@@ -1,0 +1,375 @@
+2025-09-24T11:39:53.677602895Z stderr F 
+2025-09-24T11:39:53.678170874Z stdout F Command Line: /opt/edico/bin/dragen --partial-reconfig HMM --ignore-version-check true 
+2025-09-24T11:39:53.703188583Z stdout F DRAGEN Host Software Version 05.021.602.3.8.4 and Bio-IT Processor Version 0x00000000
+2025-09-24T11:39:53.703215931Z stdout F 
+2025-09-24T11:39:53.703286372Z stdout F Generating run log at /var/log/dragen/dragen_run_1758713993677_9.log
+2025-09-24T11:39:53.703303137Z stdout F 
+2025-09-24T11:39:53.930348593Z stdout F AutoDetected reference: UNKNOWN
+2025-09-24T11:39:53.954429102Z stdout F INFO: Loaded empty agfi
+2025-09-24T11:39:53.954460639Z stderr F WARNING: Bypassing bitstream version check! Currently loaded version: 0x00000000
+2025-09-24T11:39:53.9547104Z stdout F 
+2025-09-24T11:39:53.954729147Z stdout F ==================================================================
+2025-09-24T11:39:53.954735888Z stdout F Downloading HMM Germline HW bitstream (agfi-0f1856d8a2e1dea53) - do not interrupt
+2025-09-24T11:39:53.954741737Z stdout F ==================================================================
+2025-09-24T11:39:57.646963618Z stdout F ....
+2025-09-24T11:39:57.647016315Z stdout F AGFI: Downloaded HW bitstream agfi-0f1856d8a2e1dea53
+2025-09-24T11:39:57.649334595Z stdout F 
+2025-09-24T11:39:57.649383174Z stdout F RUN TIME                                                                        Time partial reconfiguration                                      00:00:03.692   3.69
+2025-09-24T11:39:57.649401007Z stdout F RUN TIME                                                                        Total runtime                                                     00:00:03.974   3.97
+2025-09-24T11:39:57.64941262Z stdout F ==================================================================
+2025-09-24T11:39:57.669981738Z stdout F DRAGEN finished normally
+2025-09-24T11:40:03.146465053Z stdout F DRAGEN/
+2025-09-24T11:40:03.146792681Z stdout F DRAGEN/8/
+2025-09-24T11:40:03.146961594Z stdout F DRAGEN/8/anchored_rna/
+2025-09-24T11:40:03.147249286Z stdout F DRAGEN/8/anchored_rna/hash_table.cfg
+2025-09-24T11:40:03.148029804Z stdout F DRAGEN/8/anchored_rna/hash_table.cfg.bin
+2025-09-24T11:40:03.148426435Z stdout F DRAGEN/8/anchored_rna/hash_table.cmp
+2025-09-24T11:40:53.394264882Z stdout F DRAGEN/8/anchored_rna/hash_table_stats.txt
+2025-09-24T11:40:53.394547898Z stdout F DRAGEN/8/anchored_rna/ref_index.bin
+2025-09-24T11:40:53.60766265Z stdout F DRAGEN/8/anchored_rna/reference.bin
+2025-09-24T11:41:29.408889233Z stdout F DRAGEN/8/anchored_rna/repeat_mask.bin
+2025-09-24T11:41:31.821326047Z stdout F DRAGEN/8/anchored_rna/str_table.bin
+2025-09-24T11:41:34.06800053Z stdout F DRAGEN/8/hash_table.cfg
+2025-09-24T11:41:34.068334226Z stdout F DRAGEN/8/hash_table.cfg.bin
+2025-09-24T11:41:34.069543866Z stdout F DRAGEN/8/hash_table.cmp
+2025-09-24T11:43:55.64329715Z stdout F DRAGEN/8/hash_table_stats.txt
+2025-09-24T11:43:55.643671304Z stdout F DRAGEN/8/kmer_cnv.bin
+2025-09-24T11:43:58.675328086Z stdout F DRAGEN/8/ref_index.bin
+2025-09-24T11:43:58.885223966Z stdout F DRAGEN/8/reference.bin
+2025-09-24T11:44:34.146926541Z stdout F DRAGEN/8/repeat_mask.bin
+2025-09-24T11:44:36.531918983Z stdout F DRAGEN/8/str_table.bin
+2025-09-24T11:44:38.62849879Z stdout F genes.gtf.gz
+2025-09-24T11:44:39.867240151Z stdout F genome.fa
+2025-09-24T11:45:27.6101638Z stdout F genome.json
+2025-09-24T11:45:29.140931086Z stderr F 
+2025-09-24T11:45:29.141278644Z stdout F Command Line: /opt/edico/bin/dragen --lic-instance-id-location /opt/instance-identity --fastq-list /mount/input/fastq_list.csv -c /mount/input/dragen.cfg --fastq-list-sample-id DSP-1001660015507-F-H02 --ref-dir /ephemeral/ref/DRAGEN/8 --enable-spatial-analysis=true --spatial-analysis-barcode-whitelist=/mount/input/rts_whitelist.txt --enable-spatial-analysis-debug=false --output-dir=/outputs/dragen --output-file-prefix=dragen -f 
+2025-09-24T11:45:29.202523982Z stdout F DRAGEN Host Software Version 05.021.602.3.8.4 and Bio-IT Processor Version 0x04261818
+2025-09-24T11:45:29.202578182Z stdout F 
+2025-09-24T11:45:29.202658214Z stdout F Generating run log at /var/log/dragen/dragen_run_1758714329140_25.log
+2025-09-24T11:45:29.202711844Z stdout F 
+2025-09-24T11:45:29.848191044Z stdout F LICENSE_MSG| server version v2.0.0-dff7061
+2025-09-24T11:45:29.848252108Z stdout F AutoDetected reference: hg19
+2025-09-24T11:45:29.84859833Z stdout F 
+2025-09-24T11:45:29.848639522Z stdout F ==================================================================
+2025-09-24T11:45:29.848650932Z stdout F DNA Mapper/Aligner Configuration
+2025-09-24T11:45:29.848660631Z stdout F ==================================================================
+2025-09-24T11:45:29.848672865Z stdout F config-file:                       /mount/input/dragen.cfg
+2025-09-24T11:45:29.848684746Z stdout F fastqs (Read 1):                   
+2025-09-24T11:45:29.848696761Z stdout F https://euc1-prd-seq-hub-data-bucket.s3.eu-central-1.amazonaws.com/15da0e7ceb7e4589b8f5b21b003c63e3/DSP-1001660015507-F-H02_S278_L001_R1_001.fastq.gz
+2025-09-24T11:45:29.848708547Z stdout F https://euc1-prd-seq-hub-data-bucket.s3.eu-central-1.amazonaws.com/15da0e7ceb7e4589b8f5b21b003c63e3/DSP-1001660015507-F-H02_S278_L002_R1_001.fastq.gz
+2025-09-24T11:45:29.848720205Z stdout F fastqs (Read 2):                   
+2025-09-24T11:45:29.848730382Z stdout F https://euc1-prd-seq-hub-data-bucket.s3.eu-central-1.amazonaws.com/15da0e7ceb7e4589b8f5b21b003c63e3/DSP-1001660015507-F-H02_S278_L001_R2_001.fastq.gz
+2025-09-24T11:45:29.848739935Z stdout F https://euc1-prd-seq-hub-data-bucket.s3.eu-central-1.amazonaws.com/15da0e7ceb7e4589b8f5b21b003c63e3/DSP-1001660015507-F-H02_S278_L002_R2_001.fastq.gz
+2025-09-24T11:45:29.848747742Z stdout F ref-dir:                           /ephemeral/ref/DRAGEN/8
+2025-09-24T11:45:29.848772013Z stdout F ref-config:                        alt-aware capable
+2025-09-24T11:45:29.848784267Z stdout F alt-aware:                         true
+2025-09-24T11:45:29.848793586Z stdout F intermediate-results-dir:          /outputs/dragen
+2025-09-24T11:45:29.84880275Z stdout F output-directory:                  /outputs/dragen
+2025-09-24T11:45:29.848846392Z stdout F output-file-prefix:                dragen
+2025-09-24T11:45:29.848896505Z stdout F enable-map-align:                  true
+2025-09-24T11:45:29.84890565Z stdout F auto-pe-stats-detection:           enabled
+2025-09-24T11:45:29.848911682Z stdout F pe-stats-continuous-update:        disabled
+2025-09-24T11:45:29.848917332Z stdout F pe-stats-update-log-only:          disabled
+2025-09-24T11:45:29.84893669Z stdout F enable-map-align-output:           false
+2025-09-24T11:45:29.848948402Z stdout F enable-sort:                       false
+2025-09-24T11:45:29.848958464Z stdout F enable-duplicate-marking:          false
+2025-09-24T11:45:29.848967445Z stdout F remove-duplicates:                 false
+2025-09-24T11:45:29.848976411Z stdout F 
+2025-09-24T11:45:29.848986806Z stdout F ==================================================================
+2025-09-24T11:45:29.848997624Z stdout F Processing reads
+2025-09-24T11:45:29.849007179Z stdout F ==================================================================
+2025-09-24T11:45:29.863601879Z stdout F INFO: AGFI currently loaded agfi-0f1856d8a2e1dea53
+2025-09-24T11:45:29.863887357Z stdout F 
+2025-09-24T11:45:29.863918081Z stdout F ==================================================================
+2025-09-24T11:45:29.863929276Z stdout F Downloading DNA Map/Align HW bitstream (agfi-0b26548460b64b5ed) - do not interrupt
+2025-09-24T11:45:29.863937191Z stdout F ==================================================================
+2025-09-24T11:45:32.567982794Z stdout F ..
+2025-09-24T11:45:32.568051093Z stdout F AGFI: Downloaded HW bitstream agfi-0b26548460b64b5ed
+2025-09-24T11:45:37.405416694Z stdout F LICENSE_MSG| Requested streams: DNA mapper(x1) unzip(x2)
+2025-09-24T11:45:37.405478009Z stdout F LICENSE_MSG|   Board AWS-SN0, CHIPID=0000000000000000
+2025-09-24T11:45:37.405494275Z stdout F LICENSE_MSG| Allocation:
+2025-09-24T11:45:37.405505027Z stdout F LICENSE_MSG|   #0: board 0 stream 0, DNA mapper -> DNA mapper
+2025-09-24T11:45:37.405515854Z stdout F LICENSE_MSG|   #1: board 0 stream 1, unzip -> unzip
+2025-09-24T11:45:37.405541858Z stdout F LICENSE_MSG|   #2: board 0 stream 2, zip -> free
+2025-09-24T11:45:37.405552825Z stdout F LICENSE_MSG|   #3: board 0 stream 3, unzip -> unzip
+2025-09-24T11:45:37.405563711Z stdout F LICENSE_MSG|   #4: board 0 stream 4, zip -> free
+2025-09-24T11:45:37.405573723Z stdout F LICENSE_MSG|   #5: board 0 stream 5, zip -> free
+2025-09-24T11:45:37.405582713Z stdout F Opening FASTQ file DSP-1001660015507-F-H02_S278_L001_R1_001.fastq.gz
+2025-09-24T11:45:37.473964147Z stdout F Opening FASTQ file DSP-1001660015507-F-H02_S278_L001_R2_001.fastq.gz
+2025-09-24T11:45:37.658273402Z stdout F HTTP stream httpdl:fastq.gz#1 OK, received 3850222B in 0.08109s -> 45.28MB/s
+2025-09-24T11:45:37.658350802Z stdout F Closing FASTQ file DSP-1001660015507-F-H02_S278_L001_R1_001.fastq.gz
+2025-09-24T11:45:37.65838714Z stdout F Opening FASTQ file DSP-1001660015507-F-H02_S278_L002_R1_001.fastq.gz
+2025-09-24T11:45:37.714432417Z stdout F HTTP stream httpdl:fastq.gz#2 OK, received 3923914B in 0.06914s -> 54.12MB/s
+2025-09-24T11:45:37.714509607Z stdout F Closing FASTQ file DSP-1001660015507-F-H02_S278_L001_R2_001.fastq.gz
+2025-09-24T11:45:37.714535334Z stdout F Opening FASTQ file DSP-1001660015507-F-H02_S278_L002_R2_001.fastq.gz
+2025-09-24T11:45:37.785497939Z stdout F ================================================================================================================================
+2025-09-24T11:45:37.785555475Z stdout F Starting  Spatial  Analysis
+2025-09-24T11:45:37.785570043Z stdout F ================================================================================================================================
+2025-09-24T11:45:38.478635094Z stdout F Initial paired-end statistics detected for read group 42, based on 0 high quality pairs for FR orientation
+2025-09-24T11:45:38.478699337Z stdout F         Quartiles (25 50 75) = 0 0 0
+2025-09-24T11:45:38.478711911Z stdout F         Mean = 0
+2025-09-24T11:45:38.4787217Z stdout F         Standard deviation = 10000
+2025-09-24T11:45:38.478731383Z stdout F         Rescue radius = 0
+2025-09-24T11:45:38.478741638Z stdout F         Effective rescue sigmas = 0
+2025-09-24T11:45:38.478752455Z stdout F         WARNING: Default rescue sigmas value of 2.5 was overridden by host software!
+2025-09-24T11:45:38.478761636Z stdout F         The user may wish to set a rescue sigmas value explicitly with --Aligner.rescue-sigmas
+2025-09-24T11:45:38.478771457Z stdout F         Boundaries for mean and standard deviation: low = 0, high = 0
+2025-09-24T11:45:38.478779951Z stdout F         Boundaries for proper pairs: low = 1, high = 40000
+2025-09-24T11:45:38.478791764Z stdout F         NOTE: DRAGEN's insert estimates include corrections for clipping (so they are not identical to TLEN)
+2025-09-24T11:45:38.478800385Z stdout F HTTP stream httpdl:fastq.gz#3 OK, received 3864397B in 0.06144s -> 59.98MB/s
+2025-09-24T11:45:38.47880844Z stdout F HTTP stream httpdl:fastq.gz#4 OK, received 3931799B in 0.06406s -> 58.54MB/s
+2025-09-24T11:45:38.478816484Z stdout F Initial paired-end statistics detected for read group 43, based on 0 high quality pairs for FR orientation
+2025-09-24T11:45:38.478824718Z stdout F         Quartiles (25 50 75) = 0 0 0
+2025-09-24T11:45:38.478832558Z stdout F         Mean = 0
+2025-09-24T11:45:38.478840239Z stdout F         Standard deviation = 10000
+2025-09-24T11:45:38.478847959Z stdout F         Rescue radius = 0
+2025-09-24T11:45:38.47885578Z stdout F         Effective rescue sigmas = 0
+2025-09-24T11:45:38.478863756Z stdout F         WARNING: Default rescue sigmas value of 2.5 was overridden by host software!
+2025-09-24T11:45:38.478871581Z stdout F         The user may wish to set a rescue sigmas value explicitly with --Aligner.rescue-sigmas
+2025-09-24T11:45:38.478879431Z stdout F         Boundaries for mean and standard deviation: low = 0, high = 0
+2025-09-24T11:45:38.478887232Z stdout F         Boundaries for proper pairs: low = 1, high = 40000
+2025-09-24T11:45:38.478895336Z stdout F         NOTE: DRAGEN's insert estimates include corrections for clipping (so they are not identical to TLEN)
+2025-09-24T11:45:38.478919087Z stdout F Closing FASTQ file DSP-1001660015507-F-H02_S278_L002_R1_001.fastq.gz
+2025-09-24T11:45:38.480154435Z stdout F Closing FASTQ file DSP-1001660015507-F-H02_S278_L002_R2_001.fastq.gz
+2025-09-24T11:45:38.64671954Z stdout F 
+2025-09-24T11:45:38.646775785Z stdout F Total time taken for Spatial Analysis component: 0.861 seconds
+2025-09-24T11:45:38.646787673Z stdout F 
+2025-09-24T11:45:38.646795108Z stdout F Finished   with   Spatial   Analysis   counting   component
+2025-09-24T11:45:38.646802314Z stdout F 
+2025-09-24T11:45:40.930545016Z stdout F Paired-end statistics were based on initial reads for read group 42, based on 0 high quality pairs for FR orientation
+2025-09-24T11:45:40.930604332Z stdout F         Quartiles (25 50 75) = 0 0 0
+2025-09-24T11:45:40.930619519Z stdout F         Mean = 0
+2025-09-24T11:45:40.930630914Z stdout F         Standard deviation = 10000
+2025-09-24T11:45:40.930641728Z stdout F         Rescue radius = 0
+2025-09-24T11:45:40.930652325Z stdout F         Effective rescue sigmas = 0
+2025-09-24T11:45:40.930665147Z stdout F         WARNING: Default rescue sigmas value of 2.5 was overridden by host software!
+2025-09-24T11:45:40.930677648Z stdout F         The user may wish to set a rescue sigmas value explicitly with --Aligner.rescue-sigmas
+2025-09-24T11:45:40.930688995Z stdout F         Boundaries for mean and standard deviation: low = 0, high = 0
+2025-09-24T11:45:40.93070001Z stdout F         Boundaries for proper pairs: low = 1, high = 40000
+2025-09-24T11:45:40.93071048Z stdout F         NOTE: DRAGEN's insert estimates include corrections for clipping (so they are not identical to TLEN)
+2025-09-24T11:45:40.930720056Z stdout F Paired-end statistics were based on initial reads for read group 43, based on 0 high quality pairs for FR orientation
+2025-09-24T11:45:40.930728894Z stdout F         Quartiles (25 50 75) = 0 0 0
+2025-09-24T11:45:40.930738168Z stdout F         Mean = 0
+2025-09-24T11:45:40.930746966Z stdout F         Standard deviation = 10000
+2025-09-24T11:45:40.930755164Z stdout F         Rescue radius = 0
+2025-09-24T11:45:40.930763956Z stdout F         Effective rescue sigmas = 0
+2025-09-24T11:45:40.930770932Z stdout F         WARNING: Default rescue sigmas value of 2.5 was overridden by host software!
+2025-09-24T11:45:40.930789046Z stdout F         The user may wish to set a rescue sigmas value explicitly with --Aligner.rescue-sigmas
+2025-09-24T11:45:40.930813368Z stdout F         Boundaries for mean and standard deviation: low = 0, high = 0
+2025-09-24T11:45:40.930824986Z stdout F         Boundaries for proper pairs: low = 1, high = 40000
+2025-09-24T11:45:40.930833603Z stdout F         NOTE: DRAGEN's insert estimates include corrections for clipping (so they are not identical to TLEN)
+2025-09-24T11:45:40.930842312Z stdout F 
+2025-09-24T11:45:40.930851524Z stdout F LICENSE_MSG| =====================================================
+2025-09-24T11:45:40.930861541Z stdout F LICENSE_MSG| License report
+2025-09-24T11:45:40.93087196Z stdout F LICENSE_MSG|   AWS-SN0         : 17935074 bases
+2025-09-24T11:45:40.930928955Z stdout F 
+2025-09-24T11:45:40.930951017Z stdout F 
+2025-09-24T11:45:40.930958493Z stdout F ==================================================================
+2025-09-24T11:45:40.930968239Z stdout F DRAGEN METRICS
+2025-09-24T11:45:40.930977132Z stdout F ==================================================================
+2025-09-24T11:45:40.930985345Z stdout F 
+2025-09-24T11:45:40.930994839Z stdout F MAPPING/ALIGNING SUMMARY               Total input reads                                                 664262         100.00                   
+2025-09-24T11:45:40.931003101Z stdout F MAPPING/ALIGNING SUMMARY               Number of duplicate marked reads                                  0              0.00                     
+2025-09-24T11:45:40.931011316Z stdout F MAPPING/ALIGNING SUMMARY               Number of duplicate marked and mate reads removed                 NA
+2025-09-24T11:45:40.931033724Z stdout F MAPPING/ALIGNING SUMMARY               Number of unique reads (excl. duplicate marked reads)             664262         100.00                   
+2025-09-24T11:45:40.931042837Z stdout F MAPPING/ALIGNING SUMMARY               Reads with mate sequenced                                         664262         100.00                   
+2025-09-24T11:45:40.931051365Z stdout F MAPPING/ALIGNING SUMMARY               Reads without mate sequenced                                      0              0.00                     
+2025-09-24T11:45:40.93105961Z stdout F MAPPING/ALIGNING SUMMARY               QC-failed reads                                                   0              0.00                     
+2025-09-24T11:45:40.931068692Z stdout F MAPPING/ALIGNING SUMMARY               Mapped reads                                                      0              0.00                     
+2025-09-24T11:45:40.931077421Z stdout F MAPPING/ALIGNING SUMMARY               Mapped reads R1                                                   0              0.00                     
+2025-09-24T11:45:40.931085879Z stdout F MAPPING/ALIGNING SUMMARY               Mapped reads R2                                                   0              0.00                     
+2025-09-24T11:45:40.931095004Z stdout F MAPPING/ALIGNING SUMMARY               Number of unique & mapped reads (excl. duplicate marked reads)    0              0.00                     
+2025-09-24T11:45:40.931104555Z stdout F MAPPING/ALIGNING SUMMARY               Unmapped reads                                                    664262         100.00                   
+2025-09-24T11:45:40.931113586Z stdout F MAPPING/ALIGNING SUMMARY               Singleton reads (itself mapped; mate unmapped)                    0              0.00                     
+2025-09-24T11:45:40.931121842Z stdout F MAPPING/ALIGNING SUMMARY               Paired reads (itself & mate mapped)                               0              0.00                     
+2025-09-24T11:45:40.931129826Z stdout F MAPPING/ALIGNING SUMMARY               Properly paired reads                                             0              0.00                     
+2025-09-24T11:45:40.931149644Z stdout F MAPPING/ALIGNING SUMMARY               Not properly paired reads (discordant)                            0              0.00                     
+2025-09-24T11:45:40.931188995Z stdout F MAPPING/ALIGNING SUMMARY               Paired reads mapped to different chromosomes                      0              0.00                     
+2025-09-24T11:45:40.931201728Z stdout F MAPPING/ALIGNING SUMMARY               Paired reads mapped to different chromosomes (MAPQ>=10)           0              0.00                     
+2025-09-24T11:45:40.931213033Z stdout F MAPPING/ALIGNING SUMMARY               Reads with MAPQ [40:inf)                                          0              0.00                     
+2025-09-24T11:45:40.931222177Z stdout F MAPPING/ALIGNING SUMMARY               Reads with MAPQ [30:40)                                           0              0.00                     
+2025-09-24T11:45:40.931231424Z stdout F MAPPING/ALIGNING SUMMARY               Reads with MAPQ [20:30)                                           0              0.00                     
+2025-09-24T11:45:40.931259567Z stdout F MAPPING/ALIGNING SUMMARY               Reads with MAPQ [10:20)                                           0              0.00                     
+2025-09-24T11:45:40.931271977Z stdout F MAPPING/ALIGNING SUMMARY               Reads with MAPQ [ 0:10)                                           0              0.00                     
+2025-09-24T11:45:40.931281571Z stdout F MAPPING/ALIGNING SUMMARY               Reads with MAPQ NA (Unmapped reads)                               664262         100.00                   
+2025-09-24T11:45:40.931290806Z stdout F MAPPING/ALIGNING SUMMARY               Reads with indel R1                                               0              0.00                     
+2025-09-24T11:45:40.931305169Z stdout F MAPPING/ALIGNING SUMMARY               Total bases                                                       17252820       
+2025-09-24T11:45:40.93131532Z stdout F MAPPING/ALIGNING SUMMARY               Total bases R1                                                    8628409        
+2025-09-24T11:45:40.931325487Z stdout F MAPPING/ALIGNING SUMMARY               Total bases R2                                                    8624411        
+2025-09-24T11:45:40.931334538Z stdout F MAPPING/ALIGNING SUMMARY               Mapped bases R1                                                   0              
+2025-09-24T11:45:40.931343579Z stdout F MAPPING/ALIGNING SUMMARY               Mapped bases R2                                                   0              
+2025-09-24T11:45:40.931352445Z stdout F MAPPING/ALIGNING SUMMARY               Soft-clipped bases R1                                             0              0.00                     
+2025-09-24T11:45:40.931361574Z stdout F MAPPING/ALIGNING SUMMARY               Soft-clipped bases R2                                             0              0.00                     
+2025-09-24T11:45:40.931371194Z stdout F MAPPING/ALIGNING SUMMARY               Mismatched bases R1                                               0              0.00                     
+2025-09-24T11:45:40.931381674Z stdout F MAPPING/ALIGNING SUMMARY               Mismatched bases R2                                               0              0.00                     
+2025-09-24T11:45:40.931391525Z stdout F MAPPING/ALIGNING SUMMARY               Mismatched bases R1 (excl. indels)                                0              0.00                     
+2025-09-24T11:45:40.931400007Z stdout F MAPPING/ALIGNING SUMMARY               Mismatched bases R2 (excl. indels)                                0              0.00                     
+2025-09-24T11:45:40.931408673Z stdout F MAPPING/ALIGNING SUMMARY               Q30 bases                                                         16539837       95.87                    
+2025-09-24T11:45:40.931417218Z stdout F MAPPING/ALIGNING SUMMARY               Q30 bases R1                                                      8306816        96.27                    
+2025-09-24T11:45:40.931426477Z stdout F MAPPING/ALIGNING SUMMARY               Q30 bases R2                                                      8233021        95.46                    
+2025-09-24T11:45:40.931435917Z stdout F MAPPING/ALIGNING SUMMARY               Total alignments                                                  0              
+2025-09-24T11:45:40.931447115Z stdout F MAPPING/ALIGNING SUMMARY               Secondary alignments                                              0              
+2025-09-24T11:45:40.931457208Z stdout F MAPPING/ALIGNING SUMMARY               Supplementary (chimeric) alignments                               0              
+2025-09-24T11:45:40.931466077Z stdout F MAPPING/ALIGNING SUMMARY               Estimated read length                                             25.97
+2025-09-24T11:45:40.931476051Z stdout F MAPPING/ALIGNING SUMMARY               Bases in reference genome                                         3137161264     
+2025-09-24T11:45:40.931485677Z stdout F MAPPING/ALIGNING SUMMARY               Bases in target bed [% of genome]                                 NA
+2025-09-24T11:45:40.931495088Z stdout F MAPPING/ALIGNING SUMMARY               Average sequenced coverage over genome                            0.01
+2025-09-24T11:45:40.931504539Z stdout F MAPPING/ALIGNING SUMMARY               Insert length: mean                                               0.00
+2025-09-24T11:45:40.931513843Z stdout F MAPPING/ALIGNING SUMMARY               Insert length: median                                             0.00
+2025-09-24T11:45:40.931523495Z stdout F MAPPING/ALIGNING SUMMARY               Insert length: standard deviation                                 157.58
+2025-09-24T11:45:40.931533044Z stdout F MAPPING/ALIGNING SUMMARY               Provided sex chromosome ploidy                                    NA
+2025-09-24T11:45:40.931548726Z stdout F MAPPING/ALIGNING SUMMARY               Estimated sample contamination                                    NA
+2025-09-24T11:45:40.931557779Z stdout F MAPPING/ALIGNING SUMMARY               DRAGEN mapping rate [mil. reads/second]                           0.00
+2025-09-24T11:45:40.931566202Z stdout F 
+2025-09-24T11:45:40.931597198Z stdout F MAPPING/ALIGNING PER RG       42       Total reads in RG                                                 332288         100.00                   
+2025-09-24T11:45:40.931616074Z stdout F MAPPING/ALIGNING PER RG       42       Number of duplicate marked reads                                  0              0.00                     
+2025-09-24T11:45:40.93162288Z stdout F MAPPING/ALIGNING PER RG       42       Number of duplicate marked and mate reads removed                 NA
+2025-09-24T11:45:40.931628599Z stdout F MAPPING/ALIGNING PER RG       42       Number of unique reads (excl. duplicate marked reads)             332288         100.00                   
+2025-09-24T11:45:40.931634242Z stdout F MAPPING/ALIGNING PER RG       42       Reads with mate sequenced                                         332288         100.00                   
+2025-09-24T11:45:40.931639822Z stdout F MAPPING/ALIGNING PER RG       42       Reads without mate sequenced                                      0              0.00                     
+2025-09-24T11:45:40.931645505Z stdout F MAPPING/ALIGNING PER RG       42       QC-failed reads                                                   0              0.00                     
+2025-09-24T11:45:40.931655253Z stdout F MAPPING/ALIGNING PER RG       42       Mapped reads                                                      0              0.00                     
+2025-09-24T11:45:40.93166566Z stdout F MAPPING/ALIGNING PER RG       42       Mapped reads R1                                                   0              0.00                     
+2025-09-24T11:45:40.931676071Z stdout F MAPPING/ALIGNING PER RG       42       Mapped reads R2                                                   0              0.00                     
+2025-09-24T11:45:40.931684563Z stdout F MAPPING/ALIGNING PER RG       42       Number of unique & mapped reads (excl. duplicate marked reads)    0              0.00                     
+2025-09-24T11:45:40.931693053Z stdout F MAPPING/ALIGNING PER RG       42       Unmapped reads                                                    332288         100.00                   
+2025-09-24T11:45:40.93170222Z stdout F MAPPING/ALIGNING PER RG       42       Singleton reads (itself mapped; mate unmapped)                    0              0.00                     
+2025-09-24T11:45:40.931711458Z stdout F MAPPING/ALIGNING PER RG       42       Paired reads (itself & mate mapped)                               0              0.00                     
+2025-09-24T11:45:40.931733204Z stdout F MAPPING/ALIGNING PER RG       42       Properly paired reads                                             0              0.00                     
+2025-09-24T11:45:40.931740092Z stdout F MAPPING/ALIGNING PER RG       42       Not properly paired reads (discordant)                            0              0.00                     
+2025-09-24T11:45:40.931745571Z stdout F MAPPING/ALIGNING PER RG       42       Paired reads mapped to different chromosomes                      0              0.00                     
+2025-09-24T11:45:40.931751216Z stdout F MAPPING/ALIGNING PER RG       42       Paired reads mapped to different chromosomes (MAPQ>=10)           0              0.00                     
+2025-09-24T11:45:40.931757672Z stdout F MAPPING/ALIGNING PER RG       42       Reads with MAPQ [40:inf)                                          0              0.00                     
+2025-09-24T11:45:40.931763795Z stdout F MAPPING/ALIGNING PER RG       42       Reads with MAPQ [30:40)                                           0              0.00                     
+2025-09-24T11:45:40.931774378Z stdout F MAPPING/ALIGNING PER RG       42       Reads with MAPQ [20:30)                                           0              0.00                     
+2025-09-24T11:45:40.931780235Z stdout F MAPPING/ALIGNING PER RG       42       Reads with MAPQ [10:20)                                           0              0.00                     
+2025-09-24T11:45:40.931785724Z stdout F MAPPING/ALIGNING PER RG       42       Reads with MAPQ [ 0:10)                                           0              0.00                     
+2025-09-24T11:45:40.931791275Z stdout F MAPPING/ALIGNING PER RG       42       Reads with MAPQ NA (Unmapped reads)                               332288         100.00                   
+2025-09-24T11:45:40.931797138Z stdout F MAPPING/ALIGNING PER RG       42       Reads with indel R1                                               0              0.00                     
+2025-09-24T11:45:40.931802501Z stdout F MAPPING/ALIGNING PER RG       42       Total bases                                                       8630221        
+2025-09-24T11:45:40.931807727Z stdout F MAPPING/ALIGNING PER RG       42       Total bases R1                                                    4316271        
+2025-09-24T11:45:40.931812915Z stdout F MAPPING/ALIGNING PER RG       42       Total bases R2                                                    4313950        
+2025-09-24T11:45:40.931818191Z stdout F MAPPING/ALIGNING PER RG       42       Mapped bases R1                                                   0              
+2025-09-24T11:45:40.931847452Z stdout F MAPPING/ALIGNING PER RG       42       Mapped bases R2                                                   0              
+2025-09-24T11:45:40.93186073Z stdout F MAPPING/ALIGNING PER RG       42       Soft-clipped bases R1                                             0              0.00                     
+2025-09-24T11:45:40.931869172Z stdout F MAPPING/ALIGNING PER RG       42       Soft-clipped bases R2                                             0              0.00                     
+2025-09-24T11:45:40.931875337Z stdout F MAPPING/ALIGNING PER RG       42       Mismatched bases R1                                               0              0.00                     
+2025-09-24T11:45:40.931881539Z stdout F MAPPING/ALIGNING PER RG       42       Mismatched bases R2                                               0              0.00                     
+2025-09-24T11:45:40.931887823Z stdout F MAPPING/ALIGNING PER RG       42       Mismatched bases R1 (excl. indels)                                0              0.00                     
+2025-09-24T11:45:40.931908202Z stdout F MAPPING/ALIGNING PER RG       42       Mismatched bases R2 (excl. indels)                                0              0.00                     
+2025-09-24T11:45:40.931921073Z stdout F MAPPING/ALIGNING PER RG       42       Q30 bases                                                         8269813        95.82                    
+2025-09-24T11:45:40.931930535Z stdout F MAPPING/ALIGNING PER RG       42       Q30 bases R1                                                      4155134        96.27                    
+2025-09-24T11:45:40.931936882Z stdout F MAPPING/ALIGNING PER RG       42       Q30 bases R2                                                      4114679        95.38                    
+2025-09-24T11:45:40.931942573Z stdout F MAPPING/ALIGNING PER RG       42       Total alignments                                                  0              
+2025-09-24T11:45:40.93194832Z stdout F MAPPING/ALIGNING PER RG       42       Secondary alignments                                              0              
+2025-09-24T11:45:40.931953881Z stdout F MAPPING/ALIGNING PER RG       42       Supplementary (chimeric) alignments                               0              
+2025-09-24T11:45:40.931959818Z stdout F MAPPING/ALIGNING PER RG       42       Estimated read length                                             25.97
+2025-09-24T11:45:40.931965902Z stdout F MAPPING/ALIGNING PER RG       42       Average sequenced coverage over genome                            0.00
+2025-09-24T11:45:40.931977192Z stdout F MAPPING/ALIGNING PER RG       42       Insert length: mean                                               0.00
+2025-09-24T11:45:40.931983179Z stdout F MAPPING/ALIGNING PER RG       42       Insert length: median                                             0.00
+2025-09-24T11:45:40.931989197Z stdout F MAPPING/ALIGNING PER RG       42       Insert length: standard deviation                                 10000.00
+2025-09-24T11:45:40.931995223Z stdout F 
+2025-09-24T11:45:40.932001321Z stdout F MAPPING/ALIGNING PER RG       43       Total reads in RG                                                 331974         100.00                   
+2025-09-24T11:45:40.932007232Z stdout F MAPPING/ALIGNING PER RG       43       Number of duplicate marked reads                                  0              0.00                     
+2025-09-24T11:45:40.932012928Z stdout F MAPPING/ALIGNING PER RG       43       Number of duplicate marked and mate reads removed                 NA
+2025-09-24T11:45:40.932018581Z stdout F MAPPING/ALIGNING PER RG       43       Number of unique reads (excl. duplicate marked reads)             331974         100.00                   
+2025-09-24T11:45:40.932023965Z stdout F MAPPING/ALIGNING PER RG       43       Reads with mate sequenced                                         331974         100.00                   
+2025-09-24T11:45:40.932030977Z stdout F MAPPING/ALIGNING PER RG       43       Reads without mate sequenced                                      0              0.00                     
+2025-09-24T11:45:40.932041117Z stdout F MAPPING/ALIGNING PER RG       43       QC-failed reads                                                   0              0.00                     
+2025-09-24T11:45:40.932050514Z stdout F MAPPING/ALIGNING PER RG       43       Mapped reads                                                      0              0.00                     
+2025-09-24T11:45:40.932058956Z stdout F MAPPING/ALIGNING PER RG       43       Mapped reads R1                                                   0              0.00                     
+2025-09-24T11:45:40.932067754Z stdout F MAPPING/ALIGNING PER RG       43       Mapped reads R2                                                   0              0.00                     
+2025-09-24T11:45:40.932091405Z stdout F MAPPING/ALIGNING PER RG       43       Number of unique & mapped reads (excl. duplicate marked reads)    0              0.00                     
+2025-09-24T11:45:40.932102262Z stdout F MAPPING/ALIGNING PER RG       43       Unmapped reads                                                    331974         100.00                   
+2025-09-24T11:45:40.932109927Z stdout F MAPPING/ALIGNING PER RG       43       Singleton reads (itself mapped; mate unmapped)                    0              0.00                     
+2025-09-24T11:45:40.932115563Z stdout F MAPPING/ALIGNING PER RG       43       Paired reads (itself & mate mapped)                               0              0.00                     
+2025-09-24T11:45:40.932122413Z stdout F MAPPING/ALIGNING PER RG       43       Properly paired reads                                             0              0.00                     
+2025-09-24T11:45:40.932128255Z stdout F MAPPING/ALIGNING PER RG       43       Not properly paired reads (discordant)                            0              0.00                     
+2025-09-24T11:45:40.93213387Z stdout F MAPPING/ALIGNING PER RG       43       Paired reads mapped to different chromosomes                      0              0.00                     
+2025-09-24T11:45:40.932140312Z stdout F MAPPING/ALIGNING PER RG       43       Paired reads mapped to different chromosomes (MAPQ>=10)           0              0.00                     
+2025-09-24T11:45:40.932167491Z stdout F MAPPING/ALIGNING PER RG       43       Reads with MAPQ [40:inf)                                          0              0.00                     
+2025-09-24T11:45:40.932185717Z stdout F MAPPING/ALIGNING PER RG       43       Reads with MAPQ [30:40)                                           0              0.00                     
+2025-09-24T11:45:40.932197544Z stdout F MAPPING/ALIGNING PER RG       43       Reads with MAPQ [20:30)                                           0              0.00                     
+2025-09-24T11:45:40.932203272Z stdout F MAPPING/ALIGNING PER RG       43       Reads with MAPQ [10:20)                                           0              0.00                     
+2025-09-24T11:45:40.93220914Z stdout F MAPPING/ALIGNING PER RG       43       Reads with MAPQ [ 0:10)                                           0              0.00                     
+2025-09-24T11:45:40.932214691Z stdout F MAPPING/ALIGNING PER RG       43       Reads with MAPQ NA (Unmapped reads)                               331974         100.00                   
+2025-09-24T11:45:40.932220599Z stdout F MAPPING/ALIGNING PER RG       43       Reads with indel R1                                               0              0.00                     
+2025-09-24T11:45:40.932226723Z stdout F MAPPING/ALIGNING PER RG       43       Total bases                                                       8622599        
+2025-09-24T11:45:40.932232374Z stdout F MAPPING/ALIGNING PER RG       43       Total bases R1                                                    4312138        
+2025-09-24T11:45:40.932238088Z stdout F MAPPING/ALIGNING PER RG       43       Total bases R2                                                    4310461        
+2025-09-24T11:45:40.93224351Z stdout F MAPPING/ALIGNING PER RG       43       Mapped bases R1                                                   0              
+2025-09-24T11:45:40.932264247Z stdout F MAPPING/ALIGNING PER RG       43       Mapped bases R2                                                   0              
+2025-09-24T11:45:40.932275727Z stdout F MAPPING/ALIGNING PER RG       43       Soft-clipped bases R1                                             0              0.00                     
+2025-09-24T11:45:40.93228503Z stdout F MAPPING/ALIGNING PER RG       43       Soft-clipped bases R2                                             0              0.00                     
+2025-09-24T11:45:40.932293131Z stdout F MAPPING/ALIGNING PER RG       43       Mismatched bases R1                                               0              0.00                     
+2025-09-24T11:45:40.932303233Z stdout F MAPPING/ALIGNING PER RG       43       Mismatched bases R2                                               0              0.00                     
+2025-09-24T11:45:40.932312271Z stdout F MAPPING/ALIGNING PER RG       43       Mismatched bases R1 (excl. indels)                                0              0.00                     
+2025-09-24T11:45:40.93232129Z stdout F MAPPING/ALIGNING PER RG       43       Mismatched bases R2 (excl. indels)                                0              0.00                     
+2025-09-24T11:45:40.932331007Z stdout F MAPPING/ALIGNING PER RG       43       Q30 bases                                                         8270024        95.91                    
+2025-09-24T11:45:40.932338088Z stdout F MAPPING/ALIGNING PER RG       43       Q30 bases R1                                                      4151682        96.28                    
+2025-09-24T11:45:40.932349021Z stdout F MAPPING/ALIGNING PER RG       43       Q30 bases R2                                                      4118342        95.54                    
+2025-09-24T11:45:40.932354727Z stdout F MAPPING/ALIGNING PER RG       43       Total alignments                                                  0              
+2025-09-24T11:45:40.932359975Z stdout F MAPPING/ALIGNING PER RG       43       Secondary alignments                                              0              
+2025-09-24T11:45:40.932365604Z stdout F MAPPING/ALIGNING PER RG       43       Supplementary (chimeric) alignments                               0              
+2025-09-24T11:45:40.932370777Z stdout F MAPPING/ALIGNING PER RG       43       Estimated read length                                             25.97
+2025-09-24T11:45:40.9323806Z stdout F MAPPING/ALIGNING PER RG       43       Average sequenced coverage over genome                            0.00
+2025-09-24T11:45:40.932387777Z stdout F MAPPING/ALIGNING PER RG       43       Insert length: mean                                               0.00
+2025-09-24T11:45:40.932393396Z stdout F MAPPING/ALIGNING PER RG       43       Insert length: median                                             0.00
+2025-09-24T11:45:40.932399576Z stdout F MAPPING/ALIGNING PER RG       43       Insert length: standard deviation                                 10000.00
+2025-09-24T11:45:40.9346225Z stdout F 
+2025-09-24T11:45:40.93466645Z stdout F TRIMMER STATISTICS                     Total input reads                                                 664262         
+2025-09-24T11:45:40.934681845Z stdout F TRIMMER STATISTICS                     Total input bases                                                 17935074       
+2025-09-24T11:45:40.934693441Z stdout F TRIMMER STATISTICS                     Total input bases R1                                              8967537        
+2025-09-24T11:45:40.934704048Z stdout F TRIMMER STATISTICS                     Total input bases R2                                              8967537        
+2025-09-24T11:45:40.934714186Z stdout F TRIMMER STATISTICS                     Average input read length                                         27             
+2025-09-24T11:45:40.934726346Z stdout F TRIMMER STATISTICS                     Total trimmed reads                                               664262         100.00                   
+2025-09-24T11:45:40.934736315Z stdout F TRIMMER STATISTICS                     Total trimmed bases                                               682254         3.80                     
+2025-09-24T11:45:40.934747216Z stdout F TRIMMER STATISTICS                     Average bases trimmed per read                                    1              
+2025-09-24T11:45:40.934757746Z stdout F TRIMMER STATISTICS                     Average bases trimmed per trimmed read                            1              
+2025-09-24T11:45:40.934767612Z stdout F TRIMMER STATISTICS                     Remaining poly-G K-mers R1 3prime                                 0              0.00                     
+2025-09-24T11:45:40.934841633Z stdout F TRIMMER STATISTICS                     Remaining poly-G K-mers R2 3prime                                 101            0.03                     
+2025-09-24T11:45:40.934865386Z stdout F TRIMMER STATISTICS                     Poly-G soft trimmed reads unfiltered R1 3prime                    0              0.00                     
+2025-09-24T11:45:40.934872764Z stdout F TRIMMER STATISTICS                     Poly-G soft trimmed reads unfiltered R2 3prime                    280            0.08                     
+2025-09-24T11:45:40.934878695Z stdout F TRIMMER STATISTICS                     Poly-G soft trimmed reads filtered R1 3prime                      0              0.00                     
+2025-09-24T11:45:40.934884514Z stdout F TRIMMER STATISTICS                     Poly-G soft trimmed reads filtered R2 3prime                      0              0.00                     
+2025-09-24T11:45:40.934890635Z stdout F TRIMMER STATISTICS                     Poly-G soft trimmed bases unfiltered R1 3prime                    0              0.00                     
+2025-09-24T11:45:40.934900776Z stdout F TRIMMER STATISTICS                     Poly-G soft trimmed bases unfiltered R2 3prime                    5067           0.06                     
+2025-09-24T11:45:40.93494179Z stdout F TRIMMER STATISTICS                     Poly-G soft trimmed bases filtered R1 3prime                      0              0.00                     
+2025-09-24T11:45:40.934966521Z stdout F TRIMMER STATISTICS                     Poly-G soft trimmed bases filtered R2 3prime                      0              0.00                     
+2025-09-24T11:45:40.934988093Z stdout F TRIMMER STATISTICS                     Quality trimmed reads unfiltered R1 3prime                        106788         32.15                    
+2025-09-24T11:45:40.934999609Z stdout F TRIMMER STATISTICS                     Quality trimmed reads unfiltered R2 3prime                        126729         38.16                    
+2025-09-24T11:45:40.935008681Z stdout F TRIMMER STATISTICS                     Quality trimmed reads filtered R1 3prime                          0              0.00                     
+2025-09-24T11:45:40.935018946Z stdout F TRIMMER STATISTICS                     Quality trimmed reads filtered R2 3prime                          0              0.00                     
+2025-09-24T11:45:40.935028816Z stdout F TRIMMER STATISTICS                     Quality trimmed bases unfiltered R1 3prime                        108303         1.21                     
+2025-09-24T11:45:40.935039408Z stdout F TRIMMER STATISTICS                     Quality trimmed bases unfiltered R2 3prime                        131932         1.47                     
+2025-09-24T11:45:40.935049377Z stdout F TRIMMER STATISTICS                     Quality trimmed bases filtered R1 3prime                          0              0.00                     
+2025-09-24T11:45:40.935059414Z stdout F TRIMMER STATISTICS                     Quality trimmed bases filtered R2 3prime                          0              0.00                     
+2025-09-24T11:45:40.935069871Z stdout F TRIMMER STATISTICS                     Adapter trimmed reads unfiltered R1 3prime                        931            0.28                     
+2025-09-24T11:45:40.9350879Z stdout F TRIMMER STATISTICS                     Adapter trimmed reads unfiltered R2 3prime                        1000           0.30                     
+2025-09-24T11:45:40.935098473Z stdout F TRIMMER STATISTICS                     Adapter trimmed reads filtered R1 3prime                          0              0.00                     
+2025-09-24T11:45:40.935108627Z stdout F TRIMMER STATISTICS                     Adapter trimmed reads filtered R2 3prime                          0              0.00                     
+2025-09-24T11:45:40.935118616Z stdout F TRIMMER STATISTICS                     Adapter trimmed bases unfiltered R1 3prime                        5730           0.06                     
+2025-09-24T11:45:40.935128005Z stdout F TRIMMER STATISTICS                     Adapter trimmed bases unfiltered R2 3prime                        6044           0.07                     
+2025-09-24T11:45:40.935137845Z stdout F TRIMMER STATISTICS                     Adapter trimmed bases filtered R1 3prime                          0              0.00                     
+2025-09-24T11:45:40.935149709Z stdout F TRIMMER STATISTICS                     Adapter trimmed bases filtered R2 3prime                          0              0.00                     
+2025-09-24T11:45:40.935159858Z stdout F TRIMMER STATISTICS                     Cut-End trimmed reads unfiltered R1 3prime                        225095         67.77                    
+2025-09-24T11:45:40.935170486Z stdout F TRIMMER STATISTICS                     Cut-End trimmed reads unfiltered R2 3prime                        205150         61.77                    
+2025-09-24T11:45:40.935179881Z stdout F TRIMMER STATISTICS                     Cut-End trimmed reads filtered R1 3prime                          0              0.00                     
+2025-09-24T11:45:40.935189532Z stdout F TRIMMER STATISTICS                     Cut-End trimmed reads filtered R2 3prime                          0              0.00                     
+2025-09-24T11:45:40.935199699Z stdout F TRIMMER STATISTICS                     Cut-End trimmed bases unfiltered R1 3prime                        225095         2.51                     
+2025-09-24T11:45:40.935209358Z stdout F TRIMMER STATISTICS                     Cut-End trimmed bases unfiltered R2 3prime                        205150         2.29                     
+2025-09-24T11:45:40.935227091Z stdout F TRIMMER STATISTICS                     Cut-End trimmed bases filtered R1 3prime                          0              0.00                     
+2025-09-24T11:45:40.935236271Z stdout F TRIMMER STATISTICS                     Cut-End trimmed bases filtered R2 3prime                          0              0.00                     
+2025-09-24T11:45:40.935271777Z stdout F TRIMMER STATISTICS                     Total filtered reads                                              0              0.00                     
+2025-09-24T11:45:40.935296805Z stdout F TRIMMER STATISTICS                     Reads filtered for minimum read length R1                         0              0.00                     
+2025-09-24T11:45:40.935309282Z stdout F TRIMMER STATISTICS                     Reads filtered for minimum read length R2                         0              0.00                     
+2025-09-24T11:45:40.93533815Z stdout F 
+2025-09-24T11:45:40.935353147Z stdout F RUN TIME                               Time loading reference                                            00:00:00.000   0.00
+2025-09-24T11:45:40.935363258Z stdout F RUN TIME                               Time partial reconfiguration                                      00:00:02.704   2.70
+2025-09-24T11:45:40.935373552Z stdout F RUN TIME                               Time performing spatial analysis                                  00:00:00.861   0.86
+2025-09-24T11:45:40.935383967Z stdout F RUN TIME                               Time processing spatial analysis reads                            00:00:00.314   0.31
+2025-09-24T11:45:40.935392846Z stdout F RUN TIME                               Time correcting spatial analysis umis                             00:00:00.066   0.07
+2025-09-24T11:45:40.935399433Z stdout F RUN TIME                               Time writing spatial analysis metric files                        00:00:00.021   0.02
+2025-09-24T11:45:40.935405593Z stdout F RUN TIME                               Total runtime                                                     00:00:12.717   12.72
+2025-09-24T11:45:40.935412226Z stdout F ==================================================================
+2025-09-24T11:45:40.957913279Z stdout F DRAGEN finished normally

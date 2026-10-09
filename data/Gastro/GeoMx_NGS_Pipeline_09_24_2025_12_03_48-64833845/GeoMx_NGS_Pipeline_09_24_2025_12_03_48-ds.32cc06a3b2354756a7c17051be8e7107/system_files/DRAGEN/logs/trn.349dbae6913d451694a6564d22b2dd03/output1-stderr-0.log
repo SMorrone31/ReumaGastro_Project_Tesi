@@ -1,0 +1,11 @@
+2025-09-24T11:44:23.378895046Z stderr F {"concurrent_uploads":10,"container":"task","enable_find":false,"folder_to_upload":"/toupload","level":"info","log_upload_interval":120,"max_retry_count":10,"msg":"initializing upload service","namespace":"euc1","pod":"trn.349dbae6913d451694a6564d22b2dd03-hbwsp","service_url":"","taskRunId":"trn.349dbae6913d451694a6564d22b2dd03","time":"2025-09-24T11:44:23Z","upload_url":"s3://stratus-gds-euc1/8dbac3dc-de44-4ffc-1ba7-08db9fb310f4/datasets/app.euc1-prod.64833845/system_files/DRAGEN/Dragen_Additional_Logs/DSP-1001660015507-F-D03"}
+2025-09-24T11:50:23.764071266Z stderr F {"level":"info","msg":"finished waiting for container, waiting for final sync signal","time":"2025-09-24T11:50:23Z"}
+2025-09-24T11:50:23.764145901Z stderr F {"level":"info","msg":"finished waiting for final sync signal, starting final sync","time":"2025-09-24T11:50:23Z"}
+2025-09-24T11:50:23.764189701Z stderr F {"level":"info","msg":"Walk","path":"/toupload","time":"2025-09-24T11:50:23Z"}
+2025-09-24T11:50:23.764214759Z stderr F {"level":"info","msg":"IsDir","path":"/toupload","time":"2025-09-24T11:50:23Z"}
+2025-09-24T11:50:23.76432673Z stderr F {"level":"info","msg":"Walk","path":"/toupload/dragen","time":"2025-09-24T11:50:23Z"}
+2025-09-24T11:50:23.7643674Z stderr F {"level":"info","msg":"IsDir","path":"/toupload/dragen","time":"2025-09-24T11:50:23Z"}
+2025-09-24T11:50:23.764382328Z stderr F {"level":"info","msg":"Walk","path":"/toupload/dragen/dragen_run_1758714593192_25.log","time":"2025-09-24T11:50:23Z"}
+2025-09-24T11:50:23.764393122Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/dragen/dragen_run_1758714593192_25.log","time":"2025-09-24T11:50:23Z"}
+2025-09-24T11:50:23.823666657Z stderr F {"level":"info","msg":"finished uploading file","path":"dragen/dragen_run_1758714593192_25.log","time":"2025-09-24T11:50:23Z","total_time":59205150}
+2025-09-24T11:50:23.872456756Z stderr F {"level":"info","msg":"all done","time":"2025-09-24T11:50:23Z","total_time":360493670739}

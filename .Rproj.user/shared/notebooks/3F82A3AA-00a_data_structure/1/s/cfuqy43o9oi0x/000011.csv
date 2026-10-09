@@ -1,0 +1,5 @@
+"0",""
+"0","G |> group_by(`Scan Name`) |>"
+"0","  summarise(segmenti = n(), controlli = sum(controllo_sano),"
+"0","            identita = n_distinct(id_interno), .groups = ""drop"") |>"
+"0","  mutate(`Scan Name` = paste0(""scan_"", row_number())) |> knitr::kable()"

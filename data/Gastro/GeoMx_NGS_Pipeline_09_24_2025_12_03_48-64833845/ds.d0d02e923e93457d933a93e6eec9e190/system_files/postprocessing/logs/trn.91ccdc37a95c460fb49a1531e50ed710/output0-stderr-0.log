@@ -1,0 +1,307 @@
+2025-09-24T12:17:07.408303421Z stderr F {"concurrent_uploads":10,"container":"task","enable_find":false,"folder_to_upload":"/toupload","level":"info","log_upload_interval":120,"max_retry_count":10,"msg":"initializing upload service","namespace":"euc1","pod":"trn.91ccdc37a95c460fb49a1531e50ed710-2npf9","service_url":"","taskRunId":"trn.91ccdc37a95c460fb49a1531e50ed710","time":"2025-09-24T12:17:07Z","upload_url":"s3://stratus-gds-euc1/8dbac3dc-de44-4ffc-1ba7-08db9fb310f4/datasets/app.euc1-prod.64833845"}
+2025-09-24T12:19:07.835533101Z stderr F {"level":"info","msg":"finished waiting for container, waiting for final sync signal","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.835596228Z stderr F {"level":"info","msg":"finished waiting for final sync signal, starting final sync","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.835694342Z stderr F {"level":"info","msg":"Walk","path":"/toupload","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.835705051Z stderr F {"level":"info","msg":"IsDir","path":"/toupload","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.835868652Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.835887834Z stderr F {"level":"info","msg":"IsDir","path":"/toupload/base_space_root","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.836040277Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.8361078Z stderr F {"level":"info","msg":"IsDir","path":"/toupload/base_space_root/DCC_Files","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.838540132Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-A01.dcc","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.838580769Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-A01.dcc","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.83858774Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-A02.dcc","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.838592154Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-A02.dcc","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.838604047Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-A03.dcc","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.838607807Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-A03.dcc","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.838611867Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-A04.dcc","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.838615767Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-A04.dcc","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.838619297Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-A05.dcc","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.838622906Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-A05.dcc","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.838626483Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-A06.dcc","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.838629966Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-A06.dcc","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.838635467Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-A07.dcc","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.838638972Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-A07.dcc","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.838654852Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-A08.dcc","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.838658563Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-A08.dcc","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.838662215Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-A09.dcc","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.838665686Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-A09.dcc","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.838669313Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-A10.dcc","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.838672823Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-A10.dcc","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.838676352Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-A11.dcc","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.83868Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-A11.dcc","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.944393544Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-A05.dcc","time":"2025-09-24T12:19:07Z","total_time":103005491}
+2025-09-24T12:19:07.944610051Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-A12.dcc","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.944733691Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-A12.dcc","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.974053594Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-A01.dcc","time":"2025-09-24T12:19:07Z","total_time":137688720}
+2025-09-24T12:19:07.974651552Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-B01.dcc","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.974715097Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-B01.dcc","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.998593806Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-A03.dcc","time":"2025-09-24T12:19:07Z","total_time":156496388}
+2025-09-24T12:19:07.998949469Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-B02.dcc","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:07.999185071Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-B02.dcc","time":"2025-09-24T12:19:07Z"}
+2025-09-24T12:19:08.004428061Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-A02.dcc","time":"2025-09-24T12:19:08Z","total_time":162309989}
+2025-09-24T12:19:08.004635384Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-B03.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.004777708Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-B03.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.004992866Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-A10.dcc","time":"2025-09-24T12:19:08Z","total_time":168099147}
+2025-09-24T12:19:08.005188121Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-B04.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.005255706Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-B04.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.010149157Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-A09.dcc","time":"2025-09-24T12:19:08Z","total_time":168108208}
+2025-09-24T12:19:08.010770729Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-B05.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.010828822Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-B05.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.013396299Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-A11.dcc","time":"2025-09-24T12:19:08Z","total_time":69014683}
+2025-09-24T12:19:08.013544204Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-B06.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.013664137Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-B06.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.018578714Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-A04.dcc","time":"2025-09-24T12:19:08Z","total_time":176537746}
+2025-09-24T12:19:08.018928351Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-B07.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.0189417Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-B07.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.030597592Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-A07.dcc","time":"2025-09-24T12:19:08Z","total_time":188741314}
+2025-09-24T12:19:08.030852846Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-B08.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.030917562Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-B08.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.037903946Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-B04.dcc","time":"2025-09-24T12:19:08Z","total_time":27593501}
+2025-09-24T12:19:08.037968509Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-B09.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.038035072Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-B09.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.04741241Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-B01.dcc","time":"2025-09-24T12:19:08Z","total_time":48817055}
+2025-09-24T12:19:08.047614977Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-B10.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.047739875Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-B10.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.069861567Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-A08.dcc","time":"2025-09-24T12:19:08Z","total_time":227820423}
+2025-09-24T12:19:08.069920034Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-B11.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.070075877Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-B11.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.076526389Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-A06.dcc","time":"2025-09-24T12:19:08Z","total_time":234656743}
+2025-09-24T12:19:08.076789954Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-B12.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.077023878Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-B12.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.080507616Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-B09.dcc","time":"2025-09-24T12:19:08Z","total_time":33030239}
+2025-09-24T12:19:08.082462685Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-C01.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.082632591Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-C01.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.085987581Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-B02.dcc","time":"2025-09-24T12:19:08Z","total_time":81590842}
+2025-09-24T12:19:08.090257301Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-C02.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.090278605Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-C02.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.107269937Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-B05.dcc","time":"2025-09-24T12:19:08Z","total_time":93804259}
+2025-09-24T12:19:08.10746362Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-C03.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.107565774Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-C03.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.108969622Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-B03.dcc","time":"2025-09-24T12:19:08Z","total_time":103938026}
+2025-09-24T12:19:08.110545417Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-C04.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.110662464Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-C04.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.114154972Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-B07.dcc","time":"2025-09-24T12:19:08Z","total_time":83515921}
+2025-09-24T12:19:08.114468672Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-C05.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.114590858Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-C05.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.114983579Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-A12.dcc","time":"2025-09-24T12:19:08Z","total_time":140950229}
+2025-09-24T12:19:08.117706767Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-C01.dcc","time":"2025-09-24T12:19:08Z","total_time":31675798}
+2025-09-24T12:19:08.117978576Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-C06.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.118150098Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-C06.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.118295177Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-C07.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.118446505Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-C07.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.122124576Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-B06.dcc","time":"2025-09-24T12:19:08Z","total_time":103513135}
+2025-09-24T12:19:08.124420861Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-B08.dcc","time":"2025-09-24T12:19:08Z","total_time":86462976}
+2025-09-24T12:19:08.124642771Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-C08.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.124980067Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-C08.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.125110056Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-C09.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.12533899Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-C09.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.136735455Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-C02.dcc","time":"2025-09-24T12:19:08Z","total_time":29412975}
+2025-09-24T12:19:08.136789469Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-C10.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.136972901Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-C10.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.14427712Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-C04.dcc","time":"2025-09-24T12:19:08Z","total_time":30096252}
+2025-09-24T12:19:08.144870983Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-C11.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.145095331Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-C11.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.155986567Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-B10.dcc","time":"2025-09-24T12:19:08Z","total_time":86094687}
+2025-09-24T12:19:08.156279472Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-C12.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.156589101Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-C12.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.166394438Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-B11.dcc","time":"2025-09-24T12:19:08Z","total_time":89840243}
+2025-09-24T12:19:08.166624599Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-D01.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.166707255Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-D01.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.184243156Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-C06.dcc","time":"2025-09-24T12:19:08Z","total_time":65232152}
+2025-09-24T12:19:08.184888001Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-D02.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.185041477Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-D02.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.187013723Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-C03.dcc","time":"2025-09-24T12:19:08Z","total_time":77950876}
+2025-09-24T12:19:08.188750863Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-D03.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.188766086Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-D03.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.194791568Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-B12.dcc","time":"2025-09-24T12:19:08Z","total_time":114019002}
+2025-09-24T12:19:08.194814881Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-D04.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.194820404Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-D04.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.202199447Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-C07.dcc","time":"2025-09-24T12:19:08Z","total_time":79955428}
+2025-09-24T12:19:08.202272325Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-D05.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.202372541Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-D05.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.206387115Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-C05.dcc","time":"2025-09-24T12:19:08Z","total_time":91259084}
+2025-09-24T12:19:08.206553007Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-D06.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.206723409Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-D06.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.221456382Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-C10.dcc","time":"2025-09-24T12:19:08Z","total_time":77139997}
+2025-09-24T12:19:08.221700088Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-D07.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.221749484Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-D07.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.235007292Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-D04.dcc","time":"2025-09-24T12:19:08Z","total_time":32821733}
+2025-09-24T12:19:08.235109206Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-D08.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.235200969Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-D08.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.248750878Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-C11.dcc","time":"2025-09-24T12:19:08Z","total_time":92714444}
+2025-09-24T12:19:08.248883774Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-D09.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.249051486Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-D09.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.250905649Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-C08.dcc","time":"2025-09-24T12:19:08Z","total_time":125459174}
+2025-09-24T12:19:08.250983279Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-D10.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.251059295Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-D10.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.263905468Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-C12.dcc","time":"2025-09-24T12:19:08Z","total_time":97474433}
+2025-09-24T12:19:08.264172141Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-D11.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.264339385Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-D11.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.280517901Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-D03.dcc","time":"2025-09-24T12:19:08Z","total_time":85778026}
+2025-09-24T12:19:08.280644723Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-D08.dcc","time":"2025-09-24T12:19:08Z","total_time":31898706}
+2025-09-24T12:19:08.280768142Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-D12.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.280781925Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-D12.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.280909012Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-E01.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.280916814Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-E01.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.284159305Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-C09.dcc","time":"2025-09-24T12:19:08Z","total_time":147444076}
+2025-09-24T12:19:08.285589178Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-E02.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.285602641Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-E02.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.289833404Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-D02.dcc","time":"2025-09-24T12:19:08Z","total_time":102717507}
+2025-09-24T12:19:08.290038916Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-E03.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.290213585Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-E03.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.29052624Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-D01.dcc","time":"2025-09-24T12:19:08Z","total_time":106229347}
+2025-09-24T12:19:08.292555662Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-E04.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.292587858Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-E04.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.293554312Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-D06.dcc","time":"2025-09-24T12:19:08Z","total_time":72040222}
+2025-09-24T12:19:08.294207055Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-E05.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.294499256Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-E05.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.30247801Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-D05.dcc","time":"2025-09-24T12:19:08Z","total_time":96022186}
+2025-09-24T12:19:08.302629466Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-E06.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.304807689Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-E06.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.317596853Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-E01.dcc","time":"2025-09-24T12:19:08Z","total_time":33331717}
+2025-09-24T12:19:08.317680571Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-E04.dcc","time":"2025-09-24T12:19:08Z","total_time":24037592}
+2025-09-24T12:19:08.317928637Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-E07.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.318271058Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-E07.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.318525088Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-E08.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.319742329Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-E08.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.341857519Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-D07.dcc","time":"2025-09-24T12:19:08Z","total_time":106766769}
+2025-09-24T12:19:08.34231018Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-E09.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.342650462Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-E09.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.344648614Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-D10.dcc","time":"2025-09-24T12:19:08Z","total_time":80734070}
+2025-09-24T12:19:08.347633557Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-E10.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.347716303Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-E10.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.347756332Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-E07.dcc","time":"2025-09-24T12:19:08Z","total_time":29028414}
+2025-09-24T12:19:08.34793671Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-D09.dcc","time":"2025-09-24T12:19:08Z","total_time":96966243}
+2025-09-24T12:19:08.350753135Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-E11.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.350808316Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-E11.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.350818132Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-E12.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.350824396Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-E12.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.35413196Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-E02.dcc","time":"2025-09-24T12:19:08Z","total_time":64188092}
+2025-09-24T12:19:08.356987842Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-F01.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.35705455Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-F01.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.357068449Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-E06.dcc","time":"2025-09-24T12:19:08Z","total_time":39421947}
+2025-09-24T12:19:08.359748769Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-F02.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.359764218Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-F02.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.368221492Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-E03.dcc","time":"2025-09-24T12:19:08Z","total_time":77537738}
+2025-09-24T12:19:08.371946933Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-F03.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.371965522Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-F03.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.373814786Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-E08.dcc","time":"2025-09-24T12:19:08Z","total_time":31969401}
+2025-09-24T12:19:08.378349366Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-F04.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.378412645Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-F04.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.378575139Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-E11.dcc","time":"2025-09-24T12:19:08Z","total_time":27794007}
+2025-09-24T12:19:08.384665434Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-F05.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.38470003Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-F05.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.386690376Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-D12.dcc","time":"2025-09-24T12:19:08Z","total_time":105656403}
+2025-09-24T12:19:08.388819712Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-F06.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.388955346Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-F06.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.391623355Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-E05.dcc","time":"2025-09-24T12:19:08Z","total_time":89098292}
+2025-09-24T12:19:08.391810719Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-F07.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.392009702Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-F07.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.405614033Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-E09.dcc","time":"2025-09-24T12:19:08Z","total_time":60834077}
+2025-09-24T12:19:08.405847893Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-F08.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.406077888Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-F08.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.413608021Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-D11.dcc","time":"2025-09-24T12:19:08Z","total_time":133009539}
+2025-09-24T12:19:08.413677785Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-F09.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.415156388Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-F09.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.419267678Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-E12.dcc","time":"2025-09-24T12:19:08Z","total_time":65140316}
+2025-09-24T12:19:08.419356034Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-F10.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.419401104Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-F10.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.432232614Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-F07.dcc","time":"2025-09-24T12:19:08Z","total_time":26580560}
+2025-09-24T12:19:08.432411349Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-F11.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.432581813Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-F11.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.445240007Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-F08.dcc","time":"2025-09-24T12:19:08Z","total_time":31439991}
+2025-09-24T12:19:08.445630241Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-F12.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.445849589Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-F12.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.446151843Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-F01.dcc","time":"2025-09-24T12:19:08Z","total_time":89044542}
+2025-09-24T12:19:08.44736806Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-E10.dcc","time":"2025-09-24T12:19:08Z","total_time":99610822}
+2025-09-24T12:19:08.44738372Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-G01.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.447438098Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-G01.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.447464433Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-G02.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.447496542Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-G02.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.466055088Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-F03.dcc","time":"2025-09-24T12:19:08Z","total_time":92166402}
+2025-09-24T12:19:08.466484811Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-G03.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.466756035Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-G03.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.471926311Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-F04.dcc","time":"2025-09-24T12:19:08Z","total_time":93300288}
+2025-09-24T12:19:08.472089111Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-G04.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.47209834Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-G04.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.479640421Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-F11.dcc","time":"2025-09-24T12:19:08Z","total_time":34439277}
+2025-09-24T12:19:08.483558124Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-G05.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.483635747Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-G05.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.485397348Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-F02.dcc","time":"2025-09-24T12:19:08Z","total_time":117112464}
+2025-09-24T12:19:08.486645023Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-G06.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.486773117Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-G06.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.490124279Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-F06.dcc","time":"2025-09-24T12:19:08Z","total_time":98495554}
+2025-09-24T12:19:08.490344141Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-G07.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.490542036Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-G07.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.50390453Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-F05.dcc","time":"2025-09-24T12:19:08Z","total_time":117092663}
+2025-09-24T12:19:08.504123308Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-G08.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.504365922Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-G08.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.508172754Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-F09.dcc","time":"2025-09-24T12:19:08Z","total_time":88830296}
+2025-09-24T12:19:08.508431528Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-G09.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.508577553Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-G09.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.511476153Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-F10.dcc","time":"2025-09-24T12:19:08Z","total_time":79249907}
+2025-09-24T12:19:08.511818953Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-G10.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.511828856Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-G10.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.523142302Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-G06.dcc","time":"2025-09-24T12:19:08Z","total_time":32956666}
+2025-09-24T12:19:08.530243272Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-G11.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.530425563Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-G11.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.540853488Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-G01.dcc","time":"2025-09-24T12:19:08Z","total_time":93180539}
+2025-09-24T12:19:08.541148423Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-G12.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.541339305Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-G12.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.553544406Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-F12.dcc","time":"2025-09-24T12:19:08Z","total_time":107324525}
+2025-09-24T12:19:08.55605255Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-H01.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.556822001Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-H01.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.562185135Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-G03.dcc","time":"2025-09-24T12:19:08Z","total_time":90201441}
+2025-09-24T12:19:08.576731269Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-H02.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.585675774Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-H02.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.585843821Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-G02.dcc","time":"2025-09-24T12:19:08Z","total_time":116718237}
+2025-09-24T12:19:08.589734196Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-G05.dcc","time":"2025-09-24T12:19:08Z","total_time":97123054}
+2025-09-24T12:19:08.589753593Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-G10.dcc","time":"2025-09-24T12:19:08Z","total_time":59659696}
+2025-09-24T12:19:08.589759201Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-H03.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.589763297Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-H03.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.58977456Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-H04.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.589778293Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-H04.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.593028065Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-G07.dcc","time":"2025-09-24T12:19:08Z","total_time":88923310}
+2025-09-24T12:19:08.596073635Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-H05.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.596090165Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-H05.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.599916173Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-H06.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.599934393Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-H06.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.600420395Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-G08.dcc","time":"2025-09-24T12:19:08Z","total_time":92224025}
+2025-09-24T12:19:08.618627098Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-G04.dcc","time":"2025-09-24T12:19:08Z","total_time":137622441}
+2025-09-24T12:19:08.618655787Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-G11.dcc","time":"2025-09-24T12:19:08Z","total_time":76237451}
+2025-09-24T12:19:08.618661671Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-H07.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.618676185Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-H07.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.618680155Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-H08.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.618687244Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-H08.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.618690969Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-H09.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.618694781Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-H09.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.623125366Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-G09.dcc","time":"2025-09-24T12:19:08Z","total_time":111474795}
+2025-09-24T12:19:08.631087095Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-H10.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.63130573Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-H10.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.640536726Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-G12.dcc","time":"2025-09-24T12:19:08Z","total_time":86116954}
+2025-09-24T12:19:08.641441426Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-H11.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.64145947Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-H11.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.682231418Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-H01.dcc","time":"2025-09-24T12:19:08Z","total_time":119801026}
+2025-09-24T12:19:08.687599549Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-H05.dcc","time":"2025-09-24T12:19:08Z","total_time":90728196}
+2025-09-24T12:19:08.688647845Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-H02.dcc","time":"2025-09-24T12:19:08Z","total_time":102641162}
+2025-09-24T12:19:08.69171993Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-H08.dcc","time":"2025-09-24T12:19:08Z","total_time":74306502}
+2025-09-24T12:19:08.691858935Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-H06.dcc","time":"2025-09-24T12:19:08Z","total_time":91401045}
+2025-09-24T12:19:08.691978489Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-H12.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.692021327Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/DCC_Files/DSP-1001660015507-F-H12.dcc","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.69210665Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/GeoMx_NGS_Pipeline_09_24_2025_12_03_48_DCC.zip","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.692160101Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/GeoMx_NGS_Pipeline_09_24_2025_12_03_48_DCC.zip","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.692241779Z stderr F {"level":"info","msg":"Walk","path":"/toupload/base_space_root/summary.txt","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.69234348Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/base_space_root/summary.txt","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.692484511Z stderr F {"level":"info","msg":"Walk","path":"/toupload/bsshoutput.json","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.692573477Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/bsshoutput.json","time":"2025-09-24T12:19:08Z"}
+2025-09-24T12:19:08.695550603Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-H04.dcc","time":"2025-09-24T12:19:08Z","total_time":102494307}
+2025-09-24T12:19:08.719401619Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-H03.dcc","time":"2025-09-24T12:19:08Z","total_time":111270502}
+2025-09-24T12:19:08.726648692Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-H09.dcc","time":"2025-09-24T12:19:08Z","total_time":94299190}
+2025-09-24T12:19:08.732558448Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-H10.dcc","time":"2025-09-24T12:19:08Z","total_time":91785813}
+2025-09-24T12:19:08.753850452Z stderr F {"level":"info","msg":"finished uploading file","path":"bsshoutput.json","time":"2025-09-24T12:19:08Z","total_time":61108125}
+2025-09-24T12:19:08.756243358Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/summary.txt","time":"2025-09-24T12:19:08Z","total_time":31314839}
+2025-09-24T12:19:08.80466126Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-H12.dcc","time":"2025-09-24T12:19:08Z","total_time":110786126}
+2025-09-24T12:19:08.826671484Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-H11.dcc","time":"2025-09-24T12:19:08Z","total_time":144270494}
+2025-09-24T12:19:08.828989762Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/DCC_Files/DSP-1001660015507-F-H07.dcc","time":"2025-09-24T12:19:08Z","total_time":205259375}
+2025-09-24T12:19:09.122894883Z stderr F {"level":"info","msg":"finished uploading file","path":"base_space_root/GeoMx_NGS_Pipeline_09_24_2025_12_03_48_DCC.zip","time":"2025-09-24T12:19:09Z","total_time":423728267}
+2025-09-24T12:19:09.209209956Z stderr F {"level":"info","msg":"all done","time":"2025-09-24T12:19:09Z","total_time":121800783461}

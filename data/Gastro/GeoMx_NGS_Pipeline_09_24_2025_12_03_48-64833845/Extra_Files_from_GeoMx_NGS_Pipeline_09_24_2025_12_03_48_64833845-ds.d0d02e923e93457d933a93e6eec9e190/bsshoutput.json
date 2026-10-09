@@ -1,0 +1,17 @@
+{
+  "Datasets": {
+    "GeoMx_NGS_Pipeline_09_24_2025_12_03_48": {
+      "Type": "common.files",
+      "ProjectRef": "GeoMx_NGS_Pipeline_09_24_2025_12_03_48",
+      "Name": "GeoMx_NGS_Pipeline_09_24_2025_12_03_48",
+      "Path": "base_space_root"
+    }
+  },
+  "Projects": {
+    "GeoMx_NGS_Pipeline_09_24_2025_12_03_48": {
+      "Id": 42238199
+    }
+  },
+  "Properties": [],
+  "OutputVersion": "0.5.41"
+}

@@ -1,0 +1,734 @@
+---
+title: "Struttura e audit dei dati GeoMx (Reuma e Gastro)"
+author: "Simone"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: show
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+library(dplyr)
+library(tools)   # file_ext()
+options(width = 200)
+```
+
+# Step 1: Inventario dei file
+
+Prima di leggere qualsiasi dato vogliamo sapere **che cosa c'è sul disco**: quanti file, di che tipo, in quali cartelle, quanto pesano. In questo step **non apriamo nessun file**: guardiamo solo nomi, cartelle, estensioni e dimensioni.
+
+## 1.1 Elenco di tutti i file
+
+`list.files(..., recursive = TRUE, all.files = TRUE)` percorre l'intero albero, **compresi i file nascosti**. Li includiamo di proposito: `.DS_Store` e i file `._*` di macOS sono rumore, e vogliamo contarli per poterli escludere in modo esplicito, non scoprirli per caso.
+
+Per ogni file ricaviamo cartella, estensione, dimensione **in byte**, gruppo (Reuma/Gastro) e run (primi due livelli del percorso). La dimensione va tenuta in byte e non arrotondata in KB: un arrotondamento a 0,1 KB farebbe passare per "vuoto" qualunque file sotto circa 50 byte, anche se contiene dati (un `_manifest.json` con `{}` pesa 2 byte e non è vuoto).
+
+Aggiungiamo anche il flag `servizio`: i file sotto `system_files/` sono log di esecuzione e blob di BaseSpace/DRAGEN, senza contenuto analitico. Separarli subito evita che coprano i file che ci interessano davvero.
+
+```{r}
+root <- "data"
+stopifnot(dir.exists(root))
+
+files <- list.files(root, recursive = TRUE, all.files = TRUE, include.dirs = FALSE)
+
+inv <- tibble(path = files) |>
+  mutate(
+    full = file.path(root, path),
+    file = basename(path),
+    folder = dirname(path),
+    ext = tolower(file_ext(file)),
+    bytes = file.size(full),
+    size_kb = round(bytes / 1024, 1),
+    gruppo = case_when(
+      startsWith(path, "Reuma") ~ "Reuma",
+      startsWith(path, "Gastro") ~ "Gastro",
+      TRUE ~ "root"
+    ),
+    run = vapply(
+      strsplit(path, "/", fixed = TRUE),
+      function(p) if (length(p) > 2) paste(p[1:2], collapse = "/") else p[1],
+      character(1)
+    ),
+    rumore   = file == ".DS_Store" | grepl("^\\._", file) | grepl("__MACOSX", path),
+    servizio = grepl("system_files", path, fixed = TRUE)
+)
+```
+
+## 1.2 Quadro generale
+
+Poche righe che rispondono a domande semplici: quanti file e quanto peso, quanti sono rumore di sistema, come si ripartiscono tra Reuma e Gastro, quali estensioni compaiono, quanti file sono di servizio.
+
+```{r}
+cat("File totali:", nrow(inv), "| peso:", round(sum(inv$bytes) / 1024^2, 1), "MB\n")
+cat("File di rumore (.DS_Store, __MACOSX, ._*):", sum(inv$rumore), "\n")
+cat("File sotto system_files:", sum(inv$servizio), "su", nrow(inv),
+    sprintf("(%.0f%%)\n\n", 100 * mean(inv$servizio)))
+
+print(table(inv$gruppo))
+
+cat("\nEstensioni (tutte, rumore incluso):\n")
+print(sort(table(inv$ext), decreasing = TRUE))
+```
+
+## 1.3 File davvero vuoti
+
+Qui il criterio è esatto: 0 byte. Un file vuoto in una consegna di dati è spesso un trasferimento interrotto, e un download parziale dal OneDrive condiviso ci è già capitato. Per questo guardiamo **dove** stanno i file vuoti: se fossero `.dcc` o `.csv` analitici sarebbe un problema; se sono log di servizio, no.
+
+```{r vuoti}
+vuoti <- inv |> filter(bytes == 0, !rumore)
+
+cat("File di 0 byte (rumore escluso):", nrow(vuoti), "\n")
+print(table(estensione = vuoti$ext, servizio = vuoti$servizio))
+```
+
+## 1.4 Struttura della parte analitica, con le cartelle "gemelle" collassate
+
+Ogni run contiene centinaia di cartelle quasi identiche (una per pozzetto, `DSP-<piastra>-<lettera>-<pozzetto>`, più cartelle con un hash di 32 caratteri nel nome). Elencarle una per una renderebbe l'output illeggibile.
+
+La funzione `schema()` sostituisce nomi di pozzetto e hash con segnaposto (`DSP-<plate>-<L>-<well>`, `<hash>`): le cartelle gemelle diventano lo stesso schema e si raggruppano in una riga, con numero di file, estensioni e peso.
+
+Qui si mostra **solo la parte analitica** (senza rumore e senza `system_files`), perché è quella che dovrebbe essere confrontabile riga per riga tra le tre run. La parte di servizio ha una tabella a parte.
+
+```{r struttura}
+schema <- function(x) {
+  x <- gsub("DSP-[0-9]+-[A-Z]-[A-H][0-9]{2}", "DSP-<plate>-<L>-<well>", x)
+  gsub("[0-9a-f]{32}", "<hash>", x)
+}
+
+struttura <- inv |>
+  filter(!rumore, !servizio) |>
+  mutate(cartella = schema(folder)) |>
+  group_by(run, cartella) |>
+  summarise(
+    n_file     = n(),
+    estensioni = paste(names(sort(table(ext), decreasing = TRUE)), collapse = ","),
+    size_mb    = round(sum(bytes) / 1024^2, 2),
+    .groups    = "drop"
+  )
+
+knitr::kable(struttura)
+```
+
+## 1.5 Dove sta la parte di servizio
+
+`system_files/` compare in punti diversi a seconda della run. Invece di elencare i file, contiamo quanti ce ne sono in ciascuna posizione.
+
+```{r servizio}
+servizio_pos <- inv |>
+  filter(servizio, !rumore) |>
+  mutate(posizione = schema(sub("^(.*?system_files).*$", "\\1", folder, perl = TRUE))) |>
+  count(run, posizione, name = "n_file")
+
+knitr::kable(servizio_pos)
+```
+
+## Interpretazione
+
+**Quadro generale**
+
+- 10.992 file per 321,7 MB. Gastro 8.026 file, Reuma 2.962, root 4 (PKC, zip del PKC, file Excel e un `.DS_Store`).
+
+- I 35 file di rumore sono tutti `.DS_Store`. `file_ext()` non riconosce un nome come `.DS_Store`, e per questo compaiono nella colonna delle estensioni vuote. 18 stanno dentro `system_files`: per questo i file di servizio sono 6.852 se si contano tutti e 6.834 se si esclude il rumore (somma della tabella `servizio_pos`).
+
+- Il 62% dei file (6.852) sta sotto `system_files`. I 5.647 `.log`, il tipo più numeroso, sono tutti lì. I dati veri sono una frazione piccola della consegna.
+
+**File vuoti**
+
+- I file di 0 byte sono 905, tutti `.log` con `servizio = TRUE`: log vuoti di stderr/stdout, senza conseguenze. Nessun `.dcc`, `.csv` o altro file analitico è vuoto.
+
+**Parte analitica: stesso schema nelle tre run**
+
+- `DCC_Files`: 96 file in Gastro, 93 nel plate F, 96 nel plate H.
+
+- `DRAGEN/DSP-…` (cartelle per pozzetto): 1157 file in Gastro (89 × 13) e 1248 nel plate H (96 × 13), entrambi multipli di 13. 1194 nel plate F non lo è, quindi qualche cartella ha un numero di file diverso dalle altre. In Gastro le cartelle DRAGEN sono 89 contro 96 DCC. Entrambe le cose si chiariscono nello step 2.
+
+- `DRAGEN/Input`: 5 file in tutte le run. `Extra_Files…`: 5 file più 2 in `metadata`.
+
+- Nella cartella del run ci sono 2 file in Gastro (`summary.txt`, `logs.zip`) e 3 nei plate H e F (anche lo zip dei DCC).
+
+- I DCC del plate H compaiono in tre cartelle: `DCC_Files`, `..._DCC` (solo nel plate H, già scompattata) e `..._2 seduta Geomx` a livello `Reuma/`. Hanno lo stesso numero di file (96) e lo stesso peso (21,56 MB): probabili copie, da confermare per contenuto nello step 2.
+
+**Parte di servizio: diversa nelle tre run**
+
+- Plate H: `system_files` in una sola posizione, dentro `Extra_Files` (98 file).
+
+- Plate F: nessuna.
+
+- Gastro: tre posizioni, dentro `Extra_Files` (89), dentro la cartella del run (3.808) e in una cartella `ds.<hash>` separata (2.839).
+
+**Cosa possiamo concludere in negativo**
+
+- Nella consegna non c'è nessun file `.ini` e c'è un solo `.xlsx` (l'annotazione).
+
+- I `.cfg` sono tre `dragen.cfg`, uno per run. I 282 `.txt` sono tutti `summary.txt`, `RTS_sequences.txt` o `AWS-SN0_*_usage.txt`.
+
+- Quindi il file `*_GNP_config.ini` citato in `bsshinput.json` e una eventuale mappa pozzetto-\>segmento (Lab Worksheet) **non sono presenti nei dati**: vanno richiesti.
+
+# Step 2: Coerenza dei pozzetti tra le fonti
+
+Lo step 1 ci ha detto *quali file ci sono*. Ora verifichiamo che le fonti che elencano i pozzetti **parlino degli stessi pozzetti**, prima di fidarci del contenuto. Un pozzetto presente in una fonte e assente in un'altra è il segnale più rapido di un campione non processato o di un file degenere, e capirlo ora evita di scoprirlo all'import.
+
+Le fonti confrontate sono quattro:
+
+- **DCC**: un file per pozzetto, l'output finale della pipeline.
+- **Cartelle `DRAGEN/DSP-…`**: una per pozzetto effettivamente processato da DRAGEN.
+- **`summary.txt`**: tabella riassuntiva delle metriche, una riga per pozzetto.
+- **`preprocessing_output.json`**: elenco dei campioni passati alla pipeline (`SampleIds`).
+
+Anche qui non interpretiamo il contenuto dei dati: leggiamo solo **nomi di pozzetto**.
+
+## 2.1 Le cartelle DCC e le copie del plate H
+
+Il plate H compare in tre cartelle DCC con lo stesso numero di file e lo stesso peso (96 file, 21,56 MB). Se fossero diverse, scegliere una cartella a caso sarebbe un errore; se sono copie, usarle tutte triplicherebbe i pozzetti. Il nome non basta per deciderlo: si confronta il **contenuto** con l'md5, che cambia se cambia anche un solo byte.
+
+Prima etichettiamo ogni cartella DCC con un nome breve.
+
+```{r}
+dcc_folders <- inv |>
+  filter(ext == "dcc") |>
+  count(folder, name = "n_dcc") |>
+  mutate(id = case_when(
+    grepl("seduta", folder) ~ "H_2seduta",
+    grepl("plate_H", folder) & grepl("DCC_Files$", folder) ~ "H_DCC_Files",
+    grepl("plate_H", folder) ~ "H_DCC_scompattata",
+    grepl("plateF", folder) ~ "F_DCC_Files",
+    startsWith(folder, "Gastro") ~ "Gastro_DCC_Files"
+  ))
+
+stopifnot(!anyNA(dcc_folders$id))
+knitr::kable(select(dcc_folders, id, n_dcc))
+```
+
+Poi si calcola l'md5 di ogni DCC e si confrontano le tre cartelle del plate H a coppie: stessi nomi di file, e per quei nomi stesso contenuto.
+
+```{r md5-H}
+dcc <- inv |>
+  filter(ext == "dcc") |>
+  left_join(select(dcc_folders, folder, id), by = "folder") |>
+  mutate(md5 = unname(md5sum(full)))
+
+ids_H <- c("H_DCC_Files", "H_DCC_scompattata", "H_2seduta")
+H <- dcc |> filter(id %in% ids_H) |> select(id, file, md5)
+
+confronta <- function(a, b) {
+  m <- merge(H[H$id == a, c("file", "md5")],
+             H[H$id == b, c("file", "md5")],
+             by = "file", suffixes = c("_a", "_b"))
+  data.frame(a = a, b = b,
+             nomi_in_comune = nrow(m),
+             md5_identici   = sum(m$md5_a == m$md5_b))
+}
+
+bind_rows(confronta(ids_H[1], ids_H[2]),
+          confronta(ids_H[1], ids_H[3]),
+          confronta(ids_H[2], ids_H[3]))
+```
+
+Se i tre confronti danno 96 nomi in comune e 96 md5 identici, le cartelle sono copie e nel resto del progetto si usa **solo** `DCC_Files`.
+
+## 2.2 Quali pozzetti esistono, secondo ciascuna fonte
+
+Costruiamo per ogni fonte l'elenco dei pozzetti, con un'etichetta di run ricavata dal percorso. Le tre cartelle duplicate del plate H non si contano: dei DCC usiamo solo una cartella per run.
+
+```{r}
+re_well <- "DSP-[0-9]+-[A-Z]-[A-H][0-9]{2}"
+
+run_lab <- function(p) case_when(
+  grepl("plate_H", p, fixed = TRUE) ~ "Reuma_H",
+  grepl("plateF",  p, fixed = TRUE) ~ "Reuma_F",
+  startsWith(p, "Gastro")           ~ "Gastro"
+)
+
+# 1) DCC (una cartella per run)
+src_dcc <- dcc |>
+  filter(id %in% c("H_DCC_Files", "F_DCC_Files", "Gastro_DCC_Files")) |>
+  transmute(run = run_lab(path),
+            well = sub("\\.dcc$", "", file, ignore.case = TRUE),
+            fonte = "dcc")
+
+# 2) cartelle DRAGEN per pozzetto (esclusi i system_files)
+dragen_f <- inv |>
+  filter(!rumore, !servizio, grepl(paste0("/DRAGEN/", re_well, "/"), path)) |>
+  mutate(run  = run_lab(path),
+         well = sub(paste0(".*/DRAGEN/(", re_well, ")/.*"), "\\1", path))
+
+src_dragen <- dragen_f |> distinct(run, well) |> mutate(fonte = "dragen")
+
+# 3) summary.txt: una riga "File: <pozzetto>, Raw: ..., ..." per pozzetto
+sum_files <- inv |> filter(file == "summary.txt")
+src_sum <- bind_rows(lapply(seq_len(nrow(sum_files)), function(i) {
+  l   <- trimws(readLines(sum_files$full[i], warn = FALSE))
+  imp <- which(l == "<Missing Samples>")
+  elaborati <- if (length(imp)) l[seq_along(l) < imp] else l
+  mancanti  <- if (length(imp)) l[seq_along(l) > imp] else character(0)
+  estrai <- function(x) trimws(sub("^File: ([^,]+).*$", "\\1", x[grepl("^File:", x)]))
+  run <- run_lab(sum_files$path[i])
+  bind_rows(
+    tibble(run = run, well = estrai(elaborati), fonte = "summary"),
+    tibble(run = run, well = estrai(mancanti),  fonte = "summary_missing")
+  )
+}))
+
+# 4) preprocessing_output.json: elenco SampleIds
+pp_files <- inv |> filter(file == "preprocessing_output.json")
+src_pp <- bind_rows(lapply(seq_len(nrow(pp_files)), function(i) {
+  tibble(run = run_lab(pp_files$path[i]),
+         well = jsonlite::fromJSON(pp_files$full[i])$SampleIds,
+         fonte = "preprocessing")
+}))
+
+fonti <- bind_rows(src_dcc, src_dragen, src_sum, src_pp)
+```
+
+Prima un quadro d'insieme (quanti pozzetti elenca ogni fonte per ciascuna run), poi la lista dei **soli pozzetti su cui le fonti non concordano**: se tutto fosse coerente sarebbe vuota.
+
+```{r}
+print(table(run = fonti$run, fonte = fonti$fonte))
+
+tutti <- distinct(fonti, run, well)
+chiave <- function(r, w) paste(r, w)
+for (f in unique(fonti$fonte)) {
+  tutti[[f]] <- chiave(tutti$run, tutti$well) %in%
+    chiave(fonti$run[fonti$fonte == f], fonti$well[fonti$fonte == f])
+}
+
+incoerenti <- tutti |>
+  filter(!(dcc & dragen & summary & preprocessing)) |>
+  mutate(pozzetto = sub(".*-", "", well)) |>
+  arrange(run, pozzetto) |>
+  select(run, pozzetto, dcc, dragen, summary, summary_missing, preprocessing)
+
+cat("Pozzetti su cui le fonti NON concordano:", nrow(incoerenti), "\n")
+knitr::kable(incoerenti)
+```
+
+## 2.3 Quanti file ha ogni cartella pozzetto di DRAGEN
+
+Una cartella pozzetto completa ha 13 file. Per Gastro e per il plate H i totali dello step 1 tornavano esattamente (89 × 13 e 96 × 13); per il plate F no. Guardiamo la distribuzione dei file per cartella e, per le cartelle che si discostano dal caso più frequente, **quali file mancano**.
+
+I nomi si normalizzano prima del confronto: `streaming_log_none(7118).csv` contiene un numero che cambia da pozzetto a pozzetto, e il file `AWS-SN0_<n>_usage.txt` ha un indice che varia, quindi altrimenti due cartelle identiche sembrerebbero diverse.
+
+```{r}
+nomi <- dragen_f |>
+  mutate(nome = sub("\\([0-9]+\\)", "(N)", file),
+         nome = sub("^AWS-SN0_[0-9]+_usage", "AWS-SN0_N_usage", nome))
+
+fpw <- count(nomi, run, well, name = "n_file")
+
+fpw |> count(run, n_file, name = "n_pozzetti") |> arrange(run, desc(n_pozzetti)) |>
+  knitr::kable()
+
+anomali <- fpw |>
+  group_by(run) |>
+  filter(n_file != as.integer(names(which.max(table(n_file))))) |>
+  ungroup()
+
+cat("\nCartelle con un numero di file diverso dal tipico della loro run:\n")
+print(as.data.frame(anomali))
+
+for (i in seq_len(nrow(anomali))) {
+  nr  <- filter(nomi, run == anomali$run[i])
+  tipici <- names(which(table(nr$nome) >= 0.9 * n_distinct(nr$well)))
+  mancano <- setdiff(tipici, nr$nome[nr$well == anomali$well[i]])
+  cat(anomali$run[i], sub(".*-", "", anomali$well[i]), "- file mancanti:",
+      paste(mancano, collapse = ", "), "\n")
+}
+```
+
+## Interpretazione
+
+**Le tre cartelle del plate H sono copie**
+
+- `DCC_Files`, `..._DCC` (scompattata) e `..._2 seduta Geomx` hanno 96 nomi in comune e 96 md5 identici in ciascuna delle tre coppie. Il contenuto è lo stesso byte per byte.
+
+- Nel resto del progetto si usa solo `DCC_Files`. Le altre due si ignorano: contarle tutte triplicherebbe i pozzetti del plate H.
+
+**Pozzetti per fonte**
+
+- DRAGEN e `preprocessing_output.json` coincidono sempre, e `summary.txt` somma ai DCC una volta contati i Missing Samples (89 + 7 = 96, 92 + 1 = 93).
+- Nessun pozzetto compare in una fonte e non nei DCC: i DCC sono l'insieme più ampio.
+- Il plate H è perfettamente coerente: 96 pozzetti in tutte le fonti.
+
+**Pozzetti non processati**
+
+- Sono 8: Gastro B04, C02, D04, E04, E07, E08, F07 e Reuma plate F E05.
+
+- Hanno un DCC, ma nessuna cartella DRAGEN, non sono nell'elenco `SampleIds` di `preprocessing_output.json` e `summary.txt` li dichiara come Missing Samples. Quattro fonti indipendenti dicono la stessa cosa: la pipeline non li ha processati.
+
+- Il loro DCC è vuoto (nessuna sonda nel `Code_Summary`). Un DCC esistente non implica quindi un pozzetto con dati.
+
+**Plate F, pozzetto E10**
+
+- È l'unica cartella DRAGEN con un numero di file diverso dalle altre: 11 invece di 13. Mancano `dragen.mapping_metrics.csv` e il file `AWS-SN0_N_usage.txt`. Questo spiega perché i 1194 file della cartella `DRAGEN/DSP-…` del plate F non sono un multiplo di 13 (91 cartelle da 13 e una da 11).
+
+- La mancanza delle statistiche di mapping fa pensare che DRAGEN non abbia avuto reads da allineare (dal DCC risulta Raw = 0). È un'ipotesi: il contenuto lo si legge nello step 3.
+
+# Step 3: Contenuto dei file
+
+Fin qui abbiamo guardato nomi e conteggi. Ora apriamo i file di ogni tipo per capire il formato e verificare che le tre run siano state prodotte allo stesso modo.
+
+## 3.1 Formato dei DCC
+
+Un DCC ha un header con tre sezioni (`Header`, `Scan_Attributes`, `NGS_Processing_Attributes`) e un blocco `Code_Summary`. Leggiamo gli header di tutti i DCC (una cartella per run) e controlliamo due cose: che i campi siano gli stessi in ogni file, e quali parametri di pipeline cambiano tra le run, perché una differenza sarebbe una possibile fonte di batch.
+
+```{r}
+dcc1 <- dcc |>
+  filter(id %in% c("H_DCC_Files", "F_DCC_Files", "Gastro_DCC_Files")) |>
+  mutate(run = run_lab(path))
+
+leggi_header <- function(f) {
+  L  <- trimws(readLines(f, warn = FALSE))
+  i0 <- which(L == "<Code_Summary>")
+  h  <- L[seq_len(i0 - 1)]
+  h  <- h[grepl(",", h, fixed = TRUE) & !grepl("^<", h)]
+  setNames(sub("^[^,]*,", "", h), sub(",.*$", "", h))
+}
+hdr <- lapply(setNames(dcc1$full, dcc1$file), leggi_header)
+
+# un DCC: header + prime righe
+cat(readLines(dcc1$full[1], n = 36), sep = "\n")  
+# chiavi: in quanti file
+cat("\nDCC letti:", length(hdr), "\n")
+print(table(unlist(lapply(hdr, names))))                  
+```
+
+```{r}
+H <- bind_rows(lapply(hdr, \(h) as.data.frame(as.list(h), check.names = FALSE)), .id = "file")
+H$run <- dcc1$run[match(H$file, dcc1$file)]
+
+non_param <- c("file", "run", "ID", "Well", "Raw", "Trimmed", "Stitched",
+               "Aligned", "umiQ30", "rtsQ30")
+par_run <- H |>
+  group_by(run) |>
+  summarise(across(all_of(setdiff(names(H), non_param)),
+                   \(x) paste(sort(unique(x)), collapse = " | ")), .groups = "drop")
+
+m <- t(par_run[, -1]); colnames(m) <- par_run$run
+knitr::kable(m)
+```
+
+## 3.2 Formato del PKC
+
+È un JSON con una lista `Targets`; ogni target ha una lista `Probes`. Guardiamo i campi disponibili per sapere cosa possiamo estrarre (ID, sequenza, gene).
+
+```{r}
+pkc <- jsonlite::fromJSON("data/Hs_R_NGS_WTA_v1.0.pkc", simplifyVector = FALSE)
+
+str(pkc[setdiff(names(pkc), "Targets")])
+cat("Campi target:", paste(names(pkc$Targets[[1]]), collapse = ", "), "\n")
+cat("Campi sonda :", paste(names(pkc$Targets[[1]]$Probes[[1]]), collapse = ", "), "\n")
+cat("Sonde totali:", sum(lengths(lapply(pkc$Targets, `[[`, "Probes"))), "\n")
+```
+
+## 3.3 Altri file analitici
+
+Le prime righe di un esempio per tipo, per conoscere il formato prima di usarli.
+
+```{r}
+for (n in c("summary.txt", "RTS_sequences.txt", "fastq_list.csv",
+            "dragen.cfg", "dragen.mapping_metrics.csv")) {
+  f <- inv$full[inv$file == n][1]
+  cat("\n###", n, "\n")
+  cat(substr(readLines(f, n = 4, warn = FALSE), 1, 110), sep = "\n")
+}
+```
+
+## 3.4 Integrità dei DCC
+
+Prima di usare i conteggi verifichiamo che i DCC siano internamente corretti. Per ogni DCC controlliamo che non ci siano `RTS_ID` duplicati, che i conteggi siano interi positivi (il `Code_Summary` elenca solo le sonde rilevate, quindi uno zero sarebbe anomalo) e che la somma dei conteggi coincida con `TotalDedup` di `summary.txt`, che è calcolato dalla pipeline in modo indipendente.
+
+```{r}
+integrita <- bind_rows(lapply(seq_len(nrow(dcc1)), function(i) {
+  L  <- trimws(readLines(dcc1$full[i], warn = FALSE))
+  i0 <- which(L == "<Code_Summary>"); i1 <- which(L == "</Code_Summary>")
+  cs <- if (i1 > i0 + 1) L[(i0 + 1):(i1 - 1)] else character(0)
+  cs <- cs[nzchar(cs)]
+  id <- sub(",.*$", "", cs)
+  n  <- suppressWarnings(as.numeric(sub("^[^,]*,", "", cs)))
+  tibble(run = dcc1$run[i], well = sub("\\.dcc$", "", dcc1$file[i]),
+         id_duplicati = anyDuplicated(id) > 0,
+         conteggi_non_validi = any(is.na(n) | n <= 0 | n != round(n)),
+         somma = sum(n))
+}))
+
+sum_dedup <- bind_rows(lapply(seq_len(nrow(sum_files)), function(i) {
+  l <- trimws(readLines(sum_files$full[i], warn = FALSE)); l <- l[grepl("TotalDedup", l)]
+  tibble(run = run_lab(sum_files$path[i]),
+         well = sub("^File: ([^,]+),.*$", "\\1", l),
+         TotalDedup = as.numeric(sub(".*TotalDedup: ([0-9]+).*", "\\1", l)))
+}))
+
+integrita |>
+  left_join(sum_dedup, by = c("run", "well")) |>
+  group_by(run) |>
+  summarise(dcc = n(),
+            id_duplicati = sum(id_duplicati),
+            conteggi_non_validi = sum(conteggi_non_validi),
+            dedup_diversa = sum(!is.na(TotalDedup) & somma != TotalDedup),
+            senza_summary = sum(is.na(TotalDedup)),
+            .groups = "drop")
+```
+
+## Interpretazione
+
+**DCC (3.1)**
+
+- Formato uniforme: i 285 DCC hanno le stesse 24 chiavi, in quattro sezioni (`Header`, `Scan_Attributes`, `NGS_Processing_Attributes`, `Code_Summary`). Le righe del `Code_Summary` sono `RTS_ID,conteggio`, in ordine non alfabetico.
+
+- Elaborazione identica nelle tre run: stessa versione `DRAGEN_GeoMx_3.8.4-96` e stessi parametri (RTS di 12 basi, UMI di 14, distanza di edit 1, stitching 25–32, single-read disabilitato). Le differenze tra le run non dipendono dal processing.
+
+- Cambiano solo data, `Plate_ID` e `SeqSetId`, che ha il formato strumento:corsa:flowcell. Lo strumento è lo stesso (`A01423`), le corse sono tre: 209 (aprile 2024, plate F), 244 (ottobre 2024, plate H) e 265 (settembre 2025, Gastro). Ogni piastra è quindi una corsa di sequenziamento distinta: piastra e batch di sequenziamento coincidono.
+
+- `SeqSetId` vuoto compare solo in Gastro e nel plate F, che sono le run con DCC vuoti, e mai nel plate H.
+
+**PKC (3.2)**
+
+- Header: Human NGS Whole Transcriptome Atlas RNA v1.0, data 210202, `MinArea` 16000, `MinNuclei` 200 (probabilmente soglie minime raccomandate per le AOI, da confrontare con area e nuclei dell'annotazione in fase di QC).
+
+- Ogni target ha `DisplayName`, `CodeClass` e `Probes`. Ogni sonda ha `RTS_ID` (la chiave verso i DCC), `RTS_Seq`, `ProbeID`, `GeneID`, `Accession`, `DisplayName`, `TargetSequence` e coordinate genomiche. Le sonde sono 18.815.
+
+**Altri file (3.3)**
+
+- `summary.txt`: una riga per pozzetto, `File, Raw, Trimmed, Stitched, Aligned, TotalDedup`. I valori coincidono con l'header del DCC (A01 Gastro: Raw 444, Aligned 40, TotalDedup 4).
+
+- `RTS_sequences.txt`: solo sequenze di 12 basi, senza ID.
+
+- `fastq_list.csv`: `RGSM` è l'ID del pozzetto, con 2 lane per campione. I campioni sono 89 (Gastro), 92 (plate F) e 96 (plate H): sono i pozzetti processati, una quinta fonte che concorda con le altre. Le colonne `Read1File`/`Read2File` sono link S3 temporanei: i FASTQ non sono nella consegna.
+
+- `dragen.cfg`: parametri di trimming (`quality,adapter,cut-end`).
+
+- `dragen.mapping_metrics.csv`: sono le metriche generiche di DRAGEN, non quelle dell'allineamento sulle sonde (in quattro pozzetti controllati `Mapped reads` è 0). Per l'Aligned % si usa `summary.txt` o il DCC, non questi file.
+
+**Integrità dei DCC (3.4)**
+
+- I 285 DCC non hanno `RTS_ID` duplicati e tutti i conteggi sono interi positivi.
+
+- In tutti i 277 pozzetti con una riga in `summary.txt`, `TotalDedup` coincide con la somma dei conteggi del `Code_Summary`. I DCC senza riga in `summary.txt` sono 8 (Gastro 7, plate F 1): sono i Missing Samples.
+
+# Step 4: File di annotazione
+
+Fin qui abbiamo guardato la consegna tecnica. L'Excel è l'unico file con informazioni sui campioni, e lo controlliamo prima di usarlo: intestazione, colonne, chiave di riga, gruppi, pazienti ed etichette. Come per gli altri step, questa parte non fa nessun collegamento con i DCC: quello richiede la mappa pozzetto→segmento, che non abbiamo.
+
+## 4.1 Lettura
+
+Il foglio ha una riga di istruzioni sopra l'intestazione, quindi si legge saltando la prima riga. Tutte le colonne si leggono come testo, per non far indovinare i tipi a `readxl`.
+
+```{r}
+ann_path <- "data/Annotation template file GEOMX_29.01.2026_SP-BT-LP.xlsx"
+
+print(readxl::excel_sheets(ann_path))
+riga1 <- readxl::read_excel(ann_path, col_names = FALSE, n_max = 1)
+cat(substr(riga1[[1]][1], 1, 110), "...\n")
+
+ann <- readxl::read_excel(ann_path, skip = 1, col_types = "text")
+cat("righe:", nrow(ann), "| colonne:", ncol(ann), "\n")
+```
+
+## 4.2 Colonne
+
+Per ogni colonna contiamo i valori mancanti e quelli distinti, e segnaliamo quelle anomale: senza intestazione, duplicate, vuote, con un solo valore o con spazi nel nome.
+
+```{r}
+profilo <- tibble(
+  colonna    = names(ann),
+  n_na       = vapply(ann, \(x) sum(is.na(x)), integer(1)),
+  n_distinti = vapply(ann, \(x) n_distinct(x, na.rm = TRUE), integer(1))
+) |>
+  mutate(nota = case_when(
+    startsWith(colonna, "...")        ~ "senza intestazione",
+    grepl("^ROIComments", colonna)    ~ "ROIComments (duplicata)",
+    n_distinti == 1                   ~ "valore unico",
+    grepl(" _| $", colonna)           ~ "spazio nel nome",
+    TRUE                              ~ ""
+  ))
+
+knitr::kable(profilo)
+```
+
+```{r}
+na_testo <- colSums(ann == "NA", na.rm = TRUE)
+print(na_testo[na_testo > 0])
+ann <- ann |> mutate(across(everything(), \(x) na_if(x, "NA")))
+```
+
+## 4.3 Chiave di riga e colonne ridondanti
+
+Ogni riga dovrebbe essere un segmento unico. La chiave è `Scan Name` + `ROI` + `Segment`: il numero di ROI (`001`, `002`, …) si ripete da uno scan all'altro, quindi da solo non identifica nulla.
+
+```{r}
+chiave <- paste(ann$`Scan Name`, ann$`ROI (Label)`, ann$`Segment (Name/ Label)`, sep = "|")
+cat("Righe:", nrow(ann), "| chiavi uniche:", n_distinct(chiave), "\n")
+cat("Scan Name == Scan_ID:", all(ann$`Scan Name` == ann$Scan_ID), "\n")
+cat("ROI (Label) == ROI_ID:", all(ann$`ROI (Label)` == ann$ROI_ID), "\n")
+cat("ROI (Label) distinti:", n_distinct(ann$`ROI (Label)`),
+    "| combinazioni Scan x ROI:", n_distinct(ann$`Scan Name`, ann$`ROI (Label)`), "\n")
+```
+
+```{r}
+rc <- grep("^ROIComments", names(ann))
+if (length(rc) == 2) {
+  cat("Colonne ROIComments:", length(rc), "| la seconda è tutta vuota:", all(is.na(ann[[rc[2]]])), "\n")
+  names(ann)[rc[1]] <- "ROIComments"
+  ann <- ann[-rc[2]]
+}
+```
+
+## 4.4 Gruppi: Reuma e Gastro
+
+L'Excel non ha una colonna che distingua i due gruppi. La data in fondo allo `Scan Name` (`..._GGMMAAAA`) permette di dedurlo: è un'ipotesi che i dati confermano, ma non una colonna esplicita.
+
+```{r}
+ann <- ann |>
+  mutate(data_scan = sub(".*_([0-9]{8})$", "\\1", `Scan Name`),
+         gruppo = case_when(data_scan == "03102024" ~ "Gastro",
+                            data_scan %in% c("25072024", "29022024") ~ "Reuma"))
+stopifnot(!anyNA(ann$gruppo))
+
+ann |>
+  group_by(gruppo, data_scan) |>
+  summarise(scan = n_distinct(`Scan Name`),
+            roi = n_distinct(`Scan Name`, `ROI (Label)`),
+            segmenti = n(), .groups = "drop") |>
+  knitr::kable()
+
+print(table(tag = ann$`Segment Tags`, gruppo = ann$gruppo))
+```
+
+## 4.5 Pazienti
+
+In Reuma il codice è `PATIENT`. In Gastro `PATIENT` è vuoto e l'identificazione passa dalla colonna senza intestazione, che contiene **cognomi dei pazienti**: la usiamo solo per contare e per controllare la coerenza, trasformandola in un indice anonimo che non viene mai stampato. Non va esportata né salvata in nessun oggetto o file che possa essere condiviso.
+
+```{r}
+col_id <- names(ann)[startsWith(names(ann), "...") & colSums(is.na(ann)) == 0]
+stopifnot(length(col_id) == 1)
+ann$id_interno <- as.integer(factor(ann[[col_id]]))
+ann$controllo_sano <- grepl("\\bHC\\b|health|control", ann[[col_id]],
+                            ignore.case = TRUE, perl = TRUE)
+
+R <- filter(ann, gruppo == "Reuma")
+G <- filter(ann, gruppo == "Gastro")
+```
+
+**Reuma.** Si verifica che ogni paziente stia in un solo scan e che la colonna con i cognomi sia coerente con `PATIENT`: dove non lo è, si stampano solo codice paziente, ROI e tag.
+
+```{r}
+cat("Reuma: codici paziente:", n_distinct(R$PATIENT),
+    "| pazienti per scan:", paste(unique(table(unique(R[, c("Scan Name", "PATIENT")])$`Scan Name`)), collapse = ","),
+    "| scan per paziente:", paste(unique(table(unique(R[, c("Scan Name", "PATIENT")])$PATIENT)), collapse = ","), "\n")
+
+atteso <- R |> count(PATIENT, id_interno) |>
+  group_by(PATIENT) |> slice_max(n, n = 1, with_ties = FALSE) |>
+  select(PATIENT, id_atteso = id_interno)
+
+R |> left_join(atteso, by = "PATIENT") |>
+  filter(id_interno != id_atteso) |>
+  select(PATIENT, `ROI (Label)`, `Segment Tags`) |>
+  knitr::kable()
+```
+
+**Gastro.** Il campo `PATIENT` è vuoto: si contano pazienti e controlli sani.
+
+```{r}
+G |> group_by(controllo_sano) |>
+  summarise(segmenti = n(), identita = n_distinct(id_interno),
+            risposta_vuota = sum(is.na(RESPONSE)), .groups = "drop") |>
+  knitr::kable()
+
+G |> group_by(`Scan Name`) |>
+  summarise(segmenti = n(), controlli = sum(controllo_sano),
+            identita = n_distinct(id_interno), .groups = "drop") |>
+  mutate(`Scan Name` = paste0("scan_", row_number())) |> knitr::kable()
+```
+
+## 4.6 Etichette incoerenti
+
+Per ogni colonna categorica mostriamo i valori per gruppo, e cerchiamo in modo automatico le varianti dello stesso valore: stesse lettere che differiscono solo per maiuscole, spazi o underscore.
+
+```{r}
+cat_cols <- c("Segment (Name/ Label)", "Segment Tags", "PREVIOUS_bDMARDs", "SEX",
+              "RESPONSE_POOLED", "INTESTINAL_INVOLVEMENT", "RESPONSE", "BMI_CATEGORY",
+              "SYNOVIAL_GRADE_KSS", "LOCATION", "ARTICULAR_INVOLVEMENT",
+              "HISTOLOGICAL _INTESTINAL_HEALING", "ROIComments")
+
+print(lapply(setNames(cat_cols, cat_cols), \(c) table(ann[[c]], ann$gruppo, useNA = "ifany")))
+
+norm <- \(x) gsub("[ _]+", "", toupper(x))
+varianti <- lapply(setNames(cat_cols, cat_cols), \(c) {
+  v <- unique(na.omit(ann[[c]]))
+  Filter(\(g) length(g) > 1, split(v, norm(v)))
+})
+cat("\nVarianti dello stesso valore:\n")
+print(varianti[lengths(varianti) > 0])
+
+cat("\nColonne con spazi doppi nei valori:",
+    paste(cat_cols[vapply(cat_cols, \(c) any(grepl("  ", ann[[c]])), logical(1))], collapse = ", "), "\n")
+```
+
+## 4.7 Variabili del paziente: sono costanti?
+
+Sesso, risposta, BMI e simili dovrebbero valere per tutto il paziente. Contiamo, per ciascuna, quanti pazienti hanno più di un valore. `LOCATION` è invece per definizione una variabile di ROI (lining, sublining, follicle), quindi qui ci aspettiamo che cambi.
+
+```{r}
+vars_pz <- c("SEX", "RESPONSE", "RESPONSE_POOLED", "BMI_CATEGORY", "PREVIOUS_bDMARDs",
+             "INTESTINAL_INVOLVEMENT", "ARTICULAR_INVOLVEMENT", "SYNOVIAL_GRADE_KSS", "LOCATION")
+
+vapply(vars_pz, \(v) R |> group_by(PATIENT) |>
+         summarise(n = n_distinct(.data[[v]]), .groups = "drop") |>
+         filter(n > 1) |> nrow(), integer(1))
+```
+
+## 4.8 Gastro: codice del campione e Scan Name
+
+In Gastro il `Custom Segment Name` ha la forma `<codice> (istologico)`, e il codice dovrebbe comparire nello `Scan Name`.
+
+```{r}
+tok <- strsplit(sub("_[0-9]{8}$", "", G$`Scan Name`), "-")
+cod <- sub("^(\\S+).*", "\\1", G$`Custom Segment Name`)
+discordi <- !mapply(`%in%`, cod, tok)
+cat(sum(discordi), "segmenti su", nrow(G), "con codice non presente nello Scan Name;",
+    n_distinct(cod[discordi]), "codici distinti\n")
+```
+
+## Interpretazione
+
+**Struttura (4.1–4.3)**
+
+- Un solo foglio (`Annotation template`), 282 righe e 23 colonne, con una riga di istruzioni sopra l'intestazione. Ogni riga è un segmento: la chiave `Scan Name` + `ROI` + `Segment` è unica (282 su 282).
+
+- `ROI (Label)` si ripete da uno scan all'altro (31 etichette, 161 combinazioni scan × ROI), quindi da sola non identifica nulla. `Scan_ID` e `ROI_ID` sono copie esatte di `Scan Name` e `ROI (Label)`.
+
+- Colonne anomale: `ROIComments` è duplicata (la seconda è tutta vuota), `LOT_…` ha un solo valore, `HISTOLOGICAL _INTESTINAL_HEALING` ha uno spazio nel nome. Due colonne non hanno intestazione: una contiene i cognomi dei pazienti (non si usa) e l'altra solo il valore `BASELINE` (52 segmenti, tutti Gastro).
+
+- `RESPONSE` e `RESPONSE_POOLED` hanno in 27 righe di Gastro il testo `NA`, mentre i 3 mancanti di Reuma sono celle vuote. I due casi vanno uniformati in lettura.
+
+**Gruppi e pazienti (4.4–4.5)**
+
+- Il gruppo non è una colonna: si ricava dalla data in fondo allo `Scan Name`. Reuma: 8 scan, 126 ROI, 187 segmenti (CD68 111, CD3 63, CD20 13). Gastro: 4 scan, 35 ROI, 95 segmenti (CD68 33, CD3 33, PanCK 29).
+
+- Reuma ha 16 codici paziente, 2 per scan e 1 scan per paziente. Gastro non ha `PATIENT`: i segmenti sono di 4 pazienti (un solo scan ciascuno) e di 2 controlli sani (27 segmenti, 9 in ciascuno di 3 scan), che non hanno risposta né guarigione istologica.
+
+- I numeri non coincidono con l'incontro: 12 pazienti con spondiloartrite e 8 con biopsia intestinale, contro 16 in Reuma e 4 più 2 controlli in Gastro.
+
+**Etichette incoerenti (4.6)**
+
+- `Segment (Name/ Label)` ha `PanCK` e `pANck`: si usa `Segment Tags`, che è pulita.
+- `RESPONSE` ha `RESP JAKi` e `RESP JAKI`, e uno spazio doppio in `RESP  ANTI_TNF`.
+- `BMI_CATEGORY` ha `NORMALWEIGHT` e `NORMAL WEIGHT` (la seconda solo in Gastro), e in Reuma le categorie `OBESE` e `OVERWEIGHT_OBESE` si sovrappongono.
+- `ROIComments` è compilata in 94 segmenti su 187 in Reuma e in 10 diverge da `LOCATION`, che è completa.
+
+**Coerenza dei dati (4.7–4.8)**
+
+- Sesso, `PREVIOUS_bDMARDs`, `INTESTINAL_INVOLVEMENT` e `RESPONSE_POOLED` sono costanti entro ogni paziente. `LOCATION` cambia in 11 pazienti, come atteso, essendo una variabile di ROI.
+- Le variazioni di `RESPONSE`, `BMI_CATEGORY` e `SYNOVIAL_GRADE_KSS` vengono tutte da due segmenti: PT. 09 ROI 006 e PT. 14 ROI 013. Sono gli stessi in cui la colonna con i cognomi non coincide con `PATIENT`, e si comportano come righe assegnate al paziente sbagliato. In PT. 15 `ARTICULAR_INVOLVEMENT` è vuota in 20 segmenti e `YES` in 19.
+- In Gastro 25 segmenti su 95 (3 codici) hanno nel `Custom Segment Name` un codice che non compare nello `Scan Name`.
+
+**Cosa non decidiamo da qui**
+
+Quale colonna sia corretta nei segmenti di PT. 09, PT. 13 e PT. 14, quale campo lo sia nei 25 segmenti di Gastro e quanti pazienti sono previsti nello studio. Finché non c'è risposta, quei segmenti vanno segnalati e non corretti a mano.
+
+```{r}
+sessionInfo()
+```

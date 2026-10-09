@@ -1,0 +1,17 @@
+2025-09-24T11:20:39.311007881Z stderr F sh: /usr/bin/hostname: No such file or directory
+2025-09-24T11:20:39.318791909Z stderr F 
+2025-09-24T11:20:39.318822797Z stderr F Resetting the DRAGEN Bio-IT processor and stopping all software threads
+2025-09-24T11:20:39.968245854Z stderr F Reloading HW board #0
+2025-09-24T11:20:39.96829313Z stdout F Resetting board #0
+2025-09-24T11:20:40.011224021Z stdout F INFO: Loaded empty agfi
+2025-09-24T11:20:40.011295228Z stderr F 
+2025-09-24T11:20:40.011319477Z stderr F 
+2025-09-24T11:20:40.011332035Z stderr F Reloading BLANK image
+2025-09-24T11:20:40.011320124Z stdout F 
+2025-09-24T11:20:40.011352963Z stdout F ==================================================================
+2025-09-24T11:20:40.011361632Z stdout F Downloading blank HW bitstream (blank) - do not interrupt
+2025-09-24T11:20:40.011367436Z stdout F ==================================================================
+2025-09-24T11:20:56.950275686Z stdout F ........................
+2025-09-24T11:20:56.950336373Z stdout F AGFI: Downloaded HW bitstream blank
+2025-09-24T11:20:56.951076479Z stderr F 
+2025-09-24T11:20:56.951109973Z stderr F The DRAGEN Bio-IT processor has been reset

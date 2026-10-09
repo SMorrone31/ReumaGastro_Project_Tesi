@@ -1,0 +1,203 @@
+---
+title: "Check di concordanza PKC ↔ DCC (Reuma, con Gastro come controllo)"
+author: "Simone"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: show
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+# Perché questo controllo
+
+Il pannello PKC originale non è stato fornito da Humanitas. Al suo posto si usa il file standard NanoString `Hs_R_NGS_WTA_v1.0.pkc`. Prima di costruire qualunque oggetto `NanoStringGeoMxSet` serve quindi verificare che quel PKC sia davvero compatibile con i nostri DCC: è il PKC a tradurre gli identificativi `RTS########` in geni, e un pannello sbagliato produrrebbe un'annotazione errata **senza generare alcun errore**.
+
+Il controllo è a tre vie, perché le tre fonti sono indipendenti:
+
+1.  **PKC**: le sonde che *crediamo* siano state usate.
+2.  **`DRAGEN/Input/RTS_sequences.txt`**: le sonde che la pipeline ha *effettivamente* cercato nelle reads. È la prova più diretta.
+3.  **`Code_Summary` dei DCC**: le sonde che sono state *quantificate*.
+
+Attenzione a un punto che è facile sbagliare: il `Code_Summary` di un DCC elenca solo le sonde con conteggio maggiore di zero. Il numero di righe varia molto da pozzetto a pozzetto, quindi **non ha senso pretendere che un singolo DCC contenga tutte le sonde del PKC**. Il confronto va fatto sull'unione di tutti i pozzetti.
+
+Questo documento è un check una tantum: non fa parte della pipeline narrativa e non produce oggetti usati a valle.
+
+```{r librerie}
+library(jsonlite)
+library(dplyr)
+```
+
+# Parametri
+
+```{r parametri}
+pkc_path <- "data/Hs_R_NGS_WTA_v1.0.pkc"
+
+# Una sola cartella DCC per run (le copie del plate H sono verificate in 00a_data_structure.Rmd).
+run_dirs <- c(
+  Reuma_H = "data/Reuma/Finalizzata_GeoMX_plate_H-32399433/GeoMx_NGS_Pipeline_10_02_2024_16_14_14-54799752/GeoMx_NGS_Pipeline_10_02_2024_16_14_14-ds.34d4485ec31148e39acfe184e7b20522/DCC_Files",
+  Reuma_F = "data/Reuma/Finalizzata-Gremese-11-04-2024-plateF-30160133/GeoMx_NGS_Pipeline_04_18_2024_5_49_50-48390345/GeoMx_NGS_Pipeline_04_18_2024_5_49_50-ds.cc7d8633890144c6bcf2c541ed9fca9f/DCC_Files",
+  Gastro  = "data/Gastro/GeoMx_NGS_Pipeline_09_24_2025_12_03_48-64833845/GeoMx_NGS_Pipeline_09_24_2025_12_03_48-ds.32cc06a3b2354756a7c17051be8e7107/DCC_Files"
+)
+
+# RTS_sequences.txt della stessa run (cartella DRAGEN/Input, accanto a DCC_Files)
+rts_paths <- file.path(dirname(run_dirs), "DRAGEN", "Input", "RTS_sequences.txt")
+names(rts_paths) <- names(run_dirs)
+
+stopifnot(file.exists(pkc_path), dir.exists(run_dirs), file.exists(rts_paths))
+```
+
+# Lettura del PKC
+
+Il PKC è un JSON con una lista `Targets`; ogni target ha una o più `Probes`, e ogni probe porta `RTS_ID` (l'identificativo che compare nei DCC) e `RTS_Seq` (il barcode di 12 basi che la pipeline cerca). `simplifyVector = FALSE` evita che `fromJSON` collassi le liste annidate in strutture irregolari.
+
+```{r leggi-pkc}
+pkc <- fromJSON(pkc_path, simplifyVector = FALSE)
+
+str(pkc[setdiff(names(pkc), "Targets")])
+
+campo <- function(x, nm) {
+  v <- x[[nm]]
+  if (is.null(v) || length(v) == 0) NA_character_ else as.character(v[[1]])
+}
+
+pkc_probes <- bind_rows(lapply(pkc$Targets, function(tg) {
+  if (length(tg$Probes) == 0) return(NULL)
+  data.frame(
+    RTS_ID    = vapply(tg$Probes, campo, character(1), nm = "RTS_ID"),
+    RTS_Seq   = vapply(tg$Probes, campo, character(1), nm = "RTS_Seq"),
+    Target    = campo(tg, "DisplayName"),
+    CodeClass = campo(tg, "CodeClass"),
+    stringsAsFactors = FALSE
+  )
+}))
+pkc_probes$RTS_ID  <- trimws(pkc_probes$RTS_ID)
+pkc_probes$RTS_Seq <- trimws(pkc_probes$RTS_Seq)
+
+cat("righe sonda :", nrow(pkc_probes),
+    "\nRTS_ID unici:", n_distinct(pkc_probes$RTS_ID),
+    "\nRTS_Seq unici:", n_distinct(pkc_probes$RTS_Seq),
+    "\nlunghezza barcode:", unique(nchar(pkc_probes$RTS_Seq)), "\n")
+table(pkc_probes$CodeClass, useNA = "ifany")
+
+pkc_ids  <- unique(pkc_probes$RTS_ID)
+pkc_seqs <- unique(pkc_probes$RTS_Seq)
+```
+
+> **Esito.** 18.815 sonde, tutte con `RTS_ID` e barcode unici: 18.676 `Endogenous01` e 139 `Negative01` (tutte `NegProbe-WTX`). Il numero di negative è quello atteso per il WTA e sarà la base del calcolo del LOQ in `02_normalization_pca.Rmd`.
+
+# Confronto 1: PKC vs `RTS_sequences.txt`
+
+Questo confronto non passa dai nostri dati: dice se il PKC scaricato è lo stesso pannello che la pipeline ha usato in fase di allineamento. È la verifica che risponde più direttamente al dubbio sollevato via email.
+
+```{r confronto-rts}
+rts <- lapply(rts_paths, function(p) {
+  x <- trimws(readLines(p, warn = FALSE)); unique(x[nzchar(x)])
+})
+
+bind_rows(lapply(names(rts), function(k) data.frame(
+  run           = k,
+  n_sequenze    = length(rts[[k]]),
+  in_comune     = length(intersect(rts[[k]], pkc_seqs)),
+  RTS_meno_PKC  = length(setdiff(rts[[k]], pkc_seqs)),
+  PKC_meno_RTS  = length(setdiff(pkc_seqs, rts[[k]]))
+)))
+
+cat("file identici fra le tre run:",
+    all(duplicated(lapply(rts, sort))[-1]), "\n")
+```
+
+> **Esito.** Tutte e tre le run cercano esattamente le stesse 18.815 sequenze, e coincidono con i barcode del PKC in entrambe le direzioni. Il PKC standard è quindi lo stesso pannello usato dalla pipeline.
+>
+> Un limite da tenere presente: `RTS_sequences.txt` contiene solo sequenze, non gli ID. Questo conferma che il *set* di sonde è lo stesso, non l'abbinamento ID↔sequenza, che resta garantito dal solo PKC.
+
+# Confronto 2: PKC vs `Code_Summary` dei DCC
+
+```{r parser-dcc}
+parse_dcc <- function(f) {
+  L  <- trimws(readLines(f, warn = FALSE))
+  i0 <- which(L == "<Code_Summary>")
+  i1 <- which(L == "</Code_Summary>")
+  stopifnot(length(i0) == 1, length(i1) == 1)
+
+  cs  <- if (i1 > i0 + 1) L[(i0 + 1):(i1 - 1)] else character(0)
+  cs  <- cs[nzchar(cs)]
+  ids <- sub(",.*$", "", cs)
+
+  hdr <- L[seq_len(i0 - 1)]
+  hdr <- hdr[grepl(",", hdr, fixed = TRUE) & !grepl("^<", hdr)]
+  h   <- setNames(sub("^[^,]*,", "", hdr), sub(",.*$", "", hdr))
+
+  list(ids = ids, header = h)
+}
+
+leggi_run <- function(d) {
+  f <- list.files(d, pattern = "\\.dcc$", full.names = TRUE, ignore.case = TRUE)
+  setNames(lapply(f, parse_dcc), sub("\\.dcc$", "", basename(f), ignore.case = TRUE))
+}
+
+dcc <- lapply(run_dirs, leggi_run)
+```
+
+Prima di confrontare, si guarda **quante** sonde elenca ogni DCC: è la prova che il `Code_Summary` è un elenco parziale e che il confronto per pozzetto sarebbe fuorviante.
+
+```{r quante-sonde}
+bind_rows(lapply(names(dcc), function(k) {
+  n <- vapply(dcc[[k]], function(x) length(x$ids), numeric(1))
+  data.frame(run = k, n_dcc = length(n), sonde_min = min(n),
+             sonde_mediana = median(n), sonde_max = max(n),
+             dcc_vuoti = sum(n == 0))
+}))
+```
+
+> **Esito.** Il numero di sonde per DCC va da 0 (DCC vuoti: Gastro 8, plate F 2) a circa 18.800; le mediane sono 18.607 (plate H), 18.232 (plate F) e 18.472 (Gastro). Confrontare ogni DCC con il PKC segnalerebbe come "incompleti" quasi tutti i pozzetti, che invece sono normali: hanno solo meno sonde rilevate. Si confronta l'unione.
+
+```{r concordanza}
+concordanza <- bind_rows(lapply(names(dcc), function(k) {
+  unione <- unique(unlist(lapply(dcc[[k]], `[[`, "ids")))
+  data.frame(
+    run             = k,
+    n_dcc           = length(dcc[[k]]),
+    sonde_unione    = length(unione),
+    in_comune       = length(intersect(unione, pkc_ids)),
+    DCC_meno_PKC    = length(setdiff(unione, pkc_ids)),
+    PKC_meno_DCC    = length(setdiff(pkc_ids, unione)),
+    Jaccard         = round(length(intersect(unione, pkc_ids)) /
+                              length(union(unione, pkc_ids)), 5)
+  )
+}))
+concordanza
+```
+
+```{r verdetto}
+for (i in seq_len(nrow(concordanza))) with(concordanza[i, ], {
+  if (DCC_meno_PKC == 0 && PKC_meno_DCC == 0)
+    cat(sprintf("[%s] concordanza totale: il PKC è compatibile.\n", run))
+  else if (DCC_meno_PKC > 0)
+    cat(sprintf("[%s] ATTENZIONE: %d sonde quantificate non sono nel PKC.\n",
+                run, DCC_meno_PKC))
+  else
+    cat(sprintf("[%s] %d sonde del PKC mai osservate (da esaminare per CodeClass).\n",
+                run, PKC_meno_DCC))
+})
+```
+
+> **Esito.** Per Reuma H, Reuma F e Gastro l'unione delle sonde quantificate coincide esattamente con il PKC: nessuna sonda fuori pannello, nessuna sonda del pannello mai osservata, Jaccard 1,00. La direzione critica (`DCC \ PKC`) è vuota in tutte e tre le run.
+
+# Pozzetti vuoti
+
+I DCC vuoti (Gastro 8, plate F 2) non contribuiscono all'unione delle sonde. Il dettaglio per pozzetto e il confronto con DRAGEN e `summary.txt` sono in `00a_data_structure.Rmd`.
+
+# Conclusione
+
+Il PKC standard `Hs_R_NGS_WTA_v1.0` è compatibile con i dati, su due prove indipendenti: coincide con le sequenze cercate dalla pipeline (`RTS_sequences.txt`) e con le sonde quantificate nei DCC. Si può procedere con l'import.
+
+Resta aperto un punto che blocca `01_import_qc.Rmd`: **nessuno dei file ricevuti collega un pozzetto (`DSP-…-H-A01`) a uno scan, un ROI e un segmento**. L'annotazione ha come chiave `Scan Name` + `ROI` + `Segment`, i DCC hanno Plate_ID e pozzetto, e `preprocessing_output.json` riporta `DccMetadataEnabled: false`, cioè i DCC non incorporano annotazioni. Serve il Lab Worksheet (o un file di configurazione `*_GNP_config.ini`) dal collaboratore. L'inventario (`00a_data_structure.Rmd`, step 1) conferma che nessun `.ini` né altra mappa è presente nella consegna.
+
+```{r sessione}
+sessionInfo()
+```

@@ -1,0 +1,45 @@
+2025-09-24T11:30:21.428766073Z stdout F waiting for mounting
+2025-09-24T11:30:31.431806229Z stdout F total 0
+2025-09-24T11:30:31.431999664Z stdout F      0 drwxr-xr-x    2 48909    root            10 Sep 24 11:30 .
+2025-09-24T11:30:31.432047058Z stdout F      0 drwxr-xr-x    1 root     root           137 Sep 24 11:30 ..
+2025-09-24T11:30:31.433610282Z stdout F total 12
+2025-09-24T11:30:31.433856403Z stdout F      0 drwxr-xr-x    1 root     root           137 Sep 24 11:30 ..
+2025-09-24T11:30:31.433883533Z stdout F      4 -rw-r--r--    1 48909    root           485 Sep 24 11:17 document
+2025-09-24T11:30:31.43389654Z stdout F      4 -rw-r--r--    1 48909    root          1183 Sep 24 11:17 pkcs7
+2025-09-24T11:30:31.433907786Z stdout F      4 -rw-r--r--    1 48909    root           174 Sep 24 11:17 signature
+2025-09-24T11:30:31.434206342Z stdout F      0 drwxr-xr-x    2 48909    root            52 Jun 23 22:49 .
+2025-09-24T11:30:31.435418226Z stdout F total 0
+2025-09-24T11:30:31.435597677Z stdout F      0 drwxr-xr-x    1 root     root           137 Sep 24 11:30 ..
+2025-09-24T11:30:31.435658827Z stdout F      0 drwxr-xr-x    2 48909    root            10 Sep 24 11:29 .
+2025-09-24T11:30:31.437318713Z stdout F total 0
+2025-09-24T11:30:31.437482233Z stdout F      0 drwxr-xr-x    4 48909    root            44 Sep 24 11:30 .
+2025-09-24T11:30:31.437509244Z stdout F      0 drwxr-xr-x    1 root     root           137 Sep 24 11:30 ..
+2025-09-24T11:30:31.43752271Z stdout F      0 drwxr-xr-x    3 48909    root            28 Sep 24 11:30 outputs
+2025-09-24T11:30:31.437961265Z stdout F      0 drwxr-xr-x    3 48909    root            25 Sep 24 11:30 var
+2025-09-24T11:30:31.439159879Z stdout F total 0
+2025-09-24T11:30:31.439266105Z stdout F      0 drwxr-xr-x    1 root     root           137 Sep 24 11:30 ..
+2025-09-24T11:30:31.439296451Z stdout F      0 drwxr-xr-x    2 48909    root            10 Sep 24 11:29 .
+2025-09-24T11:30:31.440564213Z stdout F total 0
+2025-09-24T11:30:31.440835868Z stdout F      0 drwxr-xr-x    2 48909    root             6 Sep 24 11:30 .
+2025-09-24T11:30:31.440870726Z stdout F      0 drwxr-xr-x    1 root     root           137 Sep 24 11:30 ..
+2025-09-24T11:30:31.443752773Z stdout F total 0
+2025-09-24T11:30:31.44379661Z stdout F      0 drwxr-xr-x    2 48909    root             6 Sep 24 11:30 .
+2025-09-24T11:30:31.443810631Z stdout F      0 drwxr-xr-x    1 root     root           137 Sep 24 11:30 ..
+2025-09-24T11:30:31.444120326Z stdout F total 0
+2025-09-24T11:30:31.444306981Z stdout F      0 drwxr-xr-x    2 48909    root             6 Sep 24 11:30 .
+2025-09-24T11:30:31.444330207Z stdout F      0 drwxr-xr-x    1 root     root           137 Sep 24 11:30 ..
+2025-09-24T11:30:31.445705449Z stdout F total 0
+2025-09-24T11:30:31.445979106Z stdout F      0 drwxr-xr-x    2 48909    root             6 Sep 24 11:30 .
+2025-09-24T11:30:31.44600777Z stdout F      0 drwxr-xr-x    1 root     root           137 Sep 24 11:30 ..
+2025-09-24T11:30:31.447608596Z stdout F total 0
+2025-09-24T11:30:31.447647385Z stdout F      0 drwxr-xr-x    2 48909    root             6 Sep 24 11:30 .
+2025-09-24T11:30:31.447662761Z stdout F      0 drwxr-xr-x    1 root     root           137 Sep 24 11:30 ..
+2025-09-24T11:30:31.449812072Z stdout F total 0
+2025-09-24T11:30:31.450046702Z stdout F      0 drwxr-xr-x    2 48909    root             6 Sep 24 11:30 .
+2025-09-24T11:30:31.450067393Z stdout F      0 drwxr-xr-x    1 root     root           137 Sep 24 11:30 ..
+2025-09-24T11:30:31.451444004Z stdout F total 0
+2025-09-24T11:30:31.451676952Z stdout F      0 drwxr-xr-x    2 48909    root             6 Sep 24 11:30 .
+2025-09-24T11:30:31.451710033Z stdout F      0 drwxr-xr-x    1 root     root           137 Sep 24 11:30 ..
+2025-09-24T11:30:31.453000375Z stdout F total 0
+2025-09-24T11:30:31.453287574Z stdout F      0 drwxr-xr-x    2 48909    root             6 Sep 24 11:30 .
+2025-09-24T11:30:31.453313764Z stdout F      0 drwxr-xr-x    1 root     root           137 Sep 24 11:30 ..

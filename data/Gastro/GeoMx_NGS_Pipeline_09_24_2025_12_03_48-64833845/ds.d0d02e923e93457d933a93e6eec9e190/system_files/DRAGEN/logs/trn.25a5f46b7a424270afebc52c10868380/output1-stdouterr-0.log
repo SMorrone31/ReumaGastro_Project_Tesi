@@ -1,0 +1,11 @@
+2025-09-24T11:30:54.590031587Z stderr F {"concurrent_uploads":10,"container":"task","enable_find":false,"folder_to_upload":"/toupload","level":"info","log_upload_interval":120,"max_retry_count":10,"msg":"initializing upload service","namespace":"euc1","pod":"trn.25a5f46b7a424270afebc52c10868380-2mhmg","service_url":"","taskRunId":"trn.25a5f46b7a424270afebc52c10868380","time":"2025-09-24T11:30:54Z","upload_url":"s3://stratus-gds-euc1/8dbac3dc-de44-4ffc-1ba7-08db9fb310f4/datasets/app.euc1-prod.64833845/system_files/DRAGEN/Dragen_Additional_Logs/DSP-1001660015507-F-F05"}
+2025-09-24T11:36:54.995906782Z stderr F {"level":"info","msg":"finished waiting for container, waiting for final sync signal","time":"2025-09-24T11:36:54Z"}
+2025-09-24T11:36:54.995980498Z stderr F {"level":"info","msg":"finished waiting for final sync signal, starting final sync","time":"2025-09-24T11:36:54Z"}
+2025-09-24T11:36:54.996107663Z stderr F {"level":"info","msg":"Walk","path":"/toupload","time":"2025-09-24T11:36:54Z"}
+2025-09-24T11:36:54.996162641Z stderr F {"level":"info","msg":"IsDir","path":"/toupload","time":"2025-09-24T11:36:54Z"}
+2025-09-24T11:36:54.996285661Z stderr F {"level":"info","msg":"Walk","path":"/toupload/dragen","time":"2025-09-24T11:36:54Z"}
+2025-09-24T11:36:54.996329952Z stderr F {"level":"info","msg":"IsDir","path":"/toupload/dragen","time":"2025-09-24T11:36:54Z"}
+2025-09-24T11:36:54.996369268Z stderr F {"level":"info","msg":"Walk","path":"/toupload/dragen/dragen_run_1758713787209_25.log","time":"2025-09-24T11:36:54Z"}
+2025-09-24T11:36:54.996382815Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/dragen/dragen_run_1758713787209_25.log","time":"2025-09-24T11:36:54Z"}
+2025-09-24T11:36:55.046034982Z stderr F {"level":"info","msg":"finished uploading file","path":"dragen/dragen_run_1758713787209_25.log","time":"2025-09-24T11:36:55Z","total_time":49579018}
+2025-09-24T11:36:55.093836755Z stderr F {"level":"info","msg":"all done","time":"2025-09-24T11:36:55Z","total_time":360504001473}

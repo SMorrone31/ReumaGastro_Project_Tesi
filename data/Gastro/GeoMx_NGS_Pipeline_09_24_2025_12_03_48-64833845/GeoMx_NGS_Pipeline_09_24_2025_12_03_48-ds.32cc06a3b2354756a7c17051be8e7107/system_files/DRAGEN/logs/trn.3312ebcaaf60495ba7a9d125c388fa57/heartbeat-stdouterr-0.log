@@ -1,0 +1,6 @@
+2025-09-24T12:01:03.531305896Z stderr F {"level":"info","msg":"Heartbeat tick","tick_at":"2025-09-24T12:01:03.530981251Z","time":"2025-09-24T12:01:03Z"}
+2025-09-24T12:02:03.531264911Z stderr F {"level":"info","msg":"Heartbeat tick","tick_at":"2025-09-24T12:02:03.53098339Z","time":"2025-09-24T12:02:03Z"}
+2025-09-24T12:03:03.531230924Z stderr F {"level":"info","msg":"Heartbeat tick","tick_at":"2025-09-24T12:03:03.530985183Z","time":"2025-09-24T12:03:03Z"}
+2025-09-24T12:04:03.531278233Z stderr F {"level":"info","msg":"Heartbeat tick","tick_at":"2025-09-24T12:04:03.531014712Z","time":"2025-09-24T12:04:03Z"}
+2025-09-24T12:05:03.531268154Z stderr F {"level":"info","msg":"Heartbeat tick","tick_at":"2025-09-24T12:05:03.530985168Z","time":"2025-09-24T12:05:03Z"}
+2025-09-24T12:06:03.531315174Z stderr F {"level":"info","msg":"Heartbeat tick","tick_at":"2025-09-24T12:06:03.531012331Z","time":"2025-09-24T12:06:03Z"}

@@ -1,0 +1,8 @@
+2025-09-24T11:30:08.398421403Z stdout F Resetting board #0
+2025-09-24T11:30:08.439430586Z stdout F INFO: AGFI currently loaded agfi-0b26548460b64b5ed
+2025-09-24T11:30:08.439478542Z stdout F 
+2025-09-24T11:30:08.439484069Z stdout F ==================================================================
+2025-09-24T11:30:08.439490132Z stdout F Downloading blank HW bitstream (blank) - do not interrupt
+2025-09-24T11:30:08.439495093Z stdout F ==================================================================
+2025-09-24T11:30:24.462747489Z stdout F .........................
+2025-09-24T11:30:24.462825621Z stdout F AGFI: Downloaded HW bitstream blank

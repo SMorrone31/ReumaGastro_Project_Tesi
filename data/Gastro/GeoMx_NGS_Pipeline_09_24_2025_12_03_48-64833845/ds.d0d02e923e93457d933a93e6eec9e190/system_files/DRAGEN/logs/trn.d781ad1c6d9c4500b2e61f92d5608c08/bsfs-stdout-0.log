@@ -1,0 +1,62 @@
+2025-09-24T11:58:27.97431538Z stdout F BaseSpaceFS version: 2.0.11211
+2025-09-24T11:58:27.97435923Z stdout F ------------------------------------------------------
+2025-09-24T11:58:27.981366256Z stdout F bsfs only command line arguments or defaults:
+2025-09-24T11:58:27.981402963Z stdout F api-server : https://api.basespace.illumina.com
+2025-09-24T11:58:27.981412715Z stdout F block-size : 5242880
+2025-09-24T11:58:27.981420152Z stdout F cache-mode : SparseFile
+2025-09-24T11:58:27.981427925Z stdout F cache-size : 107374182400
+2025-09-24T11:58:27.981435968Z stdout F config-file : /config/mount.json
+2025-09-24T11:58:27.981443195Z stdout F keep-cache-files-open : malloc-m-arena-max : 2
+2025-09-24T11:58:27.98145013Z stdout F malloc-m-arena-test : -1
+2025-09-24T11:58:27.981457427Z stdout F malloc-m-check-action : -1
+2025-09-24T11:58:27.981464423Z stdout F malloc-m-mmap-max : -1
+2025-09-24T11:58:27.981471055Z stdout F malloc-m-mmap-threshold : -1
+2025-09-24T11:58:27.98147725Z stdout F malloc-m-mtop-pad : -1
+2025-09-24T11:58:27.981483581Z stdout F malloc-m-mtrim-threshold : -1
+2025-09-24T11:58:27.981489859Z stdout F malloc-m-mxfast : -1
+2025-09-24T11:58:27.981496574Z stdout F malloc-m-perturb : -1
+2025-09-24T11:58:27.981503566Z stdout F num-blocks-to-purge : 20
+2025-09-24T11:58:27.981509836Z stdout F prefetch-strategy : NextBlock
+2025-09-24T11:58:27.981516765Z stdout F Note: the above args might get overridden in the opt config file
+2025-09-24T11:58:27.981522107Z stdout F ------------------------------------------------------
+2025-09-24T11:58:27.981526385Z stdout F fuse only commandline arguments:
+2025-09-24T11:58:27.981533861Z stdout F /opt/illumina/bsfs/bsfs
+2025-09-24T11:58:27.98154047Z stdout F /mount
+2025-09-24T11:58:27.981547294Z stdout F -f
+2025-09-24T11:58:27.981553248Z stdout F -o
+2025-09-24T11:58:27.981559818Z stdout F max_background=512
+2025-09-24T11:58:27.981566655Z stdout F -o
+2025-09-24T11:58:27.98157302Z stdout F max_readahead=0
+2025-09-24T11:58:27.981579204Z stdout F -o
+2025-09-24T11:58:27.981585728Z stdout F max_read=1048576
+2025-09-24T11:58:27.981592655Z stdout F -o
+2025-09-24T11:58:27.981599164Z stdout F congestion_threshold=384
+2025-09-24T11:58:27.981605301Z stdout F -o
+2025-09-24T11:58:27.981611696Z stdout F uid=17007
+2025-09-24T11:58:27.981618353Z stdout F -o
+2025-09-24T11:58:27.981624666Z stdout F gid=17007
+2025-09-24T11:58:27.981631164Z stdout F -o
+2025-09-24T11:58:27.981637528Z stdout F allow_other
+2025-09-24T11:58:27.995364744Z stdout F -----Processing opt config file: /config/mount.json
+2025-09-24T11:58:27.995677904Z stdout F Cache folder changed to: /cache
+2025-09-24T11:58:27.995715506Z stdout F Cache folder max size changed to: 53687091200
+2025-09-24T11:58:27.995725707Z stdout F Block-size of /mount/ changed to 33554432 bytes
+2025-09-24T11:58:27.995743293Z stdout F Processing custom mount file list from: /temp/customMountList.json
+2025-09-24T11:58:27.995939885Z stdout F LRU cache mode changed to: BlockFile
+2025-09-24T11:58:27.995994136Z stdout F Number of blocks to prefetch changed to: 32
+2025-09-24T11:58:27.996003792Z stdout F Priority queue thread pool size changed to: 48
+2025-09-24T11:58:27.996010982Z stdout F Cache folder purge amount changed to: 671088640
+2025-09-24T11:58:27.996018033Z stdout F ----------------------------------------------------------------
+2025-09-24T12:04:19.677914966Z stdout F process received SIGTERM... exiting.
+2025-09-24T12:04:19.679896703Z stdout F --------------------BSFS metrics ------------------
+2025-09-24T12:04:19.679930993Z stdout F Mounted files count : 0
+2025-09-24T12:04:19.679942294Z stdout F Total bytes downloaded : 7791.35 MB
+2025-09-24T12:04:19.679994533Z stdout F Total bytes read :7791.36 MB
+2025-09-24T12:04:19.680007037Z stdout F Current cache folder size : 7791.35 MB
+2025-09-24T12:04:19.680019449Z stdout F Total cache hits :1994587
+2025-09-24T12:04:19.680030884Z stdout F Total cache misses :6
+2025-09-24T12:04:19.680042798Z stdout F Number of cache purges : 0
+2025-09-24T12:04:19.680052133Z stdout F Peak queue size : 19
+2025-09-24T12:04:19.680058534Z stdout F Fetch retry count : 0
+2025-09-24T12:04:19.680083832Z stdout F --------------------------------------------------
+2025-09-24T12:04:19.729503068Z stdout F Success: start.bash.

@@ -1,0 +1,49 @@
+2025-09-24T11:52:58.737578164Z stdout F BaseSpaceFS version: 2.0.11211
+2025-09-24T11:52:58.737612835Z stdout F ------------------------------------------------------
+2025-09-24T11:52:58.739629618Z stdout F bsfs only command line arguments or defaults:
+2025-09-24T11:52:58.739646969Z stdout F api-server : https://api.basespace.illumina.com
+2025-09-24T11:52:58.739655752Z stdout F block-size : 5242880
+2025-09-24T11:52:58.739663105Z stdout F cache-mode : SparseFile
+2025-09-24T11:52:58.739670426Z stdout F cache-size : 107374182400
+2025-09-24T11:52:58.739677589Z stdout F config-file : /config/mount.json
+2025-09-24T11:52:58.739684446Z stdout F keep-cache-files-open : malloc-m-arena-max : 2
+2025-09-24T11:52:58.739691225Z stdout F malloc-m-arena-test : -1
+2025-09-24T11:52:58.739697723Z stdout F malloc-m-check-action : -1
+2025-09-24T11:52:58.739704312Z stdout F malloc-m-mmap-max : -1
+2025-09-24T11:52:58.739711064Z stdout F malloc-m-mmap-threshold : -1
+2025-09-24T11:52:58.73971741Z stdout F malloc-m-mtop-pad : -1
+2025-09-24T11:52:58.739723767Z stdout F malloc-m-mtrim-threshold : -1
+2025-09-24T11:52:58.739732956Z stdout F malloc-m-mxfast : -1
+2025-09-24T11:52:58.739740246Z stdout F malloc-m-perturb : -1
+2025-09-24T11:52:58.73974678Z stdout F num-blocks-to-purge : 20
+2025-09-24T11:52:58.739753232Z stdout F prefetch-strategy : NextBlock
+2025-09-24T11:52:58.739760085Z stdout F Note: the above args might get overridden in the opt config file
+2025-09-24T11:52:58.73976686Z stdout F ------------------------------------------------------
+2025-09-24T11:52:58.739773235Z stdout F fuse only commandline arguments:
+2025-09-24T11:52:58.739781428Z stdout F /opt/illumina/bsfs/bsfs
+2025-09-24T11:52:58.739788491Z stdout F /mount
+2025-09-24T11:52:58.739795085Z stdout F -f
+2025-09-24T11:52:58.739801243Z stdout F -o
+2025-09-24T11:52:58.739807405Z stdout F max_background=512
+2025-09-24T11:52:58.739813384Z stdout F -o
+2025-09-24T11:52:58.739819403Z stdout F max_readahead=0
+2025-09-24T11:52:58.739825415Z stdout F -o
+2025-09-24T11:52:58.739831434Z stdout F max_read=1048576
+2025-09-24T11:52:58.739837431Z stdout F -o
+2025-09-24T11:52:58.73984373Z stdout F congestion_threshold=384
+2025-09-24T11:52:58.739850177Z stdout F -o
+2025-09-24T11:52:58.739856667Z stdout F uid=52520
+2025-09-24T11:52:58.73986299Z stdout F -o
+2025-09-24T11:52:58.739869244Z stdout F gid=52520
+2025-09-24T11:52:58.739875489Z stdout F -o
+2025-09-24T11:52:58.739881653Z stdout F allow_other
+2025-09-24T11:52:58.753161643Z stdout F -----Processing opt config file: /config/mount.json
+2025-09-24T11:52:58.753202932Z stdout F Cache folder changed to: /cache
+2025-09-24T11:52:58.753353298Z stdout F Cache folder max size changed to: 53687091200
+2025-09-24T11:52:58.753366123Z stdout F Block-size of /mount/ changed to 33554432 bytes
+2025-09-24T11:52:58.753374065Z stdout F Processing custom mount file list from: /temp/customMountList.json
+2025-09-24T11:52:58.754024363Z stdout F LRU cache mode changed to: BlockFile
+2025-09-24T11:52:58.754078494Z stdout F Number of blocks to prefetch changed to: 32
+2025-09-24T11:52:58.754088697Z stdout F Priority queue thread pool size changed to: 48
+2025-09-24T11:52:58.754097461Z stdout F Cache folder purge amount changed to: 671088640
+2025-09-24T11:52:58.75410556Z stdout F ----------------------------------------------------------------

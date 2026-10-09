@@ -1,0 +1,11 @@
+2025-09-24T12:01:56.972343552Z stderr F {"concurrent_uploads":10,"container":"task","enable_find":false,"folder_to_upload":"/toupload","level":"info","log_upload_interval":120,"max_retry_count":10,"msg":"initializing upload service","namespace":"euc1","pod":"trn.ac9336b16f03407b9c01552cbb795c62-ghzh6","service_url":"","taskRunId":"trn.ac9336b16f03407b9c01552cbb795c62","time":"2025-09-24T12:01:56Z","upload_url":"s3://stratus-gds-euc1/8dbac3dc-de44-4ffc-1ba7-08db9fb310f4/datasets/app.euc1-prod.64833845/system_files/DRAGEN/Dragen_Additional_Logs/DSP-1001660015507-F-G10"}
+2025-09-24T12:07:57.367205787Z stderr F {"level":"info","msg":"finished waiting for container, waiting for final sync signal","time":"2025-09-24T12:07:57Z"}
+2025-09-24T12:07:57.367280652Z stderr F {"level":"info","msg":"finished waiting for final sync signal, starting final sync","time":"2025-09-24T12:07:57Z"}
+2025-09-24T12:07:57.367407531Z stderr F {"level":"info","msg":"Walk","path":"/toupload","time":"2025-09-24T12:07:57Z"}
+2025-09-24T12:07:57.367442373Z stderr F {"level":"info","msg":"IsDir","path":"/toupload","time":"2025-09-24T12:07:57Z"}
+2025-09-24T12:07:57.36746584Z stderr F {"level":"info","msg":"Walk","path":"/toupload/dragen","time":"2025-09-24T12:07:57Z"}
+2025-09-24T12:07:57.367477833Z stderr F {"level":"info","msg":"IsDir","path":"/toupload/dragen","time":"2025-09-24T12:07:57Z"}
+2025-09-24T12:07:57.367570879Z stderr F {"level":"info","msg":"Walk","path":"/toupload/dragen/dragen_run_1758715654075_25.log","time":"2025-09-24T12:07:57Z"}
+2025-09-24T12:07:57.367683066Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/dragen/dragen_run_1758715654075_25.log","time":"2025-09-24T12:07:57Z"}
+2025-09-24T12:07:57.420878942Z stderr F {"level":"info","msg":"finished uploading file","path":"dragen/dragen_run_1758715654075_25.log","time":"2025-09-24T12:07:57Z","total_time":53187181}
+2025-09-24T12:07:57.468977056Z stderr F {"level":"info","msg":"all done","time":"2025-09-24T12:07:57Z","total_time":360496735694}

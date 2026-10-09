@@ -1,0 +1,39 @@
+2025-09-24T11:37:07.161434238Z stderr F {"concurrent_uploads":10,"container":"task","enable_find":false,"folder_to_upload":"/toupload","level":"info","log_upload_interval":120,"max_retry_count":10,"msg":"initializing upload service","namespace":"euc1","pod":"trn.9fcc4442193d4f5a827ec9b2b7933265-8k9f7","service_url":"","taskRunId":"trn.9fcc4442193d4f5a827ec9b2b7933265","time":"2025-09-24T11:37:07Z","upload_url":"s3://stratus-gds-euc1/8dbac3dc-de44-4ffc-1ba7-08db9fb310f4/datasets/app.euc1-prod.64833845/base_space_root/DRAGEN/DSP-1001660015507-F-H07"}
+2025-09-24T11:43:07.575680843Z stderr F {"level":"info","msg":"finished waiting for container, waiting for final sync signal","time":"2025-09-24T11:43:07Z"}
+2025-09-24T11:43:07.575729012Z stderr F {"level":"info","msg":"finished waiting for final sync signal, starting final sync","time":"2025-09-24T11:43:07Z"}
+2025-09-24T11:43:07.575883156Z stderr F {"level":"info","msg":"Walk","path":"/toupload","time":"2025-09-24T11:43:07Z"}
+2025-09-24T11:43:07.575920033Z stderr F {"level":"info","msg":"IsDir","path":"/toupload","time":"2025-09-24T11:43:07Z"}
+2025-09-24T11:43:07.57593393Z stderr F {"level":"info","msg":"Walk","path":"/toupload/AWS-SN0_25_usage.txt","time":"2025-09-24T11:43:07Z"}
+2025-09-24T11:43:07.575945351Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/AWS-SN0_25_usage.txt","time":"2025-09-24T11:43:07Z"}
+2025-09-24T11:43:07.575966397Z stderr F {"level":"info","msg":"Walk","path":"/toupload/dragen-replay.json","time":"2025-09-24T11:43:07Z"}
+2025-09-24T11:43:07.575989289Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/dragen-replay.json","time":"2025-09-24T11:43:07Z"}
+2025-09-24T11:43:07.576008797Z stderr F {"level":"info","msg":"Walk","path":"/toupload/dragen.barcode_umi_counts.csv","time":"2025-09-24T11:43:07Z"}
+2025-09-24T11:43:07.576019653Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/dragen.barcode_umi_counts.csv","time":"2025-09-24T11:43:07Z"}
+2025-09-24T11:43:07.576038699Z stderr F {"level":"info","msg":"Walk","path":"/toupload/dragen.barcode_umi_metrics.csv","time":"2025-09-24T11:43:07Z"}
+2025-09-24T11:43:07.576049304Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/dragen.barcode_umi_metrics.csv","time":"2025-09-24T11:43:07Z"}
+2025-09-24T11:43:07.5760589Z stderr F {"level":"info","msg":"Walk","path":"/toupload/dragen.fastqc_metrics.csv","time":"2025-09-24T11:43:07Z"}
+2025-09-24T11:43:07.576074588Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/dragen.fastqc_metrics.csv","time":"2025-09-24T11:43:07Z"}
+2025-09-24T11:43:07.576168223Z stderr F {"level":"info","msg":"Walk","path":"/toupload/dragen.fragment_length_hist.csv","time":"2025-09-24T11:43:07Z"}
+2025-09-24T11:43:07.576186592Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/dragen.fragment_length_hist.csv","time":"2025-09-24T11:43:07Z"}
+2025-09-24T11:43:07.576196898Z stderr F {"level":"info","msg":"Walk","path":"/toupload/dragen.insert-stats.tab","time":"2025-09-24T11:43:07Z"}
+2025-09-24T11:43:07.576206662Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/dragen.insert-stats.tab","time":"2025-09-24T11:43:07Z"}
+2025-09-24T11:43:07.576216059Z stderr F {"level":"info","msg":"Walk","path":"/toupload/dragen.mapping_metrics.csv","time":"2025-09-24T11:43:07Z"}
+2025-09-24T11:43:07.576233706Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/dragen.mapping_metrics.csv","time":"2025-09-24T11:43:07Z"}
+2025-09-24T11:43:07.576244689Z stderr F {"level":"info","msg":"Walk","path":"/toupload/dragen.time_metrics.csv","time":"2025-09-24T11:43:07Z"}
+2025-09-24T11:43:07.576253959Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/dragen.time_metrics.csv","time":"2025-09-24T11:43:07Z"}
+2025-09-24T11:43:07.576381535Z stderr F {"level":"info","msg":"Walk","path":"/toupload/dragen.trimmer_metrics.csv","time":"2025-09-24T11:43:07Z"}
+2025-09-24T11:43:07.576409798Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/dragen.trimmer_metrics.csv","time":"2025-09-24T11:43:07Z"}
+2025-09-24T11:43:07.576446328Z stderr F {"level":"info","msg":"Walk","path":"/toupload/streaming_log_none(39930).csv","time":"2025-09-24T11:43:07Z"}
+2025-09-24T11:43:07.576459433Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/streaming_log_none(39930).csv","time":"2025-09-24T11:43:07Z"}
+2025-09-24T11:43:07.637652155Z stderr F {"level":"info","msg":"finished uploading file","path":"dragen.barcode_umi_metrics.csv","time":"2025-09-24T11:43:07Z","total_time":61410522}
+2025-09-24T11:43:07.641671744Z stderr F {"level":"info","msg":"finished uploading file","path":"dragen.trimmer_metrics.csv","time":"2025-09-24T11:43:07Z","total_time":65232132}
+2025-09-24T11:43:07.64276124Z stderr F {"level":"info","msg":"finished uploading file","path":"dragen.fragment_length_hist.csv","time":"2025-09-24T11:43:07Z","total_time":66497946}
+2025-09-24T11:43:07.646953494Z stderr F {"level":"info","msg":"finished uploading file","path":"dragen.mapping_metrics.csv","time":"2025-09-24T11:43:07Z","total_time":70541354}
+2025-09-24T11:43:07.647220448Z stderr F {"level":"info","msg":"finished uploading file","path":"AWS-SN0_25_usage.txt","time":"2025-09-24T11:43:07Z","total_time":71132709}
+2025-09-24T11:43:07.648302718Z stderr F {"level":"info","msg":"finished uploading file","path":"dragen.time_metrics.csv","time":"2025-09-24T11:43:07Z","total_time":71595877}
+2025-09-24T11:43:07.654637665Z stderr F {"level":"info","msg":"finished uploading file","path":"dragen.fastqc_metrics.csv","time":"2025-09-24T11:43:07Z","total_time":78428989}
+2025-09-24T11:43:07.658316312Z stderr F {"level":"info","msg":"finished uploading file","path":"dragen-replay.json","time":"2025-09-24T11:43:07Z","total_time":82186440}
+2025-09-24T11:43:07.659451564Z stderr F {"level":"info","msg":"finished uploading file","path":"streaming_log_none(39930).csv","time":"2025-09-24T11:43:07Z","total_time":21781235}
+2025-09-24T11:43:07.664090394Z stderr F {"level":"info","msg":"finished uploading file","path":"dragen.insert-stats.tab","time":"2025-09-24T11:43:07Z","total_time":87710889}
+2025-09-24T11:43:07.711744915Z stderr F {"level":"info","msg":"finished uploading file","path":"dragen.barcode_umi_counts.csv","time":"2025-09-24T11:43:07Z","total_time":135566088}
+2025-09-24T11:43:07.753143217Z stderr F {"level":"info","msg":"all done","time":"2025-09-24T11:43:07Z","total_time":360591787315}

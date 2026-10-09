@@ -1,0 +1,897 @@
+---
+title: "Ricostruzione dell'annotazione GeoMx (Reuma e Gastro)"
+author: "Simone"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: showx
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+# Perché questo documento
+
+Per costruire l'oggetto GeoMx (`readNanoStringGeoMxSet`) ogni riga dell'annotazione deve riportare il nome del DCC a cui appartiene (`Sample_ID`). Il nostro Excel identifica i segmenti con `Scan Name` + `ROI` + `Segment`, ma non dice in quale pozzetto della piastra è finito ciascun segmento.
+
+Cosa sappiamo della consegna (verificato in `00a` e sul contenuto di tutti i 23.020 file, compresi quelli dentro gli archivi):
+
+- nessun file contiene un Lab Worksheet, nomi di scan, ROI, AOI, segmenti, `Sample_ID`, aree o numeri di nuclei;
+- i DCC non incorporano annotazioni (`DccMetadataEnabled: false`);
+- i file `*_GNP_config.ini` usati dalla pipeline sono citati in `bsshinput.json` ma non sono nella consegna.
+
+Se queste informazioni esistano altrove (OneDrive, Humanitas) non si può sapere da qui.
+
+L'idea del documento è che la mappa pozzetto→segmento **si può ricavare dai dati**. Ogni segmento è stato colorato per un tipo cellulare (CD68, CD3, CD20, PanCK) e quel tipo lascia un'impronta nell'espressione genica del suo DCC. Se i segmenti sono stati raccolti nei pozzetti seguendo un ordine regolare, esiste un ordine per cui i tipi annotati coincidono con le impronte osservate.
+
+Il documento non presuppone nessuna soluzione: cerca l'ordine tra molte ipotesi, sceglie con criteri dichiarati, verifica che la scelta non dipenda dalle mie decisioni (marcatori, soglie) e la controlla con due prove indipendenti: il cromosoma Y e un'impronta individuale basata sui geni HLA. Solo alla fine scrive i file puliti.
+
+Regole seguite:
+
+- I file originali in `data/` non vengono mai modificati.
+- Nessun dato incerto viene corretto: viene segnalato con un flag, e il nome del flag descrive ciò che si osserva, non un'interpretazione.
+- Tutte le soglie e le liste di geni sono scelte mie, dichiarate nel punto in cui si usano; la sezione 7 mostra che la mappa non cambia al variare di queste scelte.
+- La colonna senza intestazione con i cognomi viene trasformata subito in un indice numerico anonimo e poi eliminata: non compare in nessun output.
+
+```{r librerie}
+library(dplyr)
+library(readxl)
+library(jsonlite)
+options(width = 200)
+```
+
+# Passo 1 — Input
+
+Le tre cartelle `DCC_Files` (una per piastra) si trovano cercandole per nome. Le copie del plate H (verificate identiche in `00a`) non si chiamano `DCC_Files` e restano fuori.
+
+```{r input}
+root     <- "data"
+pkc_path <- file.path(root, "Hs_R_NGS_WTA_v1.0.pkc")
+ann_path <- file.path(root, "Annotation template file GEOMX_29.01.2026_SP-BT-LP.xlsx")
+
+dcc_dirs <- list.dirs(root, recursive = TRUE, full.names = TRUE)
+dcc_dirs <- dcc_dirs[basename(dcc_dirs) == "DCC_Files"]
+
+plate_of <- function(p) case_when(
+  grepl("plate_H", p, fixed = TRUE) ~ "H",
+  grepl("plateF",  p, fixed = TRUE) ~ "F",
+  grepl("/Gastro/", paste0("/", p), fixed = TRUE) ~ "G"
+)
+
+data.frame(piastra = plate_of(dcc_dirs), cartella = dcc_dirs)
+stopifnot(length(dcc_dirs) == 3, setequal(plate_of(dcc_dirs), c("H", "F", "G")),
+          file.exists(pkc_path), file.exists(ann_path))
+```
+
+> **Atteso.** Tre cartelle: H (plate H, Reuma), F (plate F, Reuma), G (Gastro).
+
+# Passo 2 — Parsing dei DCC
+
+Ogni DCC ha un header (righe `chiave,valore`) e un blocco `Code_Summary` con le righe `RTS_ID,conteggio`. Un `Code_Summary` vuoto diventa una tabella con zero righe.
+
+```{r parsing-dcc}
+parse_dcc <- function(f) {
+  L  <- trimws(readLines(f, warn = FALSE))
+  i0 <- which(L == "<Code_Summary>"); i1 <- which(L == "</Code_Summary>")
+  stopifnot(length(i0) == 1, length(i1) == 1)
+  cs  <- if (i1 > i0 + 1) L[(i0 + 1):(i1 - 1)] else character(0)
+  cs  <- cs[nzchar(cs)]
+  hdr <- L[seq_len(i0 - 1)]
+  hdr <- hdr[grepl(",", hdr, fixed = TRUE) & !grepl("^<", hdr)]
+  list(header = setNames(sub("^[^,]*,", "", hdr), sub(",.*$", "", hdr)),
+       counts = data.frame(RTS_ID = sub(",.*$", "", cs),
+                           count  = as.numeric(sub("^[^,]*,", "", cs)),
+                           stringsAsFactors = FALSE))
+}
+
+files  <- unlist(lapply(dcc_dirs, list.files, pattern = "\\.dcc$", full.names = TRUE))
+parsed <- lapply(files, parse_dcc)
+campo  <- function(k) vapply(parsed, \(x) unname(x$header[k]), character(1))
+
+wells <- data.frame(
+  Sample_ID = basename(files),
+  sample    = sub("\\.dcc$", "", basename(files)),
+  plate     = plate_of(files),
+  Plate_ID  = campo("Plate_ID"),
+  well      = campo("Well"),
+  Raw       = campo("Raw"),
+  n_sonde   = vapply(parsed, \(x) nrow(x$counts), numeric(1)),
+  stringsAsFactors = FALSE
+)
+table(wells$plate)
+```
+
+> **Atteso.** 285 DCC: F 93, G 96, H 96.
+
+# Passo 3 — PKC, matrice dei conteggi e indice del cromosoma Y
+
+Il PKC traduce ogni `RTS_ID` in un gene. Costruiamo la matrice sonde × pozzetti (le sonde assenti dal `Code_Summary` hanno conteggio 0) e la aggreghiamo per gene.
+
+Nello stesso passo calcoliamo l'**indice Y** di ogni pozzetto: la somma dei conteggi delle 7 sonde di geni del cromosoma Y, divisa per quanto ci si aspetterebbe da 7 sonde negative dello stesso pozzetto (7 × media delle 139 sonde negative). Un valore vicino a 1 vuol dire che le sonde Y si comportano come sonde negative.
+
+```{r pkc-matrice}
+pkc <- fromJSON(pkc_path, simplifyVector = FALSE)
+probes <- bind_rows(lapply(pkc$Targets, \(t) data.frame(
+  RTS_ID = vapply(t$Probes, \(p) p$RTS_ID, character(1)),
+  gene   = t$DisplayName,
+  classe = t$CodeClass,
+  stringsAsFactors = FALSE)))
+
+cnt <- matrix(0, nrow(probes), length(parsed),
+              dimnames = list(probes$RTS_ID, wells$sample))
+for (j in seq_along(parsed)) {
+  cc <- parsed[[j]]$counts
+  stopifnot(all(cc$RTS_ID %in% probes$RTS_ID))
+  if (nrow(cc)) cnt[cc$RTS_ID, j] <- cc$count
+}
+
+geni <- rowsum(cnt, probes$gene)
+endo <- geni[rownames(geni) != "NegProbe-WTX", ]
+wells$lib <- colSums(endo)
+
+geni_Y  <- c("RPS4Y1", "DDX3Y", "KDM5D", "UTY", "EIF1AY", "USP9Y", "ZFY")
+idx_Y   <- probes$gene %in% geni_Y
+idx_neg <- probes$classe == "Negative01"
+wells$somma_Y    <- colSums(cnt[idx_Y, , drop = FALSE])
+wells$media_neg  <- colMeans(cnt[idx_neg, , drop = FALSE])
+wells$rapporto_Y <- ifelse(wells$media_neg > 0, wells$somma_Y / (sum(idx_Y) * wells$media_neg), NA)
+
+cat("sonde:", nrow(probes), "| geni:", nrow(geni), "| negative:", sum(idx_neg),
+    "| sonde Y:", sum(idx_Y), "\n")
+```
+
+> **Atteso.** 18.815 sonde, 18.677 righe di geni (18.676 endogeni più `NegProbe-WTX`), 139 negative, 7 sonde Y (una per gene).
+
+# Passo 4 — Impronta del tipo cellulare
+
+Per ogni pozzetto calcoliamo l'espressione media (log2 CPM) di un gruppo di geni per tipo di segmento. La funzione accetta qualunque lista di geni, perché nella sezione 7 la rifacciamo con una lista diversa.
+
+La lista principale l'ho scelta io dalla conoscenza generale della biologia: il gene dell'antigene colorato più geni tipici dello stesso tipo cellulare.
+
+```{r marcatori}
+lcpm <- log2(sweep(endo, 2, pmax(wells$lib, 1), "/") * 1e6 + 1)
+
+punteggi <- function(marc) {
+  out <- data.frame(plate = wells$plate, well = wells$well, lib = wells$lib)
+  for (k in names(marc)) {
+    g <- intersect(marc[[k]], rownames(lcpm))
+    out[[k]] <- colMeans(lcpm[g, , drop = FALSE])
+  }
+  out
+}
+
+marcatori_scelti <- list(
+  CD68  = c("CD68", "CD163", "CSF1R", "C1QA", "C1QB", "C1QC", "MS4A7"),
+  CD3   = c("CD3E", "CD3D", "CD3G", "CD2", "CD247", "CD5"),
+  CD20  = c("MS4A1", "CD79A", "CD79B", "CD19", "CD22", "PAX5"),
+  PanCK = c("KRT8", "KRT18", "KRT19", "KRT20", "EPCAM", "CDH1")
+)
+P1 <- punteggi(marcatori_scelti)
+P1 |> filter(lib > 1000) |> group_by(plate) |>
+  summarise(across(c(CD68, CD3, CD20, PanCK), median), n = n())
+```
+
+> **Atteso.** PanCK mediano molto più alto in G (circa 7,3) che in H e F (circa 4).
+
+# Passo 5 — Lettura e pulizia di base dell'annotazione
+
+La prima riga del foglio è una riga di istruzioni; il testo `NA` vale come mancante. La colonna senza intestazione e senza valori mancanti contiene i cognomi: ne ricaviamo solo un indice numerico (`id_interno`) e se l'identità è un controllo sano (`HC`), poi la eliminiamo.
+
+```{r annotazione}
+ann <- read_excel(ann_path, skip = 1, col_types = "text", na = c("", "NA"))
+ann$riga_excel <- seq_len(nrow(ann)) + 2
+
+senza_nome <- names(ann)[startsWith(names(ann), "...")]
+col_id     <- senza_nome[colSums(is.na(ann[senza_nome])) == 0]
+col_extra  <- setdiff(senza_nome, col_id)
+stopifnot(length(col_id) == 1, length(col_extra) == 1)
+
+ann$controllo_sano <- grepl("\\bHC\\b|health|control", ann[[col_id]], ignore.case = TRUE, perl = TRUE)
+ann$id_interno     <- as.integer(factor(ann[[col_id]]))
+ann[[col_id]]      <- NULL                                  # i cognomi escono qui
+
+rc  <- grep("^ROIComments", names(ann))
+ann$ROIComments_ok <- ann[[rc[which.max(colSums(!is.na(ann[rc])))]]]
+ann$extra_BASELINE <- ann[[col_extra]]
+
+ann$data_scan <- sub(".*_([0-9]{8})$", "\\1", ann$`Scan Name`)
+gruppi <- split(ann, ann$data_scan)
+sapply(gruppi, nrow)
+```
+
+> **Atteso.** 282 righe in tre gruppi: `03102024` 95, `25072024` 95, `29022024` 92.
+
+# Passo 6 — Ricerca della mappa
+
+## 6.1 Lo spazio delle ipotesi
+
+Un'ipotesi è un modo di mettere in fila i segmenti di un gruppo e di assegnarli in ordine ai pozzetti di una piastra. La definiscono sei scelte:
+
+| Scelta | Valori provati |
+|------------------------------------|------------------------------------|
+| piastra | H, F, G |
+| verso di riempimento | per righe (A01, A02, …, A12, B01, …) o per colonne (A01, B01, …) |
+| pozzetto di partenza | A01, A02, A03 |
+| ordine dei ROI dentro lo scan | crescente o decrescente |
+| ordine dei tipi dentro il ROI | tutte le permutazioni (6) |
+| ordine degli scan | tutte le permutazioni (24) |
+
+Per ogni gruppo si provano tutte e tre le piastre, quindi anche l'abbinamento gruppo↔piastra e il pozzetto lasciato libero sono risultati, non presupposti.
+
+```{r ipotesi-funzioni}
+perms <- function(v) if (length(v) <= 1) list(v) else
+  do.call(c, lapply(seq_along(v), \(i) lapply(perms(v[-i]), \(p) c(v[i], p))))
+
+griglia <- outer(LETTERS[1:8], sprintf("%02d", 1:12), paste0)
+riempimenti <- list(righe = as.vector(t(griglia)), colonne = as.vector(griglia))
+
+auc <- function(score, pos) {                    # AUC di Mann-Whitney
+  n1 <- sum(pos); n0 <- sum(!pos)
+  if (n1 == 0 || n0 == 0) return(NA_real_)
+  r <- rank(score)
+  (sum(r[pos]) - n1 * (n1 + 1) / 2) / (n1 * n0)
+}
+
+ordina <- function(g, scan_ord, roi_dir, tag_ord) {
+  scans <- unique(g$`Scan Name`)
+  k1 <- match(g$`Scan Name`, scans[scan_ord])
+  k2 <- as.integer(g$`ROI (Label)`) * roi_dir
+  k3 <- match(g$`Segment Tags`, tag_ord)
+  g[order(k1, k2, k3), ]
+}
+
+assegna <- function(g, fill, start, roi_dir, tag_ord, scan_ord) {
+  go <- ordina(g, scan_ord, roi_dir, tag_ord)
+  n  <- nrow(go)
+  if (start + n - 1 > 96) return(NULL)
+  go$well <- riempimenti[[fill]][start:(start + n - 1)]
+  go
+}
+```
+
+## 6.2 Primo criterio: separazione CD68 / CD3 (globale)
+
+Per ogni ipotesi guardiamo i segmenti annotati CD68 o CD3 che cadono in pozzetti con più di `minlib` conteggi (valore principale 1.000, scelto da me) e misuriamo con l'AUC quanto la differenza `CD68 − CD3` dei marcatori separa i due tipi. Con la mappa giusta l'AUC è vicina a 1, con una mappa a caso è vicina a 0,5. Calcoliamo anche l'AUC del terzo tipo (CD20 in Reuma, PanCK in Gastro).
+
+```{r funzione-ricerca}
+cerca <- function(P, minlib) {
+  ris <- list()
+  for (d in names(gruppi)) {
+    g      <- gruppi[[d]]
+    tags   <- sort(unique(g$`Segment Tags`))
+    terzo  <- setdiff(tags, c("CD68", "CD3"))
+    n_scan <- length(unique(g$`Scan Name`))
+    for (p in c("H", "F", "G")) {
+      wp <- P[P$plate == p, ]
+      for (fill in names(riempimenti)) for (start in 1:3) for (rd in c(1, -1))
+        for (to in perms(tags)) for (so in perms(seq_len(n_scan))) {
+          go <- assegna(g, fill, start, rd, to, so)
+          if (is.null(go)) next
+          x   <- wp[match(go$well, wp$well), ]
+          ok  <- !is.na(x$lib) & x$lib > minlib
+          tag <- go$`Segment Tags`
+          m   <- ok & tag %in% c("CD68", "CD3")
+          ris[[length(ris) + 1]] <- data.frame(
+            gruppo = d, plate = p, fill = fill, start = start, roi_dir = rd,
+            tag_ord = paste(to, collapse = "/"), scan_ord = paste(so, collapse = "-"),
+            auc1 = auc(x$CD68[m] - x$CD3[m], tag[m] == "CD68"),
+            auc2 = auc((x[[terzo]] - pmax(x$CD68, x$CD3))[ok], (tag == terzo)[ok]))
+        }
+    }
+  }
+  bind_rows(ris)
+}
+```
+
+## 6.3 Secondo criterio: coerenza dentro lo stesso ROI (locale)
+
+L'AUC globale può essere ingannata da un "alias": in Gastro i ROI sono spesso terne PanCK/CD68/CD3, e spostando tutto di un pozzetto e scambiando l'ordine dei tipi si ritrova quasi la stessa sequenza. Il criterio decisivo è locale: per ogni coppia di segmenti di tipo diverso nello stesso ROI, quello annotato A deve avere più marcatore A rispetto a B di quanto ne abbia quello annotato B. Il confronto non dipende dai livelli assoluti dei marcatori, che cambiano da paziente a paziente.
+
+Lo calcoliamo sulle `k` ipotesi con AUC globale più alta di ogni coppia gruppo × piastra (valore principale `k` = 20, scelto da me).
+
+```{r funzioni-scelta}
+coerenza_roi <- function(go, wp, minlib) {
+  x <- wp[match(go$well, wp$well), c("CD68", "CD3", "CD20", "PanCK", "lib")]
+  d <- data.frame(chiave = paste(go$`Scan Name`, go$`ROI (Label)`), tag = go$`Segment Tags`, x)
+  d <- d[!is.na(d$lib) & d$lib > minlib, ]
+  tot <- 0; ok <- 0
+  for (k in split(seq_len(nrow(d)), d$chiave)) {
+    if (length(k) < 2) next
+    for (pr in combn(k, 2, simplify = FALSE)) {
+      a <- d[pr[1], ]; b <- d[pr[2], ]
+      if (a$tag == b$tag) next
+      tot <- tot + 1
+      ok  <- ok + ((a[[a$tag]] - a[[b$tag]]) > (b[[a$tag]] - b[[b$tag]]))
+    }
+  }
+  c(coerenti = ok, coppie = tot)
+}
+
+valuta_top <- function(ipotesi, P, minlib, k) {
+  top <- ipotesi |> group_by(gruppo, plate) |>
+    slice_max(auc1, n = k, with_ties = FALSE) |> ungroup()
+  cr <- t(vapply(seq_len(nrow(top)), function(i) {
+    h  <- top[i, ]
+    go <- assegna(gruppi[[h$gruppo]], h$fill, h$start, h$roi_dir,
+                  strsplit(h$tag_ord, "/")[[1]], as.integer(strsplit(h$scan_ord, "-")[[1]]))
+    coerenza_roi(go, P[P$plate == h$plate, ], minlib)
+  }, numeric(2)))
+  top$coerenti <- cr[, "coerenti"]; top$coppie <- cr[, "coppie"]
+  top$frac <- top$coerenti / top$coppie
+  top
+}
+
+scegli <- function(top) {
+  migliori <- top |> group_by(gruppo, plate) |>
+    arrange(desc(frac), desc(auc1), desc(auc2), .by_group = TRUE) |> slice(1) |> ungroup()
+  gr <- names(gruppi)
+  abb <- perms(c("H", "F", "G"))
+  punti <- vapply(abb, \(pl) sum(migliori$frac[match(paste(gr, pl), paste(migliori$gruppo, migliori$plate))]), numeric(1))
+  scelto <- setNames(abb[[which.max(punti)]], gr)
+  list(migliori = migliori, scelto = scelto,
+       scelte = migliori[match(paste(gr, scelto), paste(migliori$gruppo, migliori$plate)), ])
+}
+```
+
+## 6.4 Esecuzione e scelta
+
+Per ogni coppia gruppo × piastra si sceglie l'ipotesi con la coerenza locale più alta; a parità decide l'AUC globale, poi quella del terzo tipo. L'abbinamento gruppo↔piastra è la combinazione uno-a-uno con la coerenza totale più alta.
+
+```{r ricerca, cache=TRUE}
+ipotesi <- cerca(P1, minlib = 1000)
+top     <- valuta_top(ipotesi, P1, minlib = 1000, k = 20)
+sel     <- scegli(top)
+cat("ipotesi valutate:", nrow(ipotesi), "\n")
+knitr::kable(sel$migliori |> select(gruppo, plate, fill, start, roi_dir, tag_ord, scan_ord,
+                                    auc1, auc2, coerenti, coppie, frac), digits = 3)
+sel$scelto
+scelte <- sel$scelte
+```
+
+> **Atteso.** Circa 12.100 ipotesi valide. Scelta:
+>
+> | gruppo | piastra | riempimento | inizio | ROI | ordine dei tipi | coerenza | AUC CD68/CD3 | AUC terzo tipo |
+> |--------|--------|--------|--------|--------|--------|--------|--------|--------|
+> | 03102024 | G | righe | A02 | crescente | PanCK/CD68/CD3 | 72/72 | 1,000 | 0,998 |
+> | 25072024 | H | righe | A02 | crescente | CD68/CD3/CD20 | 34/34 | 0,997 | 0,962 |
+> | 29022024 | F | righe | A02 | crescente | CD68/CD3/CD20 | 33/33 | 0,998 | 0,671 |
+>
+> Per le coppie gruppo × piastra sbagliate la coerenza migliore non supera 0,80.
+
+## 6.5 Quanto è netta la scelta
+
+```{r margini}
+bind_rows(lapply(seq_len(nrow(scelte)), function(i) {
+  s  <- scelte[i, ]
+  r  <- filter(ipotesi, gruppo == s$gruppo, plate == s$plate)
+  t2 <- filter(top, gruppo == s$gruppo, plate == s$plate)
+  data.frame(gruppo = s$gruppo, plate = s$plate, auc1 = s$auc1,
+             altro_ordine_scan = max(r$auc1[r$scan_ord != s$scan_ord], na.rm = TRUE),
+             altro_inizio      = max(r$auc1[r$start != s$start], na.rm = TRUE),
+             altro_verso       = max(r$auc1[r$fill != s$fill], na.rm = TRUE),
+             roi_inverso       = max(r$auc1[r$roi_dir != s$roi_dir], na.rm = TRUE),
+             seconda_coerenza  = sort(t2$frac, decreasing = TRUE)[2])
+})) |> knitr::kable(digits = 3)
+```
+
+> **Atteso.** Gastro: altro ordine degli scan 0,920, altro inizio 0,990 (l'alias, con coerenza locale 0,971), altro verso 0,713, ROI inverso 0,889. Plate H: 0,887 / 0,840 / 0,689 / 0,721. Plate F: 0,857 / 0,790 / 0,706 / 0,720. Seconda miglior coerenza: 0,971 (G), 0,941 (H), 0,939 (F).
+
+## 6.6 La mappa
+
+```{r mappa}
+mappa <- bind_rows(lapply(seq_len(nrow(scelte)), function(i) {
+  s  <- scelte[i, ]
+  so <- as.integer(strsplit(s$scan_ord, "-")[[1]])
+  go <- assegna(gruppi[[s$gruppo]], s$fill, s$start, s$roi_dir, strsplit(s$tag_ord, "/")[[1]], so)
+  go$ordine_scan <- match(go$`Scan Name`, unique(gruppi[[s$gruppo]]$`Scan Name`)[so])
+  go$plate <- s$plate
+  go
+}))
+mappa <- left_join(mappa, wells, by = c("plate", "well"))
+
+cat("segmenti mappati:", nrow(mappa), "| Sample_ID distinti:", n_distinct(mappa$Sample_ID),
+    "| senza DCC:", sum(is.na(mappa$Sample_ID)), "\n")
+liberi <- anti_join(wells, mappa, by = c("plate", "well"))
+liberi |> select(plate, well, lib)
+```
+
+> **Atteso.** 282 segmenti su 282 DCC distinti. Restano liberi solo i tre pozzetti A01 (lib 2 in H, 119 in F, 4 in G). Nel plate F la sequenza finisce in H09, e questo coincide con l'assenza di H10, H11 e H12.
+
+# Passo 7 — La mappa dipende dalle mie scelte?
+
+Le liste di marcatori, la soglia `minlib` e il numero di candidati `k` li ho scelti io. Rifacciamo l'intera ricerca cambiandoli:
+
+- **marcatori**: la lista principale, oppure **solo i geni degli antigeni colorati** (CD68 → `CD68`; CD3 → `CD3D`, `CD3E`, `CD3G`; CD20 → `MS4A1`; PanCK, anticorpo AE1/AE3 → le cheratine che riconosce), che non contengono nessuna mia scelta di biologia;
+- **`minlib`**: 500, 1.000, 5.000 conteggi;
+- **`k`**: 10, 20, 50 candidati.
+
+Sono 18 combinazioni; per ognuna controlliamo se la mappa scelta è identica a quella del passo 6.
+
+```{r robustezza, cache=TRUE}
+marcatori_antigeni <- list(
+  CD68  = "CD68",
+  CD3   = c("CD3D", "CD3E", "CD3G"),
+  CD20  = "MS4A1",
+  PanCK = c("KRT1", "KRT2", "KRT3", "KRT4", "KRT5", "KRT6A", "KRT6B", "KRT6C",
+            "KRT7", "KRT8", "KRT10", "KRT14", "KRT15", "KRT16", "KRT19")
+)
+firma <- function(s) paste(s$gruppo, s$plate, s$fill, s$start, s$roi_dir, s$tag_ord, s$scan_ord)
+rif <- sort(firma(scelte))
+
+robustezza <- list()
+for (nome in c("scelti", "antigeni")) {
+  P <- punteggi(if (nome == "scelti") marcatori_scelti else marcatori_antigeni)
+  for (minlib in c(500, 1000, 5000)) {
+    ip  <- if (nome == "scelti" && minlib == 1000) ipotesi else cerca(P, minlib)
+    t50 <- valuta_top(ip, P, minlib, 50)
+    for (k in c(10, 20, 50)) {
+      tk <- t50 |> group_by(gruppo, plate) |> slice_max(auc1, n = k, with_ties = FALSE) |> ungroup()
+      s  <- scegli(tk)$scelte
+      robustezza[[length(robustezza) + 1]] <- data.frame(
+        marcatori = nome, minlib = minlib, k = k,
+        stessa_mappa = identical(sort(firma(s)), rif),
+        coerenza = paste0(s$plate, ":", s$coerenti, "/", s$coppie, collapse = " "))
+    }
+  }
+}
+robustezza <- bind_rows(robustezza)
+knitr::kable(robustezza)
+cat("combinazioni con la stessa mappa:", sum(robustezza$stessa_mappa), "su", nrow(robustezza), "\n")
+```
+
+> **Atteso.** 18 su 18 combinazioni danno la stessa mappa. Con i marcatori principali la coerenza è sempre G 72/72, H 34/34, F 33/33; con i soli antigeni G 72/72, H 34/34, F 32/33.
+
+# Passo 8 — Codici dei pazienti di Gastro
+
+Nell'Excel Gastro non ha `PATIENT`. Diamo un codice a ogni identità, in ordine di primo pozzetto: `G_P1`, `G_P2`… per i pazienti e `G_HC1`, `G_HC2` per i controlli sani.
+
+```{r codici-gastro}
+g_ord <- mappa |> filter(data_scan == "03102024") |> arrange(well) |>
+  distinct(id_interno, controllo_sano)
+g_ord$paziente <- NA_character_
+g_ord$paziente[!g_ord$controllo_sano] <- paste0("G_P",  seq_len(sum(!g_ord$controllo_sano)))
+g_ord$paziente[ g_ord$controllo_sano] <- paste0("G_HC", seq_len(sum( g_ord$controllo_sano)))
+
+mappa$gruppo   <- ifelse(mappa$data_scan == "03102024", "Gastro", "Reuma")
+mappa$paziente <- ifelse(mappa$gruppo == "Reuma", mappa$PATIENT,
+                         g_ord$paziente[match(mappa$id_interno, g_ord$id_interno)])
+count(mappa, gruppo, paziente) |> filter(gruppo == "Gastro")
+```
+
+> **Atteso.** `G_P1` 30 segmenti, `G_HC1` 18, `G_P2` 13, `G_P3` 9, `G_HC2` 9, `G_P4` 16.
+
+# Passo 9 — Verifica indipendente: il cromosoma Y
+
+Il sesso non è stato usato per costruire la mappa, quindi è un controllo indipendente.
+
+Per ogni persona confrontiamo l'indice Y dei suoi segmenti (solo quelli con almeno 10.000 conteggi, soglia scelta da me) con quello dei segmenti di **tutte le altre** persone annotate femmine e di tutte le altre annotate maschi, con due test di Mann-Whitney a una coda:
+
+- `p_sopra_femmine`: l'indice è più alto di quello delle altre donne?
+- `p_sotto_maschi`: l'indice è più basso di quello degli altri uomini?
+
+Il test si fa solo con almeno 3 segmenti. Le regole del flag sono scelte mie:
+
+- annotata FEMALE e `p_sopra_femmine` \< 0,001 → `sesso_FEMALE_ma_Y_sopra_le_femmine`;
+- annotato MALE, `p_sopra_femmine` ≥ 0,05 e `p_sotto_maschi` \< 0,001 → `sesso_MALE_ma_Y_non_sopra_le_femmine`.
+
+```{r sesso}
+seg_Y <- mappa |> filter(lib >= 10000) |> select(paziente, SEX, rapporto_Y)
+test_sesso <- bind_rows(lapply(split(seg_Y, seg_Y$paziente), function(d) {
+  p <- d$paziente[1]; x <- d$rapporto_Y
+  fem <- seg_Y$rapporto_Y[seg_Y$SEX == "FEMALE" & seg_Y$paziente != p]
+  mal <- seg_Y$rapporto_Y[seg_Y$SEX == "MALE"   & seg_Y$paziente != p]
+  pF <- pM <- NA_real_
+  if (length(x) >= 3) {
+    pF <- wilcox.test(x, fem, alternative = "greater", exact = FALSE, correct = TRUE)$p.value
+    pM <- wilcox.test(x, mal, alternative = "less",    exact = FALSE, correct = TRUE)$p.value
+  }
+  data.frame(paziente = p, sesso_annotato = d$SEX[1], segmenti = length(x),
+             rapporto_mediano = median(x), p_sopra_femmine = pF, p_sotto_maschi = pM)
+}))
+test_sesso$flag_sesso <- case_when(
+  test_sesso$sesso_annotato == "FEMALE" & test_sesso$p_sopra_femmine < 0.001 ~
+    "sesso_FEMALE_ma_Y_sopra_le_femmine",
+  test_sesso$sesso_annotato == "MALE" & test_sesso$p_sopra_femmine >= 0.05 &
+    test_sesso$p_sotto_maschi < 0.001 ~ "sesso_MALE_ma_Y_non_sopra_le_femmine",
+  TRUE ~ "")
+knitr::kable(arrange(test_sesso, rapporto_mediano), digits = 6)
+```
+
+> **Atteso.** Rapporto mediano delle donne 0,73–1,18, degli uomini 1,91–8,80. Due flag:
+>
+> - **PT. 03** (MALE): rapporto mediano 0,80, `p_sopra_femmine` 0,95, `p_sotto_maschi` 4·10⁻⁹ → `sesso_MALE_ma_Y_non_sopra_le_femmine`.
+> - **PT. 04** (FEMALE): rapporto mediano 1,40, `p_sopra_femmine` 5·10⁻⁵ → `sesso_FEMALE_ma_Y_sopra_le_femmine`. È anche sotto gli altri uomini (`p_sotto_maschi` 2·10⁻⁵): il segnale è intermedio.
+>
+> PT. 16, il maschio con l'indice più basso (1,91), resta sopra le donne (p 2·10⁻⁷) e non riceve flag. PT. 13 ha un solo segmento e non viene testato.
+
+Un segmento femminile fuori norma (A06 di PT. 14, rapporto 4,8) non incide sul test della persona. Le sue sonde Y sono tutte vicine a 0 tranne `DDX3Y` (34 conteggi): un segnale da una sola sonda è compatibile con un'ibridazione crociata sull'omologo dell'X (`DDX3X`) e non è, da solo, una prova di tessuto maschile.
+
+# Passo 10 — Verifica indipendente: impronta individuale HLA
+
+## 10.1 L'idea, e la verifica che regge
+
+Le sonde del pannello sono disegnate su una sola versione di riferimento di ogni gene. Per i geni HLA, i più polimorfici del genoma, una persona i cui alleli differiscono dalla sonda dà un segnale ridotto in modo costante e personale. Rapportando un gene HLA polimorfico a uno quasi invariabile della stessa cellula (`HLA-DRA` per la classe II, `B2M` per la classe I) il contributo del tipo cellulare si riduce e resta una componente individuale.
+
+È un'ipotesi, che verifichiamo con l'ICC: la quota di variabilità dovuta alla persona, nei segmenti con almeno 300 conteggi del gene di riferimento (soglia scelta da me) e per le persone con almeno 3 segmenti. Se l'ipotesi è giusta, i geni polimorfici devono avere ICC alto e quelli poco polimorfici (`HLA-DPA1`, `HLA-DPB1`, `HLA-E`) più basso.
+
+```{r hla-icc}
+coppie_hla <- list(c("HLA-DRB1", "HLA-DRA"), c("HLA-DQA1", "HLA-DRA"), c("HLA-DQB1", "HLA-DRA"),
+                   c("HLA-A", "B2M"), c("HLA-B", "B2M"), c("HLA-C", "B2M"))
+controlli  <- list(c("HLA-DPA1", "HLA-DRA"), c("HLA-DPB1", "HLA-DRA"), c("HLA-E", "B2M"))
+geni_hla   <- unique(unlist(c(coppie_hla, controlli)))
+H <- t(geni[geni_hla, mappa$sample])              # segmenti x geni, righe allineate a mappa
+
+icc <- function(v, chi) {
+  k <- table(chi); tieni <- chi %in% names(k)[k >= 3]
+  v <- v[tieni]; chi <- chi[tieni]
+  a <- length(unique(chi)); n <- length(v)
+  m <- tapply(v, chi, mean); ni <- tapply(v, chi, length)
+  msb <- sum(ni * (m - mean(v))^2) / (a - 1)
+  msw <- sum((v - m[chi])^2) / (n - a)
+  k0  <- (n - sum(ni^2) / n) / (a - 1)
+  c(ICC = (msb - msw) / (msb + (k0 - 1) * msw), persone = a, segmenti = n)
+}
+bind_rows(lapply(c(coppie_hla, controlli), function(cp) {
+  ok <- H[, cp[2]] >= 300
+  v  <- log2((H[ok, cp[1]] + 1) / (H[ok, cp[2]] + 1))
+  data.frame(rapporto = paste(cp, collapse = "/"),
+             polimorfico = list(cp) %in% coppie_hla, t(icc(v, mappa$paziente[ok])))
+})) |> knitr::kable(digits = 2)
+```
+
+> **Atteso.** Geni polimorfici: `DRB1` 0,85, `DQA1` 0,88, `DQB1` 0,89 (18 persone, 140 segmenti); `HLA-A` 0,85, `HLA-B` 0,85, `HLA-C` 0,84 (20 persone, 200 segmenti). Controlli poco polimorfici: `DPA1` 0,27, `DPB1` 0,41, `HLA-E` 0,52. Il risultato è coerente con un'origine genetica del segnale.
+
+## 10.2 Il modello e la sua validazione dentro il vetrino
+
+Per confrontare un segmento con una persona usiamo i conteggi, non i rapporti: per ogni coppia di geni la persona ha una proporzione `p` (stimata dai suoi altri segmenti) e il segmento ha una verosimiglianza binomiale. Si usano solo le coppie con almeno 50 conteggi nel segmento (soglia scelta da me). Il logaritmo del rapporto di verosimiglianza (LLR) tra due persone dice a quale delle due il segmento somiglia di più.
+
+Validazione: in ogni vetrino con due persone, ogni segmento viene confrontato con le due persone usando come riferimento tutti gli altri segmenti (leave-one-out), con almeno 2 segmenti per riferimento. Si conta quanto spesso l'LLR concorda con l'etichetta dell'annotazione.
+
+```{r hla-modello}
+loglik <- function(i, rif) {
+  ll <- 0; usate <- 0
+  for (cp in coppie_hla) {
+    a <- H[i, cp[1]]; b <- H[i, cp[2]]
+    if (a + b < 50) next
+    A <- sum(H[rif, cp[1]]); B <- sum(H[rif, cp[2]])
+    p <- (A + 0.5) / (A + B + 1)
+    ll <- ll + a * log(p) + b * log(1 - p); usate <- usate + 1
+  }
+  c(ll = ll, usate = usate)
+}
+
+loo <- list()
+for (sc in unique(mappa$`Scan Name`)) {
+  idx <- which(mappa$`Scan Name` == sc)
+  pts <- unique(mappa$paziente[idx])
+  if (length(pts) != 2) next
+  for (i in idx) {
+    own <- mappa$paziente[i]; oth <- setdiff(pts, own)
+    rO  <- setdiff(idx[mappa$paziente[idx] == own], i)
+    rX  <- setdiff(idx[mappa$paziente[idx] == oth], i)
+    if (length(rO) < 2 || length(rX) < 2) next
+    a <- loglik(i, rO); b <- loglik(i, rX)
+    if (a[["usate"]] == 0) next
+    loo[[length(loo) + 1]] <- data.frame(
+      riga = i, plate = mappa$plate[i], scan = sc, well = mappa$well[i],
+      ROI = mappa$`ROI (Label)`[i], segmento = mappa$`Segment Tags`[i],
+      etichetta = own, altro = oth, llr = a[["ll"]] - b[["ll"]], caratteristiche = a[["usate"]])
+  }
+}
+loo <- bind_rows(loo)
+loo$forte <- loo$caratteristiche >= 4 & abs(loo$llr) >= 20
+
+cat("segmenti valutati:", nrow(loo), "| a favore dell'etichetta:", sum(loo$llr > 0), "\n")
+cat("segmenti con evidenza forte (>= 4 coppie, |LLR| >= 20):", sum(loo$forte),
+    "| a favore dell'etichetta:", sum(loo$forte & loo$llr > 0), "\n")
+```
+
+> **Atteso.** 226 segmenti valutati, 214 a favore dell'etichetta. 190 con evidenza forte, di cui 184 a favore dell'etichetta. Il modello è informativo ma non infallibile, e dipende in parte dal tipo cellulare: i segmenti PanCK sono i meno affidabili.
+
+## 10.3 ROI in cui l'impronta indica l'altra persona del vetrino
+
+Regola (scelta mia): un ROI viene segnalato se almeno uno dei suoi segmenti con evidenza forte indica l'altra persona del vetrino e nessuno indica la persona dell'etichetta. Il flag `impronta_HLA_indica_<persona>` va su tutte le righe del ROI. È un indizio, non una prova.
+
+```{r hla-roi}
+roi_hla <- loo |> filter(forte) |> group_by(scan, plate, ROI, etichetta, altro) |>
+  summarise(contro = sum(llr < 0), a_favore = sum(llr > 0),
+            dettaglio = paste0(well, ":", round(llr), collapse = " "), .groups = "drop") |>
+  filter(contro > 0, a_favore == 0)
+knitr::kable(roi_hla)
+```
+
+> **Atteso.** Quattro ROI:
+>
+> - plate H, vetrino di PT. 09/PT. 10, ROI 007 (etichetta PT. 10): G07 −60, G08 −80 → indica PT. 09;
+> - plate F, vetrino di PT. 07/PT. 08, ROI 008 (etichetta PT. 07): D09 −25, D10 −181 → indica PT. 08;
+> - plate F, stesso vetrino, ROI 012 (etichetta PT. 08): E03 −57 → indica PT. 07;
+> - Gastro, vetrino `53914-7509B1-7509A1`, ROI 006 (etichetta `G_P2`): D10 −70 (PanCK) → indica `G_HC1`.
+
+## 10.4 Confronto con tutta la coorte
+
+Per i segmenti con un'incoerenza nell'annotazione (passo 11) confrontiamo il segmento con tutte le persone. Prima misuriamo quanto spesso, su segmenti con tutte e 6 le coppie affidabili, la persona dell'etichetta risulta la più compatibile.
+
+```{r hla-coorte}
+persone <- sort(unique(mappa$paziente))
+classifica <- function(i) {
+  ll <- vapply(persone, function(p) {
+    rif <- setdiff(which(mappa$paziente == p), i)
+    if (length(rif) < 2) NA_real_ else loglik(i, rif)[["ll"]]
+  }, numeric(1))
+  sort(ll[!is.na(ll)], decreasing = TRUE)
+}
+n_coppie <- vapply(seq_len(nrow(mappa)), \(i) sum(vapply(coppie_hla, \(cp) H[i, cp[1]] + H[i, cp[2]] >= 50, logical(1))), numeric(1))
+
+pos <- vapply(which(n_coppie == 6), function(i) {
+  s <- classifica(i)
+  if (mappa$paziente[i] %in% names(s)) match(mappa$paziente[i], names(s)) else NA_real_
+}, numeric(1))
+cat("segmenti:", sum(!is.na(pos)), "| etichetta al primo posto:", sum(pos == 1, na.rm = TRUE),
+    "| entro i primi 3:", sum(pos <= 3, na.rm = TRUE), "\n")
+
+for (w in c("G06", "A10", "B05")) {
+  i <- which(mappa$plate == "H" & mappa$well == w)
+  s <- classifica(i)
+  cat(w, "| etichetta", mappa$paziente[i], "| coppie affidabili", n_coppie[i], "/6",
+      "| prime 3:", paste(names(s)[1:3], collapse = ", "),
+      "| posizione di PT. 14:", match("PT. 14", names(s)), "\n")
+}
+```
+
+> **Atteso.** 242 segmenti: etichetta al primo posto in 172 (71%), entro i primi 3 in 216 (89%). G06: prima persona PT. 09. A10: PT. 13 non ha altri segmenti e non può fare da riferimento; PT. 14 è al quinto posto e le prime due sono controlli di Gastro, quindi l'impronta non identifica A10. B05: nessuna coppia affidabile, quindi la classifica non ha significato.
+
+# Passo 11 — Flag sulle incoerenze
+
+Nessun valore viene corretto: ogni riga riceve in `flag` la lista dei problemi trovati, separati da `;`. Le regole sono:
+
+- **`sesso_…`** (passo 9): su tutte le righe della persona.
+- **`identita_di_altro_paziente`**: la colonna dei cognomi (come indice anonimo) riporta l'identità che appartiene in prevalenza a un altro paziente.
+- **`identita_diversa_dal_paziente`**: l'identità non è quella prevalente del paziente e non appartiene a un altro.
+- **`<variabile>_diverso_dal_resto_del_paziente`**: per le variabili che descrivono il paziente il valore della riga è diverso da quello prevalente nel paziente.
+- **`<variabile>_mancante_solo_in_parte`**: il valore manca in alcune righe del paziente e c'è nelle altre.
+- **`impronta_HLA_indica_<persona>`** (passo 10.3): su tutte le righe del ROI.
+
+```{r flag}
+flag <- vector("list", nrow(mappa))
+aggiungi <- function(idx, codice) for (i in idx) flag[[i]] <<- c(flag[[i]], codice)
+
+for (j in which(test_sesso$flag_sesso != ""))
+  aggiungi(which(mappa$paziente == test_sesso$paziente[j]), test_sesso$flag_sesso[j])
+
+reu   <- which(mappa$gruppo == "Reuma")
+conta <- count(mappa[reu, ], paziente, id_interno)
+moda  <- conta |> group_by(paziente) |> slice_max(n, n = 1, with_ties = FALSE) |> ungroup()
+for (i in reu) {
+  p <- mappa$paziente[i]; id <- mappa$id_interno[i]
+  n_mio   <- conta$n[conta$paziente == p & conta$id_interno == id]
+  altri   <- moda$paziente[moda$id_interno == id & moda$paziente != p]
+  n_altri <- conta$n[conta$paziente %in% altri & conta$id_interno == id]
+  if (length(n_altri) && any(n_altri > n_mio)) {
+    aggiungi(i, "identita_di_altro_paziente")
+  } else if (id != moda$id_interno[moda$paziente == p]) {
+    aggiungi(i, "identita_diversa_dal_paziente")
+  }
+}
+
+var_paziente <- c("SEX", "RESPONSE", "RESPONSE_POOLED", "BMI_CATEGORY", "PREVIOUS_bDMARDs",
+                  "INTESTINAL_INVOLVEMENT", "ARTICULAR_INVOLVEMENT", "SYNOVIAL_GRADE_KSS")
+chiave <- function(x) ifelse(is.na(x), NA, toupper(gsub("[[:space:]_]+", "", x)))
+for (v in var_paziente) for (idx in split(seq_len(nrow(mappa)), mappa$paziente)) {
+  k  <- chiave(mappa[[v]][idx])
+  nn <- k[!is.na(k)]
+  if (length(unique(nn)) > 1) {
+    moda_v <- names(sort(table(nn), decreasing = TRUE))[1]
+    aggiungi(idx[!is.na(k) & k != moda_v], paste0(v, "_diverso_dal_resto_del_paziente"))
+  }
+  if (length(nn) > 0 && anyNA(k)) aggiungi(idx[is.na(k)], paste0(v, "_mancante_solo_in_parte"))
+}
+
+for (j in seq_len(nrow(roi_hla)))
+  aggiungi(which(mappa$`Scan Name` == roi_hla$scan[j] & mappa$`ROI (Label)` == roi_hla$ROI[j]),
+           paste0("impronta_HLA_indica_", roi_hla$altro[j]))
+
+mappa$flag <- vapply(flag, \(f) paste(f, collapse = ";"), character(1))
+cat("righe con almeno un flag:", sum(mappa$flag != ""), "\n")
+mappa |> filter(flag != "") |>
+  group_by(paziente, flag) |>
+  summarise(segmenti = n(), pozzetti = paste(head(sort(well), 4), collapse = ","), .groups = "drop") |>
+  knitr::kable()
+```
+
+> **Atteso.** 53 righe con flag:
+>
+> - PT. 03: 12 righe `sesso_MALE_ma_Y_non_sopra_le_femmine`.
+> - PT. 04: 10 righe `sesso_FEMALE_ma_Y_sopra_le_femmine`.
+> - PT. 09, G06 (ROI 006): `identita_di_altro_paziente`, con BMI e grado sinoviale diversi dal resto del paziente.
+> - PT. 10, G07 e G08 (ROI 007): `impronta_HLA_indica_PT. 09`.
+> - PT. 13, A10 (ROI 007): `identita_di_altro_paziente`.
+> - PT. 14, B05 (ROI 013): `identita_diversa_dal_paziente`, con risposta e grado sinoviale diversi.
+> - PT. 15: 20 righe `ARTICULAR_INVOLVEMENT_mancante_solo_in_parte`.
+> - PT. 07, D09 e D10 (ROI 008): `impronta_HLA_indica_PT. 08`.
+> - PT. 08, E03 ed E04 (ROI 012): `impronta_HLA_indica_PT. 07`.
+> - `G_P2`, D10 e D11 (ROI 006): `impronta_HLA_indica_G_HC1`.
+
+# Passo 12 — Correzioni deterministiche
+
+Qui correggiamo solo ciò che ha una sola risposta possibile, e conserviamo sempre il valore originale.
+
+**Codice del campione (Gastro).** Il codice nel `Custom Segment Name` deve essere uno dei campioni nello `Scan Name`. Se non lo è e c'è un solo token dello scan a distanza di edit 1, viene corretto; altrimenti resta com'è e la riga riceve `codice_campione_non_risolto`.
+
+```{r codici-campione}
+mappa$codice_originale <- sub("^(\\S+).*$", "\\1", mappa$`Custom Segment Name`)
+mappa$codice_campione  <- mappa$codice_originale
+for (i in which(!is.na(mappa$codice_originale))) {
+  toks <- strsplit(sub("_[0-9]{8}$", "", mappa$`Scan Name`[i]), "-")[[1]]
+  c0   <- mappa$codice_originale[i]
+  if (c0 %in% toks) next
+  d <- adist(c0, toks)[1, ]
+  if (min(d) <= 1 && sum(d == min(d)) == 1) {
+    mappa$codice_campione[i] <- toks[which.min(d)]
+  } else {
+    mappa$flag[i] <- paste(c(if (nzchar(mappa$flag[i])) mappa$flag[i], "codice_campione_non_risolto"), collapse = ";")
+  }
+}
+mappa |> filter(codice_campione != codice_originale) |> count(codice_originale, codice_campione)
+```
+
+> **Atteso.** `2924D1` → `29241D1` (9), `2924G1` → `29241G1` (7), `39945` → `39944` (9); nessun codice non risolto.
+
+**Etichette.** Per ogni variabile categorica si comprimono gli spazi; i valori che coincidono ignorando maiuscole, spazi e trattini bassi vengono unificati sulla variante più frequente. Le categorie diverse nel significato (per esempio `OBESE` e `OVERWEIGHT_OBESE`) non si toccano.
+
+```{r etichette}
+var_cat <- c("SEX", "RESPONSE", "RESPONSE_POOLED", "BMI_CATEGORY", "PREVIOUS_bDMARDs",
+             "INTESTINAL_INVOLVEMENT", "ARTICULAR_INVOLVEMENT", "SYNOVIAL_GRADE_KSS",
+             "LOCATION", "HISTOLOGICAL _INTESTINAL_HEALING")
+modifiche <- list()
+for (v in var_cat) {
+  orig <- mappa[[v]]
+  x    <- trimws(gsub("[[:space:]]+", " ", orig))
+  k    <- toupper(gsub("[ _]+", "", x))
+  canon <- tapply(x, k, \(z) names(sort(table(z), decreasing = TRUE))[1])
+  nuovo <- ifelse(is.na(x), NA, canon[k])
+  cambiati <- !is.na(orig) & nuovo != orig
+  if (any(cambiati)) modifiche[[v]] <- table(paste(orig[cambiati], "->", nuovo[cambiati]))
+  mappa[[v]] <- unname(nuovo)
+}
+modifiche
+```
+
+> **Atteso.** `RESPONSE`: `RESP  ANTI_TNF` → `RESP ANTI_TNF` (76 righe), `RESP JAKI` → `RESP JAKi` (1). `BMI_CATEGORY`: `NORMAL WEIGHT` → `NORMALWEIGHT` (48).
+
+# Passo 13 — Stato dei DCC
+
+Ogni pozzetto riceve un'etichetta descrittiva. Non è una decisione di QC: le soglie di esclusione si stabiliscono in `01_import_qc`.
+
+| stato | criterio |
+|------------------------------------|------------------------------------|
+| `non_processato` | `Raw` vuoto: la pipeline non ha processato il pozzetto (Missing Samples) |
+| `zero_reads` | `Raw` = 0 |
+| `senza_conteggi` | `Raw` \> 0 ma nessuna sonda contata |
+| `basso_segnale` | meno di 1.000 conteggi (soglia scelta da me) |
+| `ok` | almeno 1.000 conteggi |
+
+```{r stato}
+stato <- function(raw, lib) case_when(
+  is.na(raw) | raw == "" ~ "non_processato",
+  raw == "0"             ~ "zero_reads",
+  lib == 0               ~ "senza_conteggi",
+  lib < 1000             ~ "basso_segnale",
+  TRUE                   ~ "ok")
+wells$stato_dcc <- stato(wells$Raw, wells$lib)
+table(wells$plate, wells$stato_dcc)
+```
+
+> **Atteso.** H: 94 `ok`, 2 `basso_segnale` (A01, A02). F: 90 `ok`, 1 `basso_segnale` (A01), 1 `non_processato` (E05), 1 `zero_reads` (E10). G: 86 `ok`, 2 `basso_segnale` (A01, E11), 7 `non_processato`, 1 `senza_conteggi` (C04).
+
+# Passo 14 — Annotazione finale
+
+Una riga per ogni DCC: i 282 segmenti più una riga `NTC` per ogni pozzetto A01. Le colonne ridondanti (`Scan_ID`, `ROI_ID`, `LOT…`, la `ROIComments` vuota) e quelle sostituite (`Segment (Name/ Label)` da `segmento`, `Custom Segment Name` da `codice_campione`, `PATIENT` da `paziente`) non vengono riportate.
+
+```{r finale}
+seg <- mappa |> transmute(
+  Sample_ID, sample, gruppo, plate, Plate_ID, well,
+  tipo_pozzetto = "segmento",
+  scan = `Scan Name`, data_scan, ordine_scan,
+  ROI = `ROI (Label)`, segmento = `Segment Tags`,
+  codice_campione, codice_originale,
+  paziente, controllo_sano,
+  SEX, PREVIOUS_bDMARDs, RESPONSE, RESPONSE_POOLED, BMI_CATEGORY,
+  INTESTINAL_INVOLVEMENT, ARTICULAR_INVOLVEMENT, SYNOVIAL_GRADE_KSS,
+  LOCATION, ROIComments = ROIComments_ok,
+  HISTOLOGICAL_INTESTINAL_HEALING = `HISTOLOGICAL _INTESTINAL_HEALING`,
+  extra_BASELINE, riga_excel, flag)
+
+ntc <- liberi |> transmute(
+  Sample_ID, sample, plate, Plate_ID, well,
+  gruppo = ifelse(plate == "G", "Gastro", "Reuma"),
+  tipo_pozzetto = "NTC", segmento = "NTC", flag = "")
+
+finale <- bind_rows(seg, ntc) |>
+  left_join(select(wells, Sample_ID, stato_dcc, lib, rapporto_Y), by = "Sample_ID") |>
+  relocate(stato_dcc, lib, .after = tipo_pozzetto) |>
+  arrange(gruppo, plate, well)
+
+stopifnot(nrow(finale) == nrow(wells),
+          !anyDuplicated(finale$Sample_ID),
+          setequal(finale$Sample_ID, wells$Sample_ID))
+count(finale, gruppo, plate, tipo_pozzetto)
+```
+
+> **Atteso.** 285 righe: Gastro 95 segmenti + 1 NTC, Reuma H 95 + 1, Reuma F 92 + 1.
+
+# Passo 15 — Scrittura dei dati puliti
+
+Tutto finisce in `data_clean/`, separato dai dati grezzi. I DCC vengono copiati senza modifiche (una sola cartella per piastra); i DCC vuoti restano, perché l'esclusione è una scelta del QC e qui è documentata nella colonna `stato_dcc`.
+
+```{r scrittura}
+out <- "data_clean"
+for (d in c(out, file.path(out, "Reuma", "DCC"), file.path(out, "Gastro", "DCC")))
+  dir.create(d, recursive = TRUE, showWarnings = FALSE)
+
+dest <- ifelse(wells$plate == "G", file.path(out, "Gastro", "DCC"), file.path(out, "Reuma", "DCC"))
+stopifnot(all(file.copy(files, file.path(dest, basename(files)), overwrite = TRUE)))
+file.copy(pkc_path, file.path(out, basename(pkc_path)), overwrite = TRUE)
+
+write.csv(filter(finale, gruppo == "Reuma"),  file.path(out, "Reuma",  "annotazione_reuma.csv"),  row.names = FALSE, na = "")
+write.csv(filter(finale, gruppo == "Gastro"), file.path(out, "Gastro", "annotazione_gastro.csv"), row.names = FALSE, na = "")
+write.csv(finale,     file.path(out, "annotazione_completa.csv"),          row.names = FALSE, na = "")
+write.csv(top,        file.path(out, "ricostruzione_ipotesi_migliori.csv"), row.names = FALSE)
+write.csv(robustezza, file.path(out, "ricostruzione_robustezza.csv"),       row.names = FALSE)
+write.csv(test_sesso, file.path(out, "controllo_sesso.csv"),                row.names = FALSE)
+write.csv(loo,        file.path(out, "controllo_impronta_hla.csv"),         row.names = FALSE)
+
+cat("DCC Reuma:", length(list.files(file.path(out, "Reuma", "DCC"))),
+    "| DCC Gastro:", length(list.files(file.path(out, "Gastro", "DCC"))), "\n")
+```
+
+> **Atteso.** 189 DCC in `data_clean/Reuma/DCC`, 96 in `data_clean/Gastro/DCC`. Per costruire l'oggetto: `dccFiles` dalla cartella `DCC` del gruppo, `pkcFiles` dal PKC in `data_clean`, `phenoData` dall'annotazione del gruppo, `phenoDataDccColName = "Sample_ID"`.
+
+# Appendice — Informazioni non tabellari dell'Excel (facoltativa)
+
+Lette dall'XML del file. Richiede il pacchetto `tidyxl`; se non è installato la sezione viene saltata.
+
+```{r excel-colori}
+if (requireNamespace("tidyxl", quietly = TRUE)) {
+  celle   <- tidyxl::xlsx_cells(ann_path)
+  formati <- tidyxl::xlsx_formats(ann_path)
+  pf      <- formati$local$fill$patternFill
+  celle$tipo  <- pf$patternType[celle$local_format_id]
+  celle$rgb   <- pf$fgColor$rgb[celle$local_format_id]
+  celle$tema  <- pf$fgColor$theme[celle$local_format_id]
+  celle |> filter(row >= 3, !is.na(tipo), tipo != "none") |>
+    count(colonna = col, rgb, tema, name = "celle") |> knitr::kable()
+} else {
+  cat("tidyxl non installato: sezione saltata\n")
+}
+```
+
+> **Atteso.** Colonna 1 (`Scan Name`): 95 celle con un colore del tema, esattamente le righe di `03102024`. Colonna 5 (`Custom Segment Name`): 95 celle in 9 colori, uno per codice campione. Colonne 13 e 15 (`RESPONSE_POOLED`, `RESPONSE`): 7 celle gialle (`FFFFFF00`) ciascuna, le righe dello scan di PT. 11 e PT. 12. Il significato dei colori non è scritto nel file. Dai metadati: file creato dal software GeoMx ("DSPDA") il 17/12/2025, ultima modifica il 29/01/2026; il filtro copre le colonne A–T, quindi le colonne U–W sono state aggiunte dopo.
+
+# Limiti
+
+Ogni punto distingue ciò che è **verificato** da ciò che è **dedotto**.
+
+**La mappa è dedotta, non documentata.** Verificato: tra circa 15.500 ipotesi, la soluzione spiega il 100% dei confronti locali in tutte e tre le piastre, è nettamente separata dalle alternative e non cambia in nessuna delle 18 combinazioni di marcatori e soglie (passo 7). Dedotto: che la raccolta abbia seguito l'ordine trovato. L'ipotesi di partenza è che i segmenti siano stati raccolti in un ordine regolare; un segmento raccolto fuori sequenza sarebbe rimasto fuori dalla famiglia di ipotesi, ma comparirebbe come incoerenza locale, che non osserviamo. La conferma documentale sarebbe il Lab Worksheet.
+
+**Alcuni errori della mappa non sarebbero rilevabili.** Due segmenti dello stesso tipo e della stessa persona scambiati tra loro (per esempio due CD68 di ROI diversi) non cambiano né il tipo né il sesso né l'impronta HLA. Cambierebbero però le variabili del ROI (`LOCATION`, `ROIComments`), e la loro coerenza con l'espressione non è stata verificata. Anche i 10 pozzetti senza dati utilizzabili non si possono controllare: la loro posizione è dedotta dalla sequenza.
+
+**I marcatori servono a scegliere un ordine, non a classificare i pozzetti.** Nessun pozzetto riceve il tipo in base ai propri marcatori: il tipo resta quello annotato. Resta una leggera circolarità se in seguito si confrontano i tipi di segmento proprio su quei geni.
+
+**Il test del sesso ha dei presupposti.** Verificato: in PT. 03 le sonde Y sono indistinguibili dalle sonde negative in tutti i 12 segmenti, come nelle 8 donne di riferimento e diversamente dai 12 uomini. Dedotto: che questo significhi assenza del cromosoma Y nel tessuto. Le spiegazioni compatibili (sesso sbagliato nell'annotazione, tessuti dei due pazienti dello scan scambiati, perdita del cromosoma Y in tutte le cellule) non si distinguono con questi dati. Per PT. 04 il segnale è intermedio: sopra tutte le donne e sotto tutti gli uomini di riferimento. Il test confronta persone con profondità e tipi cellulari diversi, e l'indice Y può risentirne.
+
+**L'impronta HLA è un indizio, non un'identificazione.** Verificato: è fortemente individuale (ICC 0,84–0,89 per i geni polimorfici contro 0,27–0,52 per quelli poco polimorfici), concorda con l'annotazione nel 97% dei segmenti con evidenza forte dentro il vetrino, mette la persona giusta al primo posto nel 71% dei casi tra tutte le persone, e accetta senza problemi i vetrini con ROI alternati tra i pazienti (PT. 05/06, PT. 15/16). Non verificato: che sia indipendente dal tipo cellulare. Gli errori in Gastro riguardano segmenti PanCK. I ROI segnalati vanno quindi letti come domande: non permettono di dire quale delle fonti (colonna `PATIENT`, colonna dei cognomi, impronta) sia corretta. Per PT. 13 e PT. 14 l'impronta non decide: A10 non è attribuibile e B05 ha troppi pochi conteggi.
+
+**Le correzioni sono solo tipografiche.** L'uniformazione delle etichette e dei codici dei campioni corregge varianti di scrittura e refusi con un'unica soluzione possibile. Il significato di `ARTICULAR_INVOLVEMENT` vuoto, la differenza tra `OBESE` e `OVERWEIGHT_OBESE`, il significato della colonna `BASELINE`, quello dei colori dell'Excel e il numero di pazienti previsto dallo studio non si deducono dai dati.
+
+**A01 come NTC è dedotto.** Verificato: A01 è l'unico pozzetto a cui non corrisponde nessun segmento in tutte e tre le piastre, e ha segnale quasi nullo. Che sia il controllo senza templato è la spiegazione più semplice, non una conferma.
+
+**Le soglie sono scelte mie.** 1.000 conteggi (ricerca e `basso_segnale`), 10.000 (test del sesso), 300 e 50 conteggi (impronta HLA), \|LLR\| ≥ 20 con almeno 4 coppie (evidenza forte), `p` \< 0,001 e ≥ 0,05 (flag del sesso), distanza di edit 1 (codici campione). Per la mappa il passo 7 mostra che le scelte non contano entro gli intervalli provati; per gli altri flag non è stata fatta un'analisi di sensibilità.
+
+**Mancano area e nuclei delle AOI.** Verificato: non sono nell'Excel né in nessun altro file della consegna.
+
+```{r sessione}
+sessionInfo()
+```

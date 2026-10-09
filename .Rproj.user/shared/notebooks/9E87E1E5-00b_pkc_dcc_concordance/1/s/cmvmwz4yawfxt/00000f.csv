@@ -1,0 +1,16 @@
+"0","for (i in seq_len(nrow(concordanza))) with(concordanza[i, ], {"
+"0","  if (DCC_meno_PKC == 0 && PKC_meno_DCC == 0)"
+"0","    cat(sprintf(""[%s] concordanza totale: il PKC è compatibile.\n"", run))"
+"0","  else if (DCC_meno_PKC > 0)"
+"0","    cat(sprintf(""[%s] ATTENZIONE: %d sonde quantificate non sono nel PKC.\n"","
+"0","                run, DCC_meno_PKC))"
+"0","  else"
+"0","    cat(sprintf(""[%s] %d sonde del PKC mai osservate (da esaminare per CodeClass).\n"","
+"0","                run, PKC_meno_DCC))"
+"0","})"
+"1","[Reuma_H] concordanza totale: il PKC è compatibile.
+"
+"1","[Reuma_F] concordanza totale: il PKC è compatibile.
+"
+"1","[Gastro] concordanza totale: il PKC è compatibile.
+"

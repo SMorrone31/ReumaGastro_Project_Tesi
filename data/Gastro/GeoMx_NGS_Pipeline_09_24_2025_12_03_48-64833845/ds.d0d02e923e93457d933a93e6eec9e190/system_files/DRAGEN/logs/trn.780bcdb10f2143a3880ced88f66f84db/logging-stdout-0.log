@@ -1,0 +1,53 @@
+2025-09-24T11:32:05.695669672Z stdout F Waiting for main container to finish
+2025-09-24T11:34:06.171786373Z stderr F {"currentUploadSize":3343,"lastUploadSize":0,"level":"info","msg":"upload, log file size changed","name":"bsfs-stdout-0.log","path":"/logs/bsfs-stdout-0.log","time":"2025-09-24T11:34:06Z"}
+2025-09-24T11:34:06.192979153Z stderr F {"level":"info","msg":"finished uploading file","path":"bsfs-stdout-0.log","time":"2025-09-24T11:34:06Z","total_time":21138636}
+2025-09-24T11:34:06.193029009Z stderr F {"currentUploadSize":3343,"lastUploadSize":0,"level":"info","msg":"upload, log file size changed","name":"bsfs-stdouterr-0.log","path":"/logs/bsfs-stdouterr-0.log","time":"2025-09-24T11:34:06Z"}
+2025-09-24T11:34:06.219588532Z stderr F {"level":"info","msg":"finished uploading file","path":"bsfs-stdouterr-0.log","time":"2025-09-24T11:34:06Z","total_time":26505101}
+2025-09-24T11:34:06.241683612Z stderr F {"currentUploadSize":645,"lastUploadSize":0,"level":"info","msg":"upload, log file size changed","name":"dragen-init-stdout-0.log","path":"/logs/dragen-init-stdout-0.log","time":"2025-09-24T11:34:06Z"}
+2025-09-24T11:34:06.266367719Z stderr F {"level":"info","msg":"finished uploading file","path":"dragen-init-stdout-0.log","time":"2025-09-24T11:34:06Z","total_time":24674182}
+2025-09-24T11:34:06.266413558Z stderr F {"currentUploadSize":1216,"lastUploadSize":0,"level":"info","msg":"upload, log file size changed","name":"dragen-init-stdouterr-0.log","path":"/logs/dragen-init-stdouterr-0.log","time":"2025-09-24T11:34:06Z"}
+2025-09-24T11:34:06.291455209Z stderr F {"level":"info","msg":"finished uploading file","path":"dragen-init-stdouterr-0.log","time":"2025-09-24T11:34:06Z","total_time":24911697}
+2025-09-24T11:34:06.321796751Z stderr F {"currentUploadSize":0,"lastUploadSize":0,"level":"info","msg":"upload, log file size changed","name":"heartbeat-init-stdout-0.log","path":"/logs/heartbeat-init-stdout-0.log","time":"2025-09-24T11:34:06Z"}
+2025-09-24T11:34:06.343771333Z stderr F {"level":"info","msg":"finished uploading file","path":"heartbeat-init-stdout-0.log","time":"2025-09-24T11:34:06Z","total_time":21904456}
+2025-09-24T11:34:06.343835804Z stderr F {"currentUploadSize":16652,"lastUploadSize":0,"level":"info","msg":"upload, log file size changed","name":"heartbeat-init-stdouterr-0.log","path":"/logs/heartbeat-init-stdouterr-0.log","time":"2025-09-24T11:34:06Z"}
+2025-09-24T11:34:06.366858162Z stderr F {"level":"info","msg":"finished uploading file","path":"heartbeat-init-stdouterr-0.log","time":"2025-09-24T11:34:06Z","total_time":23006129}
+2025-09-24T11:34:06.395783107Z stderr F {"currentUploadSize":0,"lastUploadSize":0,"level":"info","msg":"upload, log file size changed","name":"heartbeat-stdout-0.log","path":"/logs/heartbeat-stdout-0.log","time":"2025-09-24T11:34:06Z"}
+2025-09-24T11:34:06.416422774Z stderr F {"level":"info","msg":"finished uploading file","path":"heartbeat-stdout-0.log","time":"2025-09-24T11:34:06Z","total_time":20557442}
+2025-09-24T11:34:06.416529005Z stderr F {"currentUploadSize":306,"lastUploadSize":0,"level":"info","msg":"upload, log file size changed","name":"heartbeat-stdouterr-0.log","path":"/logs/heartbeat-stdouterr-0.log","time":"2025-09-24T11:34:06Z"}
+2025-09-24T11:34:06.439558647Z stderr F {"level":"info","msg":"finished uploading file","path":"heartbeat-stdouterr-0.log","time":"2025-09-24T11:34:06Z","total_time":22798759}
+2025-09-24T11:34:06.463630942Z stderr F {"currentUploadSize":77,"lastUploadSize":0,"level":"info","msg":"upload, log file size changed","name":"logging-stdout-0.log","path":"/logs/logging-stdout-0.log","time":"2025-09-24T11:34:06Z"}
+2025-09-24T11:34:06.481484325Z stderr F {"level":"info","msg":"finished uploading file","path":"logging-stdout-0.log","time":"2025-09-24T11:34:06Z","total_time":17868530}
+2025-09-24T11:34:06.481533785Z stderr F {"currentUploadSize":643,"lastUploadSize":0,"level":"info","msg":"upload, log file size changed","name":"logging-stdouterr-0.log","path":"/logs/logging-stdouterr-0.log","time":"2025-09-24T11:34:06Z"}
+2025-09-24T11:34:06.506751053Z stderr F {"level":"info","msg":"finished uploading file","path":"logging-stdouterr-0.log","time":"2025-09-24T11:34:06Z","total_time":25030969}
+2025-09-24T11:34:06.529405774Z stderr F {"currentUploadSize":0,"lastUploadSize":0,"level":"info","msg":"upload, log file size changed","name":"network-init-stdout-0.log","path":"/logs/network-init-stdout-0.log","time":"2025-09-24T11:34:06Z"}
+2025-09-24T11:34:06.551578308Z stderr F {"level":"info","msg":"finished uploading file","path":"network-init-stdout-0.log","time":"2025-09-24T11:34:06Z","total_time":22126200}
+2025-09-24T11:34:06.551628215Z stderr F {"currentUploadSize":0,"lastUploadSize":0,"level":"info","msg":"upload, log file size changed","name":"network-init-stdouterr-0.log","path":"/logs/network-init-stdouterr-0.log","time":"2025-09-24T11:34:06Z"}
+2025-09-24T11:34:06.573066393Z stderr F {"level":"info","msg":"finished uploading file","path":"network-init-stdouterr-0.log","time":"2025-09-24T11:34:06Z","total_time":21362119}
+2025-09-24T11:34:06.598620579Z stderr F {"currentUploadSize":0,"lastUploadSize":0,"level":"info","msg":"upload, log file size changed","name":"output0-stdout-0.log","path":"/logs/output0-stdout-0.log","time":"2025-09-24T11:34:06Z"}
+2025-09-24T11:34:06.618804396Z stderr F {"level":"info","msg":"finished uploading file","path":"output0-stdout-0.log","time":"2025-09-24T11:34:06Z","total_time":20180479}
+2025-09-24T11:34:06.618854046Z stderr F {"currentUploadSize":555,"lastUploadSize":0,"level":"info","msg":"upload, log file size changed","name":"output0-stdouterr-0.log","path":"/logs/output0-stdouterr-0.log","time":"2025-09-24T11:34:06Z"}
+2025-09-24T11:34:06.645425154Z stderr F {"level":"info","msg":"finished uploading file","path":"output0-stdouterr-0.log","time":"2025-09-24T11:34:06Z","total_time":26472979}
+2025-09-24T11:34:06.66831486Z stderr F {"currentUploadSize":0,"lastUploadSize":0,"level":"info","msg":"upload, log file size changed","name":"output1-stdout-0.log","path":"/logs/output1-stdout-0.log","time":"2025-09-24T11:34:06Z"}
+2025-09-24T11:34:06.687939108Z stderr F {"level":"info","msg":"finished uploading file","path":"output1-stdout-0.log","time":"2025-09-24T11:34:06Z","total_time":19612880}
+2025-09-24T11:34:06.687991892Z stderr F {"currentUploadSize":575,"lastUploadSize":0,"level":"info","msg":"upload, log file size changed","name":"output1-stdouterr-0.log","path":"/logs/output1-stdouterr-0.log","time":"2025-09-24T11:34:06Z"}
+2025-09-24T11:34:06.710553562Z stderr F {"level":"info","msg":"finished uploading file","path":"output1-stdouterr-0.log","time":"2025-09-24T11:34:06Z","total_time":22530536}
+2025-09-24T11:34:06.732267746Z stderr F {"currentUploadSize":4007,"lastUploadSize":0,"level":"info","msg":"upload, log file size changed","name":"permission-init-stdout-0.log","path":"/logs/permission-init-stdout-0.log","time":"2025-09-24T11:34:06Z"}
+2025-09-24T11:34:06.755638591Z stderr F {"level":"info","msg":"finished uploading file","path":"permission-init-stdout-0.log","time":"2025-09-24T11:34:06Z","total_time":23355799}
+2025-09-24T11:34:06.755678741Z stderr F {"currentUploadSize":4007,"lastUploadSize":0,"level":"info","msg":"upload, log file size changed","name":"permission-init-stdouterr-0.log","path":"/logs/permission-init-stdouterr-0.log","time":"2025-09-24T11:34:06Z"}
+2025-09-24T11:34:06.782132337Z stderr F {"level":"info","msg":"finished uploading file","path":"permission-init-stdouterr-0.log","time":"2025-09-24T11:34:06Z","total_time":26403238}
+2025-09-24T11:34:06.824968395Z stderr F {"currentUploadSize":2697,"lastUploadSize":0,"level":"info","msg":"upload, log file size changed","name":"task-stdout-0.log","path":"/logs/task-stdout-0.log","time":"2025-09-24T11:34:06Z"}
+2025-09-24T11:34:06.8561468Z stderr F {"level":"info","msg":"finished uploading file","path":"task-stdout-0.log","time":"2025-09-24T11:34:06Z","total_time":31140871}
+2025-09-24T11:34:06.85619453Z stderr F {"currentUploadSize":2859,"lastUploadSize":0,"level":"info","msg":"upload, log file size changed","name":"task-stdouterr-0.log","path":"/logs/task-stdouterr-0.log","time":"2025-09-24T11:34:06Z"}
+2025-09-24T11:34:06.880815476Z stderr F {"level":"info","msg":"finished uploading file","path":"task-stdouterr-0.log","time":"2025-09-24T11:34:06Z","total_time":24554638}
+2025-09-24T11:34:06.910410371Z stderr F {"currentUploadSize":0,"lastUploadSize":0,"level":"info","msg":"upload, log file size changed","name":"tes-input-handler-init-container-stdout-0.log","path":"/logs/tes-input-handler-init-container-stdout-0.log","time":"2025-09-24T11:34:06Z"}
+2025-09-24T11:34:06.930080962Z stderr F {"level":"info","msg":"finished uploading file","path":"tes-input-handler-init-container-stdout-0.log","time":"2025-09-24T11:34:06Z","total_time":19616168}
+2025-09-24T11:34:06.930128606Z stderr F {"currentUploadSize":711,"lastUploadSize":0,"level":"info","msg":"upload, log file size changed","name":"tes-input-handler-init-container-stdouterr-0.log","path":"/logs/tes-input-handler-init-container-stdouterr-0.log","time":"2025-09-24T11:34:06Z"}
+2025-09-24T11:34:06.954584984Z stderr F {"level":"info","msg":"finished uploading file","path":"tes-input-handler-init-container-stdouterr-0.log","time":"2025-09-24T11:34:06Z","total_time":24397495}
+2025-09-24T11:36:07.038444581Z stderr F {"currentUploadSize":612,"lastUploadSize":306,"level":"info","msg":"upload, log file size changed","name":"heartbeat-stdouterr-0.log","path":"/logs/heartbeat-stdouterr-0.log","time":"2025-09-24T11:36:07Z"}
+2025-09-24T11:36:07.064148024Z stderr F {"level":"info","msg":"finished uploading file","path":"heartbeat-stdouterr-0.log","time":"2025-09-24T11:36:07Z","total_time":25578554}
+2025-09-24T11:36:07.096334386Z stderr F {"currentUploadSize":9346,"lastUploadSize":77,"level":"info","msg":"upload, log file size changed","name":"logging-stdout-0.log","path":"/logs/logging-stdout-0.log","time":"2025-09-24T11:36:07Z"}
+2025-09-24T11:36:07.123018848Z stderr F {"level":"info","msg":"finished uploading file","path":"logging-stdout-0.log","time":"2025-09-24T11:36:07Z","total_time":26645625}
+2025-09-24T11:36:07.123077504Z stderr F {"currentUploadSize":14891,"lastUploadSize":643,"level":"info","msg":"upload, log file size changed","name":"logging-stdouterr-0.log","path":"/logs/logging-stdouterr-0.log","time":"2025-09-24T11:36:07Z"}
+2025-09-24T11:36:07.17405912Z stderr F {"level":"info","msg":"finished uploading file","path":"logging-stdouterr-0.log","time":"2025-09-24T11:36:07Z","total_time":50910805}
+2025-09-24T11:38:06.999048651Z stdout F Container terminated (task)
+2025-09-24T11:38:07.115721151Z stdout F Task Container finished!

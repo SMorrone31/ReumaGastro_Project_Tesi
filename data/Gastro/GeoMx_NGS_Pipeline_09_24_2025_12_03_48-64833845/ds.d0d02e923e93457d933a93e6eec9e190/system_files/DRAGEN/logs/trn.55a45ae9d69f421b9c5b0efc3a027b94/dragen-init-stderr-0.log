@@ -1,0 +1,9 @@
+2025-09-24T11:21:15.070617867Z stderr F sh: /usr/bin/hostname: No such file or directory
+2025-09-24T11:21:15.0735656Z stderr F 
+2025-09-24T11:21:15.073585091Z stderr F Resetting the DRAGEN Bio-IT processor and stopping all software threads
+2025-09-24T11:21:15.658449388Z stderr F Reloading HW board #0
+2025-09-24T11:21:15.6846805Z stderr F 
+2025-09-24T11:21:15.684728318Z stderr F 
+2025-09-24T11:21:15.684738233Z stderr F Reloading BLANK image
+2025-09-24T11:21:33.075074993Z stderr F 
+2025-09-24T11:21:33.075123311Z stderr F The DRAGEN Bio-IT processor has been reset

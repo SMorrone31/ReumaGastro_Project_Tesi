@@ -1,0 +1,11 @@
+2025-09-24T11:55:26.19279874Z stderr F {"concurrent_uploads":10,"container":"task","enable_find":false,"folder_to_upload":"/toupload","level":"info","log_upload_interval":120,"max_retry_count":10,"msg":"initializing upload service","namespace":"euc1","pod":"trn.8f725c1ff8b14b61b4374df63c5ad787-w6twj","service_url":"","taskRunId":"trn.8f725c1ff8b14b61b4374df63c5ad787","time":"2025-09-24T11:55:26Z","upload_url":"s3://stratus-gds-euc1/8dbac3dc-de44-4ffc-1ba7-08db9fb310f4/datasets/app.euc1-prod.64833845/system_files/DRAGEN/Dragen_Additional_Logs/DSP-1001660015507-F-G05"}
+2025-09-24T12:01:26.593945442Z stderr F {"level":"info","msg":"finished waiting for container, waiting for final sync signal","time":"2025-09-24T12:01:26Z"}
+2025-09-24T12:01:26.59399812Z stderr F {"level":"info","msg":"finished waiting for final sync signal, starting final sync","time":"2025-09-24T12:01:26Z"}
+2025-09-24T12:01:26.594102905Z stderr F {"level":"info","msg":"Walk","path":"/toupload","time":"2025-09-24T12:01:26Z"}
+2025-09-24T12:01:26.594169697Z stderr F {"level":"info","msg":"IsDir","path":"/toupload","time":"2025-09-24T12:01:26Z"}
+2025-09-24T12:01:26.594203321Z stderr F {"level":"info","msg":"Walk","path":"/toupload/dragen","time":"2025-09-24T12:01:26Z"}
+2025-09-24T12:01:26.594233386Z stderr F {"level":"info","msg":"IsDir","path":"/toupload/dragen","time":"2025-09-24T12:01:26Z"}
+2025-09-24T12:01:26.594312339Z stderr F {"level":"info","msg":"Walk","path":"/toupload/dragen/dragen_run_1758715267658_25.log","time":"2025-09-24T12:01:26Z"}
+2025-09-24T12:01:26.594345991Z stderr F {"level":"info","msg":"queued file for upload","path":"/toupload/dragen/dragen_run_1758715267658_25.log","time":"2025-09-24T12:01:26Z"}
+2025-09-24T12:01:26.659071887Z stderr F {"level":"info","msg":"finished uploading file","path":"dragen/dragen_run_1758715267658_25.log","time":"2025-09-24T12:01:26Z","total_time":64670844}
+2025-09-24T12:01:26.7322173Z stderr F {"level":"info","msg":"all done","time":"2025-09-24T12:01:26Z","total_time":360539885254}

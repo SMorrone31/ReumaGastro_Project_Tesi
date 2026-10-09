@@ -1,0 +1,2 @@
+"0","# leggiamo l'excel"
+"0","ann <- read_excel(ann_path, skip = 1, col_types = ""text"")"

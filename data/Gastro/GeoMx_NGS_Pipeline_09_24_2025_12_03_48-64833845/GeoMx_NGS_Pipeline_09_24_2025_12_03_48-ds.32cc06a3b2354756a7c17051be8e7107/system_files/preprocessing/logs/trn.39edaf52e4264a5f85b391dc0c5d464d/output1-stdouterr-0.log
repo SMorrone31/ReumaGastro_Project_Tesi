@@ -1,6 +1,0 @@
-2025-09-24T11:11:30.807686342Z stderr F {"concurrent_uploads":10,"container":"task","enable_find":false,"folder_to_upload":"/toupload","level":"info","log_upload_interval":120,"max_retry_count":10,"msg":"initializing upload service","namespace":"euc1","pod":"trn.39edaf52e4264a5f85b391dc0c5d464d-5mgzf","service_url":"","taskRunId":"trn.39edaf52e4264a5f85b391dc0c5d464d","time":"2025-09-24T11:11:30Z","upload_url":"s3://stratus-gds-euc1/8dbac3dc-de44-4ffc-1ba7-08db9fb310f4/datasets/app.euc1-prod.64833845/metadata"}
-2025-09-24T11:13:31.158674924Z stderr F {"level":"info","msg":"finished waiting for container, waiting for final sync signal","time":"2025-09-24T11:13:31Z"}
-2025-09-24T11:13:31.158715735Z stderr F {"level":"info","msg":"finished waiting for final sync signal, starting final sync","time":"2025-09-24T11:13:31Z"}
-2025-09-24T11:13:31.15893103Z stderr F {"level":"info","msg":"Walk","path":"/toupload","time":"2025-09-24T11:13:31Z"}
-2025-09-24T11:13:31.158951457Z stderr F {"level":"info","msg":"IsDir","path":"/toupload","time":"2025-09-24T11:13:31Z"}
-2025-09-24T11:13:31.238110457Z stderr F {"level":"info","msg":"all done","time":"2025-09-24T11:13:31Z","total_time":120430457269}

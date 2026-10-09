@@ -1,6 +1,0 @@
-"0","bind_rows(lapply(names(dcc), function(k) {"
-"0","  n <- vapply(dcc[[k]], function(x) length(x$ids), numeric(1))"
-"0","  data.frame(run = k, n_dcc = length(n), sonde_min = min(n),"
-"0","             sonde_mediana = median(n), sonde_max = max(n),"
-"0","             dcc_vuoti = sum(n == 0))"
-"0","}))"

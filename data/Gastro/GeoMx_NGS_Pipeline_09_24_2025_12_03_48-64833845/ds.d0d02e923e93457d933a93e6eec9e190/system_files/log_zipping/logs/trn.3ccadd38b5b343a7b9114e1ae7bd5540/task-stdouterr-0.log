@@ -1,7 +1,0 @@
-2025-09-24T12:26:25.223924391Z stdout F [DBG 2025-09-24 12:26:25.190] Starting application.
-2025-09-24T12:26:25.224100686Z stdout F [DBG 2025-09-24 12:26:25.223] Program arguments: `zip-files --source-folder-path /mount/input/to_be_zipped --output-zip-path /mount/output/base_space_root/logs.zip`
-2025-09-24T12:26:25.307486394Z stdout F [DBG 2025-09-24 12:26:25.307] Zipping stage is started.
-2025-09-24T12:26:25.307517205Z stdout F [DBG 2025-09-24 12:26:25.307] Starting to create `.zip` file..
-2025-09-24T12:32:47.566623405Z stdout F [DBG 2025-09-24 12:32:47.566] Files and folders zipped successfully. File path is `/mount/output/base_space_root/logs.zip`.
-2025-09-24T12:32:47.566658386Z stdout F [DBG 2025-09-24 12:32:47.566] Stage finished normally.
-2025-09-24T12:32:47.566663322Z stdout F [DBG 2025-09-24 12:32:47.566] App finished normally.

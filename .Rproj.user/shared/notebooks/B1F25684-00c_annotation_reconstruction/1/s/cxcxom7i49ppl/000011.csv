@@ -1,2 +1,0 @@
-"0","stopifnot(length(dcc_dirs) == 3, setequal(plate_of(dcc_dirs), c(""H"", ""F"", ""G"")),"
-"0","          file.exists(pkc_path), file.exists(ann_path))"

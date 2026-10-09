@@ -1,7 +1,0 @@
-RUN TIME,,Time loading reference,00:00:00.000,0.00
-RUN TIME,,Time partial reconfiguration,00:00:02.637,2.64
-RUN TIME,,Time performing spatial analysis,00:00:02.669,2.67
-RUN TIME,,Time processing spatial analysis reads,00:00:01.920,1.92
-RUN TIME,,Time correcting spatial analysis umis,00:00:00.121,0.12
-RUN TIME,,Time writing spatial analysis metric files,00:00:00.037,0.04
-RUN TIME,,Total runtime,00:00:14.655,14.66

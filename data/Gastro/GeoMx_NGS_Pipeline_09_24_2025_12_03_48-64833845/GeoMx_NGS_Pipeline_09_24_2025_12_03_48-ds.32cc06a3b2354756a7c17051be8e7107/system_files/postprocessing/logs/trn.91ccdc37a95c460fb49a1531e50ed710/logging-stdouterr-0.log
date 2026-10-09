@@ -1,5 +1,0 @@
-2025-09-24T12:17:08.339279214Z stdout F Waiting for main container to finish
-2025-09-24T12:17:08.369027716Z stderr F {"concurrent_uploads":10,"container":"task","enable_find":false,"folder_to_upload":"/logs","level":"info","log_upload_interval":120,"max_retry_count":10,"msg":"initializing upload service","namespace":"euc1","pod":"trn.91ccdc37a95c460fb49a1531e50ed710-2npf9","service_url":"","taskRunId":"trn.91ccdc37a95c460fb49a1531e50ed710","time":"2025-09-24T12:17:08Z","upload_url":"s3://stratus-gds-euc1/8dbac3dc-de44-4ffc-1ba7-08db9fb310f4/datasets/app.euc1-prod.64833845/system_files/postprocessing/logs/trn.91ccdc37a95c460fb49a1531e50ed710"}
-2025-09-24T12:19:08.768293171Z stderr F {"level":"info","msg":"finished waiting for container, waiting for final sync signal","time":"2025-09-24T12:19:08Z"}
-2025-09-24T12:19:10.387252069Z stdout F Container terminated (task)
-2025-09-24T12:19:10.46855417Z stdout F Task Container finished!

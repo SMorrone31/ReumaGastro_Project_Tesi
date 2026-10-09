@@ -1,5 +1,0 @@
-"0","roi_hla <- loo |> filter(forte) |> group_by(scan, plate, ROI, etichetta, altro) |>"
-"0","  summarise(contro = sum(llr < 0), a_favore = sum(llr > 0),"
-"0","            dettaglio = paste0(well, "":"", round(llr), collapse = "" ""), .groups = ""drop"") |>"
-"0","  filter(contro > 0, a_favore == 0)"
-"0","knitr::kable(roi_hla)"

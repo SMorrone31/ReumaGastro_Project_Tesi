@@ -1,8 +1,0 @@
-"0","nomi <- dragen_f |>"
-"0","  mutate(nome = sub(""\\([0-9]+\\)"", ""(N)"", file),"
-"0","         nome = sub(""^AWS-SN0_[0-9]+_usage"", ""AWS-SN0_N_usage"", nome))"
-"0",""
-"0","fpw <- count(nomi, run, well, name = ""n_file"")"
-"0",""
-"0","fpw |> count(run, n_file, name = ""n_pozzetti"") |> arrange(run, desc(n_pozzetti)) |>"
-"0","  knitr::kable()"

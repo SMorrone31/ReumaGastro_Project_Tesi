@@ -1,6 +1,0 @@
-"0","servizio_pos <- inv |>"
-"0","  filter(servizio, !rumore) |>"
-"0","  mutate(posizione = schema(sub(""^(.*?system_files).*$"", ""\\1"", folder, perl = TRUE))) |>"
-"0","  count(run, posizione, name = ""n_file"")"
-"0",""
-"0","knitr::kable(servizio_pos)"

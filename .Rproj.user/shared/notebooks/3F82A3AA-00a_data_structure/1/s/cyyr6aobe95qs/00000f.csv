@@ -1,8 +1,0 @@
-"0","col_id <- names(ann)[startsWith(names(ann), ""..."") & colSums(is.na(ann)) == 0]"
-"0","stopifnot(length(col_id) == 1)"
-"0","ann$id_interno <- as.integer(factor(ann[[col_id]]))"
-"0","ann$controllo_sano <- grepl(""\\bHC\\b|health|control"", ann[[col_id]],"
-"0","                            ignore.case = TRUE, perl = TRUE)"
-"0",""
-"0","R <- filter(ann, gruppo == ""Reuma"")"
-"0","G <- filter(ann, gruppo == ""Gastro"")"

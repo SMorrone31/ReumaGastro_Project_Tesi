@@ -1,0 +1,323 @@
+---
+title: "Reuma: costruzione dell'oggetto NanoStringGeoMxSet"
+author: "Simone"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: show
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = TRUE)
+# Il file sta in reuma_scipts/: tutti i percorsi sono relativi alla radice del progetto.
+knitr::opts_knit$set(root.dir = normalizePath(".."))
+```
+
+# Scopo
+
+Costruire `ns_object` per Reuma (plate F e plate H) con `GeomxTools::readNanoStringGeoMxSet()`, a partire da:
+
+- i DCC delle due piastre (solo le cartelle `DCC_Files`);
+- il PKC standard `Hs_R_NGS_WTA_v1.0.pkc`;
+- i due Lab Worksheet (pozzetto → scan, ROI, segmento, area, nuclei, NTC);
+- l'Excel di annotazione, solo per le variabili cliniche, agganciato su `Scan Name` + ROI + segmento.
+
+Qui non si fa QC e non si esclude nulla per scelta. Le sole esclusioni sono quelle che fa la funzione da sola (NTC e DCC senza conteggi), e vengono elencate.
+
+Come si comporta la funzione è stato letto nel codice sorgente (GeomxTools su GitHub, `R/readNanoStringGeoMxSet.R`, ramo master, versione 3.13.2): <https://github.com/Nanostring-Biostats/GeomxTools/blob/master/R/readNanoStringGeoMxSet.R>. La versione installata in locale può differire: i controlli in fondo servono a verificarlo.
+
+Punti del sorgente che contano per noi:
+
+1. `phenoData` accetta direttamente un `data.frame`: non serve scrivere un file di annotazione.
+2. Se `phenoDataFile` è un file di testo, viene letto come Lab Worksheet solo se il nome finisce con `_labworksheet.txt`. I nostri finiscono con `_LabWorksheet_F.txt` e `_LabWorksheet_H.txt`, quindi verrebbero letti con `fread` e fallirebbe. Per questo li leggiamo noi.
+3. Alla colonna `Sample_ID` viene aggiunto `.dcc` se manca: con o senza estensione è uguale.
+4. Gli NTC si riconoscono da `slide name` uguale a `No Template Control` (senza distinzione di maiuscole). A ogni riga viene assegnato l'NTC che la precede nell'annotazione, fino al successivo: **l'ordine delle righe conta**. Le righe NTC vengono poi tolte dall'oggetto e i loro conteggi totali finiscono in `protocolData` (`NTC_ID`, `NTC`).
+5. Le righe NTC vengono rimosse con `rownames(pheno) %in% ntcs`, dove `ntcs` sono posizioni: il `data.frame` passato deve avere i nomi di riga predefiniti (1, 2, …).
+6. I DCC con `Code_Summary` vuoto vengono esclusi con un avviso ("had no counts").
+7. Le sonde: tutte quelle del PKC entrano nell'oggetto; quelle mai osservate in nessun DCC hanno conteggio 0.
+
+```{r librerie}
+library(GeomxTools)
+library(readxl)
+library(dplyr)
+packageVersion("GeomxTools")
+```
+
+# Parametri
+
+```{r parametri}
+pkc_path <- "data/Hs_R_NGS_WTA_v1.0.pkc"
+
+dcc_dirs <- c(
+  F = "data/Reuma/Finalizzata-Gremese-11-04-2024-plateF-30160133/GeoMx_NGS_Pipeline_04_18_2024_5_49_50-48390345/GeoMx_NGS_Pipeline_04_18_2024_5_49_50-ds.cc7d8633890144c6bcf2c541ed9fca9f/DCC_Files",
+  H = "data/Reuma/Finalizzata_GeoMX_plate_H-32399433/GeoMx_NGS_Pipeline_10_02_2024_16_14_14-54799752/GeoMx_NGS_Pipeline_10_02_2024_16_14_14-ds.34d4485ec31148e39acfe184e7b20522/DCC_Files"
+)
+
+lw_paths <- c(
+  F = "data/20240411T1504_LabWorksheet_F.txt",
+  H = "data/25072024_20240805T1014_LabWorksheet_H.txt"
+)
+
+# Plate_ID attesi (verificati nei DCC e nell'intestazione dei worksheet)
+plate_ids <- c(F = "1001660015484", H = "1001660015486")
+
+excel_path <- "data/Annotation template file GEOMX_29.01.2026_SP-BT-LP.xlsx"
+
+stopifnot(file.exists(pkc_path), dir.exists(dcc_dirs), file.exists(lw_paths), file.exists(excel_path))
+```
+
+# DCC
+
+```{r dcc}
+dcc_files <- unlist(lapply(dcc_dirs, list.files, pattern = "\\.dcc$", full.names = TRUE), use.names = FALSE)
+table(plate = sub("^DSP-\\d+-([A-Z])-.*", "\\1", basename(dcc_files)))
+```
+
+Atteso: 93 per F e 96 per H.
+
+Prima della funzione leggo ogni DCC da solo con `readDccFile()`, la stessa funzione che `readNanoStringGeoMxSet()` usa internamente. Serve a capire in anticipo come vengono trattati i DCC vuoti (F-E05 ha l'header non compilato, F-E10 ha `Raw` = 0): se uno dà errore, la lettura complessiva si fermerebbe.
+
+```{r dcc-singoli}
+letture <- lapply(dcc_files, function(f) tryCatch(readDccFile(f), error = function(e) e))
+names(letture) <- basename(dcc_files)
+
+errori <- vapply(letture, inherits, logical(1), what = "error")
+errori_msg <- vapply(letture[errori], conditionMessage, character(1))
+errori_msg
+
+n_sonde <- vapply(letture[!errori], function(x) nrow(x[["Code_Summary"]]), integer(1))
+n_sonde[n_sonde == 0]
+```
+
+Nella prima uscita ci sono i DCC che `readDccFile()` non riesce a leggere, nella seconda quelli letti ma senza sonde. Se la prima è vuota, passo tutti i DCC alla funzione. Altrimenti escludo quelli in errore e lo scrivo.
+
+```{r dcc-da-usare}
+dcc_use <- dcc_files[!errori]
+length(dcc_use)
+```
+
+# Lab Worksheet
+
+Il file ha un'intestazione libera; la tabella inizia dopo la riga `Annotations`. Leggo tutto come testo e con `quote = ""`, così i valori restano quelli scritti nel file: la colonna `Roi` è salvata come formula Excel (`"=""001"""`) e la ripulisco io.
+
+```{r leggi-worksheet}
+leggi_lw <- function(path, plate) {
+  righe <- readLines(path, warn = FALSE)
+  start <- which(righe == "Annotations")
+  stopifnot(length(start) == 1)
+
+  # Plate_ID dichiarato nell'intestazione (riga dopo "Library Prep Plate")
+  i_lib <- grep("^Library Prep Plate\t", righe)
+  pid <- gsub("\\D", "", strsplit(righe[i_lib + 1], "\t")[[1]][2])
+
+  tab <- read.delim(path, skip = start, header = TRUE, sep = "\t", quote = "",
+                    colClasses = "character", check.names = FALSE, fill = TRUE,
+                    na.strings = character(0))
+  tab$plate <- plate
+  tab$plate_id_worksheet <- pid
+  tab
+}
+
+lw <- bind_rows(Map(leggi_lw, lw_paths, names(lw_paths)))
+rownames(lw) <- NULL   # punto 5 del sorgente: nomi di riga 1..n
+
+dim(lw)
+colnames(lw)
+table(lw$plate, lw$plate_id_worksheet)
+```
+
+Attese 93 righe F e 96 H, 18 colonne del worksheet più le due aggiunte.
+
+```{r pulizia-worksheet}
+# Nomi in minuscolo, come nell'esempio della vignetta; la colonna del lotto ha un nome lungo
+colnames(lw) <- tolower(colnames(lw))
+colnames(lw)[colnames(lw) == "sample_id"] <- "Sample_ID"
+colnames(lw)[startsWith(colnames(lw), "(v1.0)")] <- "lotto_wta"
+
+lw <- lw %>%
+  mutate(
+    roi   = ifelse(roi == "", NA, sprintf("%03d", as.integer(gsub("\\D", "", roi)))),
+    well  = sub(".*-", "", Sample_ID),
+    is_ntc = tolower(`slide name`) == "no template control"
+  )
+
+# Controlli sul file
+stopifnot(
+  !anyDuplicated(lw$Sample_ID),
+  all(sub("^DSP-(\\d+)-.*", "\\1", lw$Sample_ID) == plate_ids[lw$plate]),
+  all(lw$plate_id_worksheet == plate_ids[lw$plate])
+)
+
+lw %>% filter(is_ntc) %>% select(Sample_ID, `slide name`)
+table(lw$plate, lw$segment, useNA = "ifany")
+```
+
+Gli NTC devono essere F-A01 e H-A01, ciascuno come prima riga della sua piastra: la funzione assegna a ogni riga l'NTC che la precede.
+
+```{r ordine-ntc}
+ntc_pos <- which(lw$is_ntc)
+stopifnot(
+  length(ntc_pos) == 2,
+  ntc_pos[1] == 1,
+  all(lw$plate[ntc_pos[1]:(ntc_pos[2] - 1)] == lw$plate[ntc_pos[1]]),
+  all(lw$plate[ntc_pos[2]:nrow(lw)] == lw$plate[ntc_pos[2]])
+)
+```
+
+Worksheet contro DCC: ogni DCC deve avere una riga e viceversa.
+
+```{r worksheet-vs-dcc}
+setdiff(basename(dcc_files), paste0(lw$Sample_ID, ".dcc"))  # DCC senza riga
+setdiff(paste0(lw$Sample_ID, ".dcc"), basename(dcc_files))  # righe senza DCC
+```
+
+Attese due uscite vuote.
+
+# Variabili cliniche dall'Excel
+
+Leggo solo le colonne con intestazione. Le colonne senza nome (una contiene cognomi, l'altra `BASELINE`) prendono da `readxl` un nome che inizia con `...` e vengono scartate subito, senza stamparle.
+
+```{r leggi-excel}
+xl <- read_excel(excel_path, skip = 1, col_types = "text", .name_repair = "unique_quiet")
+xl <- xl[, !startsWith(colnames(xl), "...")]
+xl$riga_excel <- seq_len(nrow(xl)) + 2   # riga nel foglio: istruzioni e intestazione sono le righe 1 e 2
+colnames(xl)
+```
+
+Righe Reuma: data `29022024` o `25072024` in fondo allo `Scan Name`. Chiave: `Scan Name` + ROI a tre cifre + segmento.
+
+```{r excel-reuma}
+xl_reuma <- xl %>%
+  mutate(
+    `Scan Name` = trimws(`Scan Name`),
+    data_scan   = sub(".*_(\\d{8})$", "\\1", `Scan Name`),
+    roi         = sprintf("%03d", as.integer(`ROI (Label)`)),
+    segment     = trimws(`Segment (Name/ Label)`)
+  ) %>%
+  filter(data_scan %in% c("29022024", "25072024"))
+
+nrow(xl_reuma)
+stopifnot(!anyDuplicated(xl_reuma[, c("Scan Name", "roi", "segment")]))
+table(xl_reuma$data_scan)
+```
+
+Atteso: 187 righe (92 e 95).
+
+```{r excel-vs-worksheet}
+seg <- lw %>% filter(!is_ntc)
+
+solo_worksheet <- anti_join(seg, xl_reuma, by = c("scan name" = "Scan Name", "roi", "segment"))
+solo_excel     <- anti_join(xl_reuma, seg, by = c("Scan Name" = "scan name", "roi", "segment"))
+nrow(solo_worksheet); nrow(solo_excel)
+```
+
+Attese entrambe 0. Solo a questo punto unisco.
+
+Le colonne cliniche vengono portate così come sono nell'Excel: le etichette non uniformi (`RESP JAKi`/`RESP JAKI`, ecc.) e i segmenti con paziente incoerente non vengono toccati qui. Le regole vanno decise per scritto prima dell'analisi.
+
+```{r unione}
+cliniche <- xl_reuma %>%
+  select(-`ROI (Label)`, -`Segment (Name/ Label)`, -data_scan)
+
+annot <- lw %>%
+  left_join(cliniche, by = c("scan name" = "Scan Name", "roi", "segment"))
+
+stopifnot(
+  nrow(annot) == nrow(lw),
+  identical(annot$Sample_ID, lw$Sample_ID),     # stesso ordine: serve per gli NTC
+  !anyDuplicated(colnames(annot))
+)
+rownames(annot) <- NULL
+
+# Ogni segmento ha trovato la sua riga Excel; gli NTC no
+table(ntc = annot$is_ntc, excel_trovato = !is.na(annot$riga_excel))
+```
+
+# Creazione dell'oggetto
+
+```{r controllo-versione}
+# phenoData come data.frame è nel sorgente master; se la versione locale non lo ha, la chiamata sotto non funziona
+stopifnot("phenoData" %in% names(formals(readNanoStringGeoMxSet)))
+```
+
+```{r ns-object}
+ns_object <- readNanoStringGeoMxSet(
+  dccFiles               = dcc_use,
+  pkcFiles               = pkc_path,
+  phenoData              = annot,
+  phenoDataDccColName    = "Sample_ID",
+  protocolDataColNames   = c("aoi", "roi"),
+  experimentDataColNames = c("panel")
+)
+ns_object
+```
+
+Lascio gli avvisi visibili (`warning = TRUE`): devono comparire i DCC senza conteggi.
+
+# Controlli sull'oggetto
+
+Dimensioni. Righe: sonde del PKC (18.815). Colonne: 189 DCC meno 2 NTC meno i DCC senza conteggi. Se gli unici senza conteggi sono F-E05 e F-E10, le colonne sono 185. È un'attesa ricavata dal sorgente, da confermare con l'output.
+
+```{r dimensioni}
+dim(ns_object)
+```
+
+Quali DCC non sono entrati e perché.
+
+```{r esclusi}
+fuori <- setdiff(basename(dcc_files), sampleNames(ns_object))
+data.frame(
+  dcc   = fuori,
+  ntc   = fuori %in% paste0(annot$Sample_ID[annot$is_ntc], ".dcc"),
+  sonde = n_sonde[fuori],
+  errore_lettura = fuori %in% names(errori_msg)
+)
+```
+
+NTC assegnato a ogni segmento: per piastra deve esserci un solo `NTC_ID`, quello del suo A01.
+
+```{r ntc}
+pd_prot <- protocolData(ns_object)@data
+table(plate = pData(ns_object)$plate, NTC_ID = pd_prot$NTC_ID)
+unique(pd_prot[, c("NTC_ID", "NTC")])
+```
+
+Coerenza tra `Plate_ID` scritto nel DCC (in `protocolData`) e piastra dell'annotazione.
+
+```{r plate}
+table(Plate_ID = pd_prot$Plate_ID, plate = pData(ns_object)$plate)
+```
+
+Area e nuclei devono essere numerici (la funzione li converte).
+
+```{r area-nuclei}
+summary(pData(ns_object)[, c("area", "nuclei")])
+```
+
+Sonde e pannello.
+
+```{r sonde}
+annotation(ns_object)
+table(fData(ns_object)$CodeClass)
+featureType(ns_object)
+```
+
+Segmenti per piastra e scan.
+
+```{r segmenti}
+table(pData(ns_object)$`scan name`, pData(ns_object)$segment)
+```
+
+# Salvataggio
+
+Non eseguito: scrivere in `data_clean/` va deciso prima.
+
+```{r salva, eval=FALSE}
+saveRDS(ns_object, "data_clean/Reuma/ns_object_reuma.rds")
+```
+
+```{r sessione}
+sessionInfo()
+```

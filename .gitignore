@@ -1,0 +1,17 @@
+# Dati: non vanno mai nel repository (contengono informazioni sui pazienti)
+data/
+data_clean/
+*.7z
+*.xlsx
+*.dcc
+*.pkc
+*.rds
+
+# File di sessione R e RStudio
+.RData
+.RDataTmp*
+.Rhistory
+.Rproj.user/
+
+# macOS
+.DS_Store
